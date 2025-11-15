@@ -64,3 +64,7 @@ const pages = [
 ];
 
 main.appendChild(DashboardRender.render(pages));
+
+setTimeout(() => {
+    document.querySelector('#nav-users').click();
+}, 100);
