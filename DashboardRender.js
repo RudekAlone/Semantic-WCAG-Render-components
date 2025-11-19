@@ -208,7 +208,11 @@ export class DashboardRender {
       "Rola",
       "Reset hasła",
     ];
+    console.log(data, headers);
     data.forEach((row) => {
+      if(row.length=== headers.length){
+        row.pop();
+      }
       if (row[5].includes("Uczeń") || row[5].includes("Nauczyciel")) {
         row.push({
           type: "button",
@@ -237,6 +241,7 @@ export class DashboardRender {
     const sectionTable = document.createElement("section");
     sectionTable.id = "user-list-table-section";
     sectionTable.appendChild(userListTable);
+    parentSection.querySelector(".table-container")?.remove();
     parentSection.appendChild(sectionTable);
   }
 
