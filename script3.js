@@ -66,5 +66,5 @@ const pages = [
 main.appendChild(DashboardRender.render(pages));
 
 setTimeout(() => {
-    document.querySelector('#nav-users').click();
+    document.querySelector('#nav-classes').click();
 }, 100);

@@ -166,36 +166,37 @@ export class RenderElements {
       input.setAttribute("inputmode", "numeric"); // podpowiedź dla mobile
       input.setAttribute("pattern", "[0-9]*"); // podpowiedź dla mobile
 
-        input.addEventListener("keypress", (e) => {
-          if (!/[0-9]/.test(e.key)) {
-            e.preventDefault(); // blokuje wpisanie litery
-          }
-        });
+      input.addEventListener("keypress", (e) => {
+        if (!/[0-9]/.test(e.key)) {
+          e.preventDefault(); // blokuje wpisanie litery
+        }
+      });
 
-        const butonArrowUp = document.createElement("button");
-        butonArrowUp.classList.add("ff-number-arrow", "ff-number-arrow-up");
-        butonArrowUp.textContent = "▲";
-        butonArrowUp.addEventListener("click", () => {
-          input.stepUp();
-        });
-        const butonArrowDown = document.createElement("button");
-        butonArrowDown.classList.add("ff-number-arrow", "ff-number-arrow-down");
-        butonArrowDown.textContent = "▼";
-        butonArrowDown.addEventListener("click", () => {
-          input.stepDown();
-        });
-        
-        const numericInput = document.createElement("div");
-        numericInput.classList.add("numeric-input");
-        numericInput.appendChild(input);
+      const butonArrowUp = document.createElement("button");
+      butonArrowUp.classList.add("ff-number-arrow", "ff-number-arrow-up");
+      butonArrowUp.textContent = "▲";
+      butonArrowUp.addEventListener("click", () => {
+        input.stepUp();
+        input.dispatchEvent(new InputEvent("input", { bubbles: true }));
+      });
+      const butonArrowDown = document.createElement("button");
+      butonArrowDown.classList.add("ff-number-arrow", "ff-number-arrow-down");
+      butonArrowDown.textContent = "▼";
+      butonArrowDown.addEventListener("click", () => {
+        input.stepDown();
+        input.dispatchEvent(new InputEvent("input", { bubbles: true }));
+      });
 
-        numericInput.appendChild(butonArrowUp);
-        numericInput.appendChild(butonArrowDown);
-        wrapper.appendChild(numericInput);
-      }else {
-        wrapper.appendChild(input);
-      }
+      const numericInput = document.createElement("div");
+      numericInput.classList.add("numeric-input");
+      numericInput.appendChild(input);
 
+      numericInput.appendChild(butonArrowUp);
+      numericInput.appendChild(butonArrowDown);
+      wrapper.appendChild(numericInput);
+    } else {
+      wrapper.appendChild(input);
+    }
 
     return wrapper;
   }
@@ -248,23 +249,36 @@ export class RenderElements {
     form.setAttribute("data-layout", direction);
 
     elements.forEach((element) => {
-      const inputWrapper = this.renderInput(
-        element.label,
-        element.name,
-        element.id,
-        element.type,
-        element.role,
-        element.required
-      );
+      let inputWrapper;
+      if (!element.selectInputOptions) {
+        inputWrapper = this.renderInput(
+          element.label,
+          element.name,
+          element.id,
+          element.type,
+          element.role,
+          element.required
+        );
 
-      const input = inputWrapper.querySelector("input");
-      if (
-        input &&
-        !["checkbox", "radio", "file", "color", "range"].includes(element.type)
-      ) {
-        input.setAttribute("autocomplete", "on");
+        const input = inputWrapper.querySelector("input");
+        if (
+          input &&
+          !["checkbox", "radio", "file", "color", "range"].includes(
+            element.type
+          )
+        ) {
+          input.setAttribute("autocomplete", "on");
+        }
+      } else {
+        inputWrapper = this.selectInputOptions(
+          element.label,
+          element.options,
+          element.name,
+          element.id,
+          element.required,
+          element.layout
+        );
       }
-
       form.appendChild(inputWrapper);
     });
 
@@ -912,7 +926,7 @@ export class RenderElements {
    * ]
    */
 
-  static renderResponsiveTable(data = [], headers = [], isExportable = true) {
+  static renderResponsiveTable(data = [], headers = [], isExportable = true, newFunction = null) {
     data = data.sort((a, b) => (a[0] > b[0] ? 1 : -1));
 
     const container = document.createElement("div");
@@ -937,10 +951,56 @@ export class RenderElements {
         );
         container.appendChild(exportButtons);
       }
+      // Zapisz informacje o spanach z już istniejącej tabeli do kontenera,
+      // żeby nie tracić ich przy ponownym renderowaniu.
+      try {
+        if (currentMode === "desktop") {
+          const existingTable = container.querySelector("table");
+          if (existingTable) {
+        const spans = [];
+        existingTable.querySelectorAll("tr").forEach((tr, rIdx) => {
+          Array.from(tr.children).forEach((cell, cIdx) => {
+            const cspan = cell.colSpan;
+            const rspan = cell.rowSpan;
+            if (cspan > 1 || rspan > 1) {
+          spans.push({ r: rIdx, c: cIdx, cs: cspan, rs: rspan });
+            }
+          });
+        });
+        container.dataset.savedTableSpans = JSON.stringify(spans);
+          }
+        }
+      } catch (err) {
+        // ignore serialization errors
+      }
 
+      // Usuń poprzednie widoki (table / mobile)
       container.querySelector("table")?.remove();
       container.querySelector(".mobile-table")?.remove();
+
+      // Przywróć zapisane spany na nowo wyrenderowanej tabeli (jeśli są)
+      if (currentMode === "desktop" && container.dataset.savedTableSpans) {
+        try {
+          const spans = JSON.parse(container.dataset.savedTableSpans || "[]");
+          spans.forEach((s) => {
+        const row = table.rows[s.r];
+        if (!row) return;
+        const cell = row.children[s.c];
+        if (!cell) return;
+        if (s.cs > 1) cell.colSpan = parseInt(s.cs, 10);
+        if (s.rs > 1) cell.rowSpan = parseInt(s.rs, 10);
+          });
+        } catch (err) {
+          // jeśli nie uda się odczytać, pomijamy
+        } finally {
+          delete container.dataset.savedTableSpans;
+        }
+      }
+
       container.appendChild(table);
+      if (typeof newFunction === "function") {
+        newFunction(container);
+      }
     };
 
     const handleSort = (index) => {
@@ -958,6 +1018,7 @@ export class RenderElements {
         render();
       }
     });
+
 
     return container;
   }
