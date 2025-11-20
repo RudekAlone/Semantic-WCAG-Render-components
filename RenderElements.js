@@ -35,6 +35,7 @@ export class RenderElements {
       tertiary: "bg-tertiary",
       quaternary: "bg-quaternary",
       fifth: "bg-fifth",
+      tabButton: "tab-button",
     }[variant];
 
     if (variantClass) {

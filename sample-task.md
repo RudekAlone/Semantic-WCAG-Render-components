@@ -1,5 +1,74 @@
 # Cheat Sheet
 
+## Quiz
+
+<data-quiz>
+  <question>
+  Co zostanie wyświetlone w konsoli?
+   ```js
+   console.log(2+2)
+   ```
+   </question>
+  <options>
+    <option>$$3$$</option>
+    <option correct>$$4$$</option>
+    <option>$$22$$</option>
+  </options>
+</data-quiz>
+
+````markdown
+<data-quiz>
+  <question>
+  Co zostanie wyświetlone w konsoli?
+   ```js
+   console.log(2+2)
+   ```
+   </question>
+  <options>
+    <option>3</option>
+    <option correct>4</option>
+    <option>22</option>
+  </options>
+</data-quiz>
+````
+
+
+## Karty
+
+
+<data-tabs>
+    <tabs>
+        <b>Tab 1</b>
+        <b>Tab 2</b>
+    </tabs>
+    <div>
+## Zadanie
+Wyświetl w konsoli tekst "*test*"
+    </div>
+    <div>
+```js
+console.log("test")
+```
+    </div>
+</data-tabs>
+
+```html
+<data-tabs>
+    <tabs>
+        <b>Tab 1</b>
+        <b>Tab 2</b>
+    </tabs>
+    <div>
+## Zadanie
+Wyświetl w konsoli tekst "*test*"
+    </div>
+    <div>
+```js
+console.log("test")
+```
+    </div>
+</data-tabs>
+```
 
 ## Przyciski
 
@@ -200,41 +269,7 @@ Możesz wykorzystać znak plusa, minusa lub gwiazdki:
 ```
  
 
-## Karty
 
- 
-
-<div data-tabs>
-    <div class="tabs">
-        <b>Tab 1</b>
-        <b>Tab 2</b>
-    </div>
-    <div class="active">
-        <h3>Tab 1</h3>
-        <p>Zawartość pierwszej karty.</p>
-    </div>
-    <div>
-        <h3>Tab 2</h3>
-        <p>Zawartość drugiej karty.</p>
-    </div>
-</div>
-
-```html
-<div data-tabs>
-    <div class="tabs">
-        <b>Tab 1</b>
-        <b>Tab 2</b>
-    </div>
-    <div class="active">
-        <h3>Tab 1</h3>
-        <p>Zawartość pierwszej karty.</p>
-    </div>
-    <div>
-        <h3>Tab 2</h3>
-        <p>Zawartość drugiej karty.</p>
-    </div>
-</div>
-```
 
  
 
