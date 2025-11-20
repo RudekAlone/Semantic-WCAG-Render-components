@@ -1,4 +1,6 @@
 import { RenderElements } from "./RenderElements.js";
+import { RenderMarkdown } from "./RenderMarkdown.js";
+
 import { MarkdownExtenders } from "./MarkdownExtenders.js";
 
 export class DashboardRender {
@@ -245,13 +247,6 @@ export class DashboardRender {
     tasksManagement.id = "tasks-management-page";
     tasksManagement.textContent = "To jest strona Zarządzanie zadaniami.";
 
-    /*
-    Header i main z dwiema sekcjami w headerze:
-    - Dodaj nowe zadanie (formularz)
-    - Filtry (wyszukiwarka, kategorie, itp.)
-    W main lewa sekcja z edytorem kodu markdown, prawa sekcja z podglądem zadania
-    */
-
     const tasksHeader = document.createElement("section");
     tasksHeader.classList.add("task-header");
 
@@ -340,19 +335,8 @@ static finalizeAlign(textareaEditor, preview) {
         buttonSave.disabled = false;
       }
       const markdownText = textareaEditor.value;
-      const htmlContent = marked.parse(markdownText);
-      preview.innerHTML = htmlContent;
-      preview.querySelectorAll("pre code").forEach((block) => {
-        hljs.highlightElement(block);
-      });
-      renderMathInElement(preview, {
-        delimiters: [
-          { left: "$$", right: "$$", display: true },
-          { left: "$", right: "$", display: false },
-        ],
-      });
+      RenderMarkdown.renderMarkdownPreview(preview, markdownText);
 
-      MarkdownExtenders.applyMarkdownStyles(preview);
     });
 
 let activeSource = null;
