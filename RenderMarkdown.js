@@ -6,19 +6,29 @@ export class RenderMarkdown {
     this.renderQuiz(container);
   }
 
-  static convertMarkdownToHTML(container, markdownContent) {
-    const htmlContent = marked.parse(markdownContent);
-    container.innerHTML = htmlContent;
-    container.querySelectorAll("pre code").forEach((block) => {
-      hljs.highlightElement(block);
-    });
-    renderMathInElement(container, {
-      delimiters: [
-        { left: "$$", right: "$$", display: true },
-        { left: "$", right: "$", display: false },
-      ],
-    });
-  }
+static convertMarkdownToHTML(container, markdownContent) {
+  const htmlContent = marked.parse(markdownContent);
+  container.innerHTML = htmlContent;
+
+  container.querySelectorAll("pre code").forEach((block) => {
+    hljs.highlightElement(block);
+  });
+
+  renderMathInElement(container, {
+    delimiters: [
+      { left: "$$", right: "$$", display: true },
+      { left: "$", right: "$", display: false },
+    ],
+  });
+
+  // Szukamy elementów z klasą .mord
+  container.querySelectorAll('.mord').forEach((el) => {
+    if (el.getAttribute('style') === 'color: transparent;') {
+      el.textContent = " "; // zamiana na spację
+    }
+  });
+}
+
 
   static renderTabs(containerHTML) {
     const dataTabs = containerHTML.querySelectorAll("data-tabs");

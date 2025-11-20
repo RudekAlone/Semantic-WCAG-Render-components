@@ -1109,7 +1109,7 @@ section#dashboard nav button:not(.tab-button):hover {
   margin: 20px 0;
 }
 .preview-markdown code {
-  display: block;
+  display: inline-block;
   background-color: #1d1f22;
   padding: 2px 4px;
   border-radius: 3px;
@@ -1118,6 +1118,17 @@ section#dashboard nav button:not(.tab-button):hover {
   font-weight: bold;
   font-size: 1rem;
 }
+.preview-markdown pre code {
+  display: block;
+}
+
+.preview-markdown .katex-display {
+  display: inline-block; 
+}
+.mord[style*="color: transparent"] {
+  text-shadow: none !important;
+}
+
 
 .preview-markdown .data-quiz {
   background-color: var(--bg-layer-1);
