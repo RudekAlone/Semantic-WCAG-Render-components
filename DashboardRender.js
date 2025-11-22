@@ -41,7 +41,13 @@ export class DashboardRender {
       case "dashboard":
         contentArea.appendChild(this.renderDashboard());
         break;
+      case "tasks":
+        contentArea.appendChild(this.renderTasksManagement());
+        break;
       // Add cases for other pages as needed
+      case "students":
+        contentArea.appendChild(this.renderUserManagement(false));
+        break;
       case "classes":
         contentArea.appendChild(this.renderClassesPage());
         break;
@@ -49,7 +55,7 @@ export class DashboardRender {
         contentArea.appendChild(this.renderUserManagement());
         break;
       case "manage-tasks":
-        contentArea.appendChild(this.renderTasksManagement());
+        contentArea.appendChild(this.renderTasksEditorManagement());
         break;
       default:
         const placeholder = document.createElement("div");
@@ -74,86 +80,86 @@ export class DashboardRender {
     userManagement.appendChild(title);
 
     const content = document.createElement("section");
+    if (isAdmin) {
+      const form = document.createElement("form");
+      form.appendChild(
+        RenderElements.renderInput(
+          "Imię",
+          "name",
+          "name-input",
+          "text",
+          "textbox",
+          true
+        )
+      );
+      form.appendChild(
+        RenderElements.renderInput(
+          "Drugie imię",
+          "middleName",
+          "middle-name-input",
+          "text",
+          "textbox",
+          false
+        )
+      );
+      form.appendChild(
+        RenderElements.renderInput(
+          "Nazwisko",
+          "lastName",
+          "last-name-input",
+          "text",
+          "textbox",
+          true
+        )
+      );
+      const roleOptions = [
+        { value: "student", text: "Uczeń" },
+        { value: "teacher", text: "Nauczyciel" },
+        { value: "admin", text: "Administrator" },
+      ];
+      form.appendChild(
+        RenderElements.selectInputOptions(
+          "Rola konta",
+          roleOptions,
+          "accountRole",
+          "account-role",
+          true,
+          "row"
+        )
+      );
 
-    const form = document.createElement("form");
-    form.appendChild(
-      RenderElements.renderInput(
-        "Imię",
-        "name",
-        "name-input",
-        "text",
-        "textbox",
-        true
-      )
-    );
-    form.appendChild(
-      RenderElements.renderInput(
-        "Drugie imię",
-        "middleName",
-        "middle-name-input",
-        "text",
-        "textbox",
-        false
-      )
-    );
-    form.appendChild(
-      RenderElements.renderInput(
-        "Nazwisko",
-        "lastName",
-        "last-name-input",
-        "text",
-        "textbox",
-        true
-      )
-    );
-    const roleOptions = [
-      { value: "student", text: "Uczeń" },
-      { value: "teacher", text: "Nauczyciel" },
-      { value: "admin", text: "Administrator" },
-    ];
-    form.appendChild(
-      RenderElements.selectInputOptions(
-        "Rola konta",
-        roleOptions,
-        "accountRole",
-        "account-role",
-        true,
-        "row"
-      )
-    );
+      const classOptions = [
+        { value: "1A", text: "1A" },
+        { value: "2B", text: "2B" },
+        { value: "3C", text: "3C" },
+      ];
+      form.appendChild(
+        RenderElements.selectInputOptions(
+          "Przypisana klasa",
+          classOptions,
+          "assignedClass",
+          "assignedClass",
+          true,
+          "row"
+        )
+      );
 
-    const classOptions = [
-      { value: "1A", text: "1A" },
-      { value: "2B", text: "2B" },
-      { value: "3C", text: "3C" },
-    ];
-    form.appendChild(
-      RenderElements.selectInputOptions(
-        "Przypisana klasa",
-        classOptions,
-        "assignedClass",
-        "assignedClass",
-        true,
-        "row"
-      )
-    );
+      const submitButton = RenderElements.renderButton(
+        "Dodaj użytkownika",
+        "primary"
+      );
+      form.appendChild(submitButton);
 
-    const submitButton = RenderElements.renderButton(
-      "Dodaj użytkownika",
-      "primary"
-    );
-    form.appendChild(submitButton);
+      const details = RenderElements.renderDetailsSummary(
+        "Dodawanie nowego użytkownika",
+        form
+      );
+      content.appendChild(details);
 
-    const details = RenderElements.renderDetailsSummary(
-      "Dodawanie nowego użytkownika",
-      form
-    );
-    content.appendChild(details);
-
-    if (window.innerWidth > 600) {
-      details.open = true;
+      if (window.innerWidth > 600) {
+        details.open = true;
+      }
     }
-
     const sectionOptionsLoad = document.createElement("section");
     sectionOptionsLoad.id = "user-list-section";
 
@@ -212,7 +218,7 @@ export class DashboardRender {
     ];
     console.log(data, headers);
     data.forEach((row) => {
-      if(row.length=== headers.length){
+      if (row.length === headers.length) {
         row.pop();
       }
       if (row[5].includes("Uczeń") || row[5].includes("Nauczyciel")) {
@@ -247,7 +253,7 @@ export class DashboardRender {
     parentSection.appendChild(sectionTable);
   }
 
-  static renderTasksManagement() {
+  static renderTasksEditorManagement() {
     const tasksManagement = document.createElement("section");
     tasksManagement.id = "tasks-management-page";
     tasksManagement.textContent = "To jest strona Zarządzanie zadaniami.";
@@ -291,23 +297,26 @@ export class DashboardRender {
     return tasksManagement;
   }
 
-static finalizeAlign(textareaEditor, preview) {
-  // procent przewinięcia preview
-  const ratio = preview.scrollTop / (preview.scrollHeight - preview.clientHeight);
-  // docelowy scrollTop w edytorze
-  let targetTop = ratio * (textareaEditor.scrollHeight - textareaEditor.clientHeight);
+  static finalizeAlign(textareaEditor, preview) {
+    // procent przewinięcia preview
+    const ratio =
+      preview.scrollTop / (preview.scrollHeight - preview.clientHeight);
+    // docelowy scrollTop w edytorze
+    let targetTop =
+      ratio * (textareaEditor.scrollHeight - textareaEditor.clientHeight);
 
-  // dopasowanie do wysokości linii, żeby „piksel” był równy linii tekstu
-  const lh = parseFloat(getComputedStyle(textareaEditor).lineHeight) || parseFloat(getComputedStyle(textareaEditor).fontSize);
-  if (lh && Number.isFinite(lh)) {
-    targetTop = Math.round(targetTop / lh) * lh;
+    // dopasowanie do wysokości linii, żeby „piksel” był równy linii tekstu
+    const lh =
+      parseFloat(getComputedStyle(textareaEditor).lineHeight) ||
+      parseFloat(getComputedStyle(textareaEditor).fontSize);
+    if (lh && Number.isFinite(lh)) {
+      targetTop = Math.round(targetTop / lh) * lh;
+    }
+
+    activeSource = "preview";
+    textareaEditor.scrollTop = targetTop;
+    activeSource = null;
   }
-
-  activeSource = "preview";
-  textareaEditor.scrollTop = targetTop;
-  activeSource = null;
-}
-
 
   static taskEditor(editorSection, previewSection, buttonSave) {
     const editor = RenderElements.renderTextArea(
@@ -341,61 +350,72 @@ static finalizeAlign(textareaEditor, preview) {
       }
       const markdownText = textareaEditor.value;
       RenderMarkdown.renderMarkdownPreview(preview, markdownText);
-
     });
 
-let activeSource = null;
-let skipPreviewSync = false;
-let finalizeTimer = null;
+    let activeSource = null;
+    let skipPreviewSync = false;
+    let finalizeTimer = null;
 
-// — wykrycie klawiatury w preview: w trakcie trzymania strzałek wyłączamy sync —
-preview.addEventListener("keydown", (e) => {
-  if (["ArrowDown", "ArrowUp", "PageDown", "PageUp", "Home", "End"].includes(e.key)) {
-    skipPreviewSync = true;
-    // w trakcie przewijania klawiaturą nie synchronizujemy
-    if (finalizeTimer) {
-      clearTimeout(finalizeTimer);
-      finalizeTimer = null;
-    }
-  }
-});
+    // — wykrycie klawiatury w preview: w trakcie trzymania strzałek wyłączamy sync —
+    preview.addEventListener("keydown", (e) => {
+      if (
+        ["ArrowDown", "ArrowUp", "PageDown", "PageUp", "Home", "End"].includes(
+          e.key
+        )
+      ) {
+        skipPreviewSync = true;
+        // w trakcie przewijania klawiaturą nie synchronizujemy
+        if (finalizeTimer) {
+          clearTimeout(finalizeTimer);
+          finalizeTimer = null;
+        }
+      }
+    });
 
-// — po puszczeniu klawisza: pojedyncze, płynne wyrównanie —
-preview.addEventListener("keyup", (e) => {
-  if (["ArrowDown", "ArrowUp", "PageDown", "PageUp", "Home", "End"].includes(e.key)) {
-    skipPreviewSync = false;
-    // minimalne opóźnienie pozwala domknąć ostatni „skok” scrolla
-    finalizeTimer = setTimeout(() => {
-      this.finalizeAlign(textareaEditor, preview);
-      finalizeTimer = null;
-    }, 30);
-  }
-});
+    // — po puszczeniu klawisza: pojedyncze, płynne wyrównanie —
+    preview.addEventListener("keyup", (e) => {
+      if (
+        ["ArrowDown", "ArrowUp", "PageDown", "PageUp", "Home", "End"].includes(
+          e.key
+        )
+      ) {
+        skipPreviewSync = false;
+        // minimalne opóźnienie pozwala domknąć ostatni „skok” scrolla
+        finalizeTimer = setTimeout(() => {
+          this.finalizeAlign(textareaEditor, preview);
+          finalizeTimer = null;
+        }, 30);
+      }
+    });
 
-// — zwykła synchronizacja edytor → preview (zawsze włączona) —
-textareaEditor.addEventListener("scroll", () => {
-  if (activeSource === "preview") return;
-  activeSource = "editor";
-  requestAnimationFrame(() => {
-    const ratio = textareaEditor.scrollTop / (textareaEditor.scrollHeight - textareaEditor.clientHeight);
-    preview.scrollTop = ratio * (preview.scrollHeight - preview.clientHeight);
-    activeSource = null;
-  });
-});
+    // — zwykła synchronizacja edytor → preview (zawsze włączona) —
+    textareaEditor.addEventListener("scroll", () => {
+      if (activeSource === "preview") return;
+      activeSource = "editor";
+      requestAnimationFrame(() => {
+        const ratio =
+          textareaEditor.scrollTop /
+          (textareaEditor.scrollHeight - textareaEditor.clientHeight);
+        preview.scrollTop =
+          ratio * (preview.scrollHeight - preview.clientHeight);
+        activeSource = null;
+      });
+    });
 
-// — synchronizacja preview → edytor: tylko dla myszy/touchpada, bez klawiatury —
-preview.addEventListener("scroll", () => {
-  if (activeSource === "editor") return;
-  if (skipPreviewSync) return; // podczas trzymania strzałek pomijamy
+    // — synchronizacja preview → edytor: tylko dla myszy/touchpada, bez klawiatury —
+    preview.addEventListener("scroll", () => {
+      if (activeSource === "editor") return;
+      if (skipPreviewSync) return; // podczas trzymania strzałek pomijamy
 
-  activeSource = "preview";
-  requestAnimationFrame(() => {
-    const ratio = preview.scrollTop / (preview.scrollHeight - preview.clientHeight);
-    textareaEditor.scrollTop = ratio * (textareaEditor.scrollHeight - textareaEditor.clientHeight);
-    activeSource = null;
-  });
-});
-
+      activeSource = "preview";
+      requestAnimationFrame(() => {
+        const ratio =
+          preview.scrollTop / (preview.scrollHeight - preview.clientHeight);
+        textareaEditor.scrollTop =
+          ratio * (textareaEditor.scrollHeight - textareaEditor.clientHeight);
+        activeSource = null;
+      });
+    });
 
     const markdownContent = fetch("sample-task.md");
 
@@ -563,17 +583,13 @@ preview.addEventListener("scroll", () => {
       console.log(filterSubject);
       tasksList.innerHTML = "";
       const filteredTasks = tasks.filter((task) => {
-        return (
-          filterSubject === "all" ||
-          task.subject === filterSubject
-        );
+        return filterSubject === "all" || task.subject === filterSubject;
       });
 
       if (filteredTasks.length === 0) {
         tasksList.textContent = "Brak zadań do wyświetlenia.";
         return;
       } else {
-        
         tasksList.appendChild(this.renderTaskElement(filteredTasks));
       }
     });
@@ -627,14 +643,16 @@ preview.addEventListener("scroll", () => {
     const content = document.createElement("section");
 
     const classElements = [
-      { label: "Nazwa klasy",
+      {
+        label: "Nazwa klasy",
         name: "className",
         id: "class-name-input",
         type: "text",
         role: "textbox",
         required: true,
       },
-      { label: "Rok szkolny",
+      {
+        label: "Rok szkolny",
         name: "schoolYear",
         id: "school-year-input",
         type: "number",
@@ -642,7 +660,6 @@ preview.addEventListener("scroll", () => {
         required: true,
       },
     ];
-
 
     const addNewClassForm = RenderElements.renderForm(
       classElements,
@@ -656,7 +673,8 @@ preview.addEventListener("scroll", () => {
     content.appendChild(addNewClassForm);
     classesPage.appendChild(content);
 
-    addNewClassForm.querySelector("#school-year-input").value = new Date().getFullYear();
+    addNewClassForm.querySelector("#school-year-input").value =
+      new Date().getFullYear();
 
     const tableClassesData = [
       [1, "1A", 2024, 25],
@@ -693,17 +711,16 @@ preview.addEventListener("scroll", () => {
     );
 
     content.appendChild(classesTable);
-   
 
     return classesPage;
   }
 
   static rebrandTableClasses(classesTable) {
-     const headers = classesTable.querySelectorAll("th");
+    const headers = classesTable.querySelectorAll("th");
     headers[headers.length - 1].colSpan = 2;
 
     classesTable.querySelectorAll("tr").forEach((tr) => {
-      const applyButton = tr.querySelector('button.bg-tertiary');
+      const applyButton = tr.querySelector("button.bg-tertiary");
       if (!applyButton) return;
 
       applyButton.disabled = true;
@@ -714,7 +731,7 @@ preview.addEventListener("scroll", () => {
       tr.children[2].addEventListener("input", (e) => {
         applyButton.disabled = false;
       });
-      const deleteButton = tr.querySelector('button.bg-quaternary');
+      const deleteButton = tr.querySelector("button.bg-quaternary");
       if (!deleteButton) return;
 
       deleteButton.disabled = false;
@@ -722,5 +739,259 @@ preview.addEventListener("scroll", () => {
         console.log("Usuń klasę:", tr.children[1].textContent);
       });
     });
+  }
+
+  static renderTasksManagement() {
+    // Implementacja strony zarządzania zadaniami
+    // Podział na dwie sekcje: lista zadań i podgląd wybranego zadania ładowane z raw.githubusercontent.com markdown
+    // lewa sekcja to podzielone na przedmioty listy zadań oznaczone ikonami stanu (🟢, 🟡, 🔴) i małym opisem stanu
+    // Przedmioty to: ASO, SO, BD, PAI
+
+    const tasksPage = document.createElement("section");
+    tasksPage.id = "tasks-page";
+
+    const tasksHubSection = document.createElement("section");
+    tasksHubSection.id = "tasks-hub-page";
+
+    const title = document.createElement("h2");
+    title.textContent = "Twoje zadania";
+    tasksPage.appendChild(title);
+
+    const navSubjectSection = document.createElement("nav");
+    navSubjectSection.id = "nav-subject-section";    
+
+    const listTasksSection = document.createElement("section");
+    listTasksSection.id = "list-tasks-section";
+    tasksHubSection.appendChild(listTasksSection);
+
+    const taskPreviewSection = document.createElement("section");
+    taskPreviewSection.id = "task-preview-section";
+    taskPreviewSection.classList.add("preview-markdown");
+    tasksHubSection.appendChild(taskPreviewSection);
+
+    tasksPage.appendChild(navSubjectSection);
+    tasksPage.appendChild(tasksHubSection);
+
+
+    const tasks = [
+      {
+        id: 1,
+        name: "Konfiguracja Domeny Active Directory",
+        subject: "aso",
+        status: "1",
+        link: "https://raw.githubusercontent.com/Edu-Koala-V/task-markdown/refs/heads/main/task10.md",
+        deadline: "2024-05-20",
+      },
+      {
+        id: 2,
+        name: "Sortowanie i filtrowanie danych w SQL",
+        subject: "bd",
+        status: "1",
+        link: "https://raw.githubusercontent.com/Edu-Koala-V/task-markdown/refs/heads/main/task7.md",
+        deadline: "2024-06-15",
+      },
+      {
+        id: 3,
+        name: "Aliasy nazw domenowych DNS",
+        subject: "aso",
+        status: "-1",
+        link: "https://raw.githubusercontent.com/Edu-Koala-V/task-markdown/refs/heads/main/task8.md",
+        deadline: "2026-05-10",
+      },
+      {
+        id: 4,
+        name: "Zarządzanie Użytkownikami w Domenie",
+        subject: "aso",
+        status: "0",
+        link: "https://raw.githubusercontent.com/Edu-Koala-V/task-markdown/refs/heads/main/task9.md",
+        deadline: "2026-05-25",
+      },
+      {
+        id: 5,
+        name: "Tworzenie bazy danych MySQL",
+        subject: "bd",
+        status: "0",
+        link: "https://raw.githubusercontent.com/Edu-Koala-V/task-markdown/refs/heads/main/task4.md",
+        deadline: "2026-06-15",
+      },
+    ];
+
+    // Wybór przedmiotu jeżeli jest ich więcej niż jeden
+    const subjects = [...new Set(tasks.map((task) => task.subject))];
+    if (subjects.length > 1) {
+      const subjectOptions = subjects.map((subject) => {
+        let subjectName = "";
+        switch (subject) {
+          case "aso":
+            subjectName = "Administracja Systemami Operacyjnymi";
+            break;
+          case "so":
+            subjectName = "Systemy Operacyjne";
+            break;
+          case "bd":
+            subjectName = "Bazy Danych";
+            break;
+          case "pai":
+            subjectName = "Programowanie Aplikacji Internetowych";
+            break;
+          default:
+            subjectName = subject;
+        }
+        return { value: subject, text: subjectName };
+      });
+
+      subjectOptions.forEach((option) => {
+        const button = RenderElements.renderButton(option.text, "secondary", "button",() => {
+          const filteredTasks = tasks.filter(
+            (task) => task.subject === option.value
+          );
+          listTasksSection.innerHTML = "";
+          const buttons = navSubjectSection.querySelectorAll("button");
+          buttons.forEach((btn) => btn.classList.remove("active"));
+          button.classList.add("active");
+
+          // set url as #subject-value
+          history.replaceState(
+            null,
+            "",
+            window.location.pathname + `#zadania-${option.value}`
+          );
+
+          listTasksSection.appendChild(
+            this.renderTaskListElements(filteredTasks, taskPreviewSection)
+          );
+        });
+        button.dataset.subject = option.value;
+        navSubjectSection.appendChild(button);
+      });
+
+    }
+
+    // Initial load
+    const hash = window.location.hash;
+    let initialSubject = subjects[0];
+    if (hash.startsWith("#zadania-")) {
+      initialSubject = hash.replace("#zadania-", "");
+      navSubjectSection.querySelector("button[data-subject='" + initialSubject + "']")?.click();
+    }else {
+      navSubjectSection.querySelector("button")?.click();
+    }
+
+    return tasksPage;
+  }
+
+  static renderTaskListElements(tasks, previewSection) {
+    let ongoingTasks = [];
+    let completedTasks = [];
+    let overdueTasks = [];
+
+    tasks.forEach((task) => {
+      if (task.status === "0") {
+        ongoingTasks.push(task);
+      } else if (task.status === "-1") {
+        overdueTasks.push(task);
+      } else {
+        completedTasks.push(task);
+      }
+    });
+
+
+    const ulOngoing = document.createElement("ul");
+    ongoingTasks.forEach((task) => {
+      const li = document.createElement("li");
+         const taskName = document.createElement("p");
+      taskName.textContent = task.name;
+      li.appendChild(taskName);
+      const taskDeadline = document.createElement("p");
+      const smallDeadline = document.createElement("small");
+      smallDeadline.textContent = ` Termin: ${task.deadline}`;
+      taskDeadline.appendChild(smallDeadline);
+      li.appendChild(taskDeadline);
+      li.addEventListener("click", () => {
+        fetch(task.link)
+          .then((response) => response.text())
+          .then((data) => {
+            previewSection.innerHTML = "";
+            RenderMarkdown.renderMarkdownPreview(previewSection, data);
+          });
+      });
+      ulOngoing.appendChild(li);
+    });
+
+    const ongoingDetail = RenderElements.renderDetailsSummary(
+      "🟡 Zadania trwające",
+      ulOngoing
+    );
+    ongoingDetail.open = true;
+    ongoingDetail.appendChild(ulOngoing);
+
+    const ulCompleted = document.createElement("ul");
+    completedTasks.forEach((task) => {
+      const li = document.createElement("li");
+          const taskName = document.createElement("p");
+      taskName.textContent = task.name;
+      li.appendChild(taskName);
+      const taskDeadline = document.createElement("p");
+      const smallDeadline = document.createElement("small");
+      smallDeadline.textContent = ` Termin: ${task.deadline}`;
+      taskDeadline.appendChild(smallDeadline);
+      li.appendChild(taskDeadline);
+      li.addEventListener("click", () => {
+        fetch(task.link)
+          .then((response) => response.text())
+          .then((data) => {
+            previewSection.innerHTML = "";
+            RenderMarkdown.renderMarkdownPreview(previewSection, data);
+          });
+      });
+      ulCompleted.appendChild(li);
+    });
+    const completedDetail = RenderElements.renderDetailsSummary(
+      "🟢 Zadania ukończone",
+      ulCompleted
+    );
+    completedDetail.appendChild(ulCompleted);
+
+    const ulOverdue = document.createElement("ul");
+    overdueTasks.forEach((task) => {
+      const li = document.createElement("li");
+
+
+      const taskName = document.createElement("p");
+      taskName.textContent = task.name;
+      li.appendChild(taskName);
+      const taskDeadline = document.createElement("p");
+      const smallDeadline = document.createElement("small");
+      smallDeadline.textContent = ` Termin: ${task.deadline}`;
+      taskDeadline.appendChild(smallDeadline);
+      li.appendChild(taskDeadline);
+
+      li.addEventListener("click", () => {
+        fetch(task.link)
+          .then((response) => response.text())
+          .then((data) => {
+            previewSection.innerHTML = "";
+            RenderMarkdown.renderMarkdownPreview(previewSection, data);
+          });
+      });
+      ulOverdue.appendChild(li);
+    });
+    const overdueDetail = RenderElements.renderDetailsSummary(
+      "🔴 Zadania przeterminowane",
+      ulOverdue
+    );
+    overdueDetail.appendChild(ulOverdue);
+
+    const container = document.createElement("div");
+    if (ongoingTasks.length > 0) {
+      container.appendChild(ongoingDetail);
+    }
+    if (overdueTasks.length > 0) {
+      container.appendChild(overdueDetail);
+    }
+    if (completedTasks.length > 0) {
+      container.appendChild(completedDetail);
+    }
+    return container;
   }
 }
