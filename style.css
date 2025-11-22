@@ -1522,7 +1522,7 @@ section#dashboard nav button:not(.tab-button):hover {
   gap: 10px;
 }
 
-@media (max-width: 900px){
+@media (max-width: 960px){
   #tasks-page{
     padding: 20px 0;
   }
