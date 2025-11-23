@@ -1,4 +1,4 @@
-import {DashboardRender} from './DashboardRender.js';
+import {DashboardRender} from '../Class/DashboardRender.js';
 
 const main = document.querySelector('main');
 

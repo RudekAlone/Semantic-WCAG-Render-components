@@ -1,4 +1,4 @@
-import { RenderElements } from "./RenderElements.js";
+import { RenderElements } from "./Class/RenderElements.js";
 
 const main = document.querySelector("main");
 

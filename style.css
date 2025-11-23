@@ -1017,10 +1017,11 @@ section#dashboard nav button:not(.tab-button):hover {
 }
 
 #user-management-page > section {
-  display: flex;
-  justify-content: space-around;
-  gap: 10px;
-  padding: 10px;
+    display: flex;
+    justify-content: space-around;
+    gap: 10px;
+    padding: 10px;
+    align-items: flex-start;
 }
 
 @media (max-width: 890px) {
@@ -1529,6 +1530,9 @@ section#dashboard nav button:not(.tab-button):hover {
   #tasks-page #tasks-hub-page {
     flex-direction: column;
     align-items: center;
+  }
+  #tasks-page #list-tasks-section {
+    width: 100%!important;
   }
 }
 
