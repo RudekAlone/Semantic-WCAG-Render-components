@@ -12,7 +12,9 @@ import {
 } from "./Dashboard/constants.js";
 
 // Dashboard Pages imports
-import {TasksPage} from "./Dashboard/TasksPage.js";
+import { TasksPage } from "./Dashboard/TasksPage.js";
+import { UsersPage } from "./Dashboard/UsersPage.js";
+import { ClassesPage } from "./Dashboard/ClassesPage.js";
 
 export class DashboardRender {
   static render(pages = []) {
@@ -61,9 +63,9 @@ export class DashboardRender {
     const PAGE_RENDERERS = {
       dashboard: () => this.renderDashboard(),
       tasks: () => TasksPage.render(),
-      students: () => DashboardRender.renderUserManagement(false),
-      classes: () => DashboardRender.renderClassesPage(),
-      users: () => DashboardRender.renderUserManagement(true),
+      students: () => UsersPage.render(false),
+      classes: () => ClassesPage.renderClassesPage(),
+      users: () => UsersPage.render(true),
       "manage-tasks": () => DashboardRender.renderTasksEditorManagement(),
     };
     const renderer = PAGE_RENDERERS[page.id];
@@ -83,161 +85,7 @@ export class DashboardRender {
     return dashboard;
   }
 
-  static renderUserManagement(isAdmin = true) {
-    const userManagement = document.createElement("section");
-    userManagement.id = "user-management-page";
-
-    const title = document.createElement("h2");
-    title.textContent = "Zarządzanie użytkownikami";
-    userManagement.appendChild(title);
-
-    const content = document.createElement("section");
-    if (isAdmin) {
-      const userFormElements = [
-        {
-          label: "Imię",
-          name: "name",
-          id: "name-input",
-          type: "text",
-          role: "textbox",
-          required: true,
-        },
-        {
-          label: "Drugie imię",
-          name: "middleName",
-          id: "middle-name-input",
-          type: "text",
-          role: "textbox",
-          required: false,
-        },
-        {
-          label: "Nazwisko",
-          name: "lastName",
-          id: "last-name-input",
-          type: "text",
-          role: "textbox",
-          required: true,
-        },
-        {
-          selectInputOptions: true,
-          label: "Rola konta",
-          options: ROLE_OPTIONS,
-          name: "accountRole",
-          id: "account-role",
-          required: true,
-          layout: "row",
-        },
-        {
-          selectInputOptions: true,
-          label: "Przypisana klasa",
-          options: CLASS_OPTIONS,
-          name: "assignedClass",
-          id: "assignedClass",
-          required: true,
-          layout: "row",
-        },
-      ];
-
-      const form = RenderElements.renderForm(
-        userFormElements,
-        "Dodaj użytkownika",
-        (formData) => {
-          console.log("Dodano użytkownika:", Object.fromEntries(formData));
-        },
-        "column"
-      );
-
-      const details = RenderElements.renderDetailsSummary(
-        "Dodawanie nowego użytkownika",
-        form
-      );
-      content.appendChild(details);
-
-      if (window.innerWidth > 600) {
-        details.open = true;
-      }
-    }
-    const sectionOptionsLoad = document.createElement("section");
-    sectionOptionsLoad.id = "user-list-section";
-
-    const optionsLoad = isAdmin
-      ? LOAD_USER_OPTIONS_ADMIN
-      : LOAD_USER_OPTIONS_NON_ADMIN;
-
-    const data = USERS_DATA;
-
-    const selectLoad = RenderElements.selectInputOptions(
-      "Wybierz użytkowników do załadowania",
-      optionsLoad,
-      "loadUsers",
-      "load-users",
-      true,
-      "row"
-    );
-    sectionOptionsLoad.appendChild(selectLoad);
-    selectLoad.appendChild(
-      RenderElements.renderButton(
-        "Załaduj tabelę",
-        "secondary",
-        "button",
-        () => {
-          this.loadUserDataTable(data, isAdmin, sectionOptionsLoad);
-        }
-      )
-    );
-    selectLoad.classList.add("mr-10");
-    content.appendChild(sectionOptionsLoad);
-
-    userManagement.appendChild(content);
-    return userManagement;
-  }
-
-  static loadUserDataTable(data, isAdmin, parentSection) {
-    const headers = [
-      "ID",
-      "Imię",
-      "Drugie imię",
-      "Nazwisko",
-      "Login",
-      "Rola",
-      "Reset hasła",
-    ];
-    console.log(data, headers);
-    data.forEach((row) => {
-      if (row.length === headers.length) {
-        row.pop();
-      }
-      if (row[5].includes("Uczeń") || row[5].includes("Nauczyciel")) {
-        row.push({
-          type: "button",
-          label: "Resetuj hasło",
-          buttonStyle: "tertiary",
-        });
-      } else if (isAdmin) {
-        row.push({
-          type: "button",
-          label: "Resetuj hasło",
-          buttonStyle: "quaternary",
-        });
-      } else {
-        row.push("Brak uprawnień");
-      }
-    });
-
-    if (isAdmin) {
-    }
-    const userListTable = RenderElements.renderResponsiveTable(
-      data,
-      headers,
-      false
-    );
-
-    const sectionTable = document.createElement("section");
-    sectionTable.id = "user-list-table-section";
-    sectionTable.appendChild(userListTable);
-    parentSection.querySelector(".table-container")?.remove();
-    parentSection.appendChild(sectionTable);
-  }
+ 
 
   static renderTasksEditorManagement() {
     const tasksManagement = document.createElement("section");
@@ -613,114 +461,5 @@ export class DashboardRender {
     return tasksListTable;
   }
 
-  static renderClassesPage() {
-    const classesPage = document.createElement("section");
-    classesPage.id = "classes-page";
-
-    const title = document.createElement("h2");
-    title.textContent = "Zarządzanie klasami";
-    classesPage.appendChild(title);
-
-    const content = document.createElement("section");
-
-    const classElements = [
-      {
-        label: "Nazwa klasy",
-        name: "className",
-        id: "class-name-input",
-        type: "text",
-        role: "textbox",
-        required: true,
-      },
-      {
-        label: "Rok szkolny",
-        name: "schoolYear",
-        id: "school-year-input",
-        type: "number",
-        role: "textbox",
-        required: true,
-      },
-    ];
-
-    const addNewClassForm = RenderElements.renderForm(
-      classElements,
-      "Dodaj nową klasę",
-      (e) => {
-        console.log("Dodano klasę:", e);
-      },
-      "row"
-    );
-
-    content.appendChild(addNewClassForm);
-    classesPage.appendChild(content);
-
-    addNewClassForm.querySelector("#school-year-input").value =
-      new Date().getFullYear();
-
-    const tableClassesData = [
-      [1, "1A", 2024, 25],
-      [2, "2B", 2024, 22],
-      [3, "3C", 2024, 20],
-    ];
-
-    tableClassesData.forEach((row) => {
-      row[1] = {
-        type: "text",
-        value: row[1],
-      };
-      row[2] = {
-        type: "number",
-        value: row[2],
-      };
-      row.push({
-        type: "button",
-        label: "Zastosuj zmiany",
-        buttonStyle: "tertiary",
-      });
-      row.push({
-        type: "button",
-        label: "Usuń klasę",
-        buttonStyle: "quaternary",
-      });
-    });
-
-    const classesTable = RenderElements.renderResponsiveTable(
-      tableClassesData,
-      ["ID", "Nazwa klasy", "Rok szkolny", "Liczba uczniów", "Zarządzaj"],
-      false,
-      this.rebrandTableClasses.bind(this)
-    );
-
-    content.appendChild(classesTable);
-
-    return classesPage;
-  }
-
-  static rebrandTableClasses(classesTable) {
-    const headers = classesTable.querySelectorAll("th");
-    headers[headers.length - 1].colSpan = 2;
-
-    classesTable.querySelectorAll("tr").forEach((tr) => {
-      const applyButton = tr.querySelector("button.bg-tertiary");
-      if (!applyButton) return;
-
-      applyButton.disabled = true;
-      tr.children[1].addEventListener("input", (e) => {
-        applyButton.disabled = false;
-      });
-
-      tr.children[2].addEventListener("input", (e) => {
-        applyButton.disabled = false;
-      });
-      const deleteButton = tr.querySelector("button.bg-quaternary");
-      if (!deleteButton) return;
-
-      deleteButton.disabled = false;
-      deleteButton.addEventListener("click", (e) => {
-        console.log("Usuń klasę:", tr.children[1].textContent);
-      });
-    });
-  }
-
-  
+ 
 }

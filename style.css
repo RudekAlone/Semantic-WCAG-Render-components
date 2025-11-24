@@ -56,34 +56,26 @@
   --hint-danger-border-color: #f44336;
 }
 
-/* Pionowy i poziomy pasek – grubość */
+
 ::-webkit-scrollbar {
-  width: 6px; /* pionowy */
-  height: 5px; /* poziomy */
+  width: 6px;
+  height: 5px; 
 }
 
-/* Tor (track) */
+
 ::-webkit-scrollbar-track {
-  background: rgba(30, 30, 30, 0.6); /* ciemny, półprzezroczysty */
+  background: rgba(30, 30, 30, 0.6); 
   border-radius: 6px;
 }
 
-/* Uchwyt (thumb) */
 ::-webkit-scrollbar-thumb {
-  background: rgba(180, 180, 180, 0.4); /* jasny, półprzezroczysty */
+  background: rgba(180, 180, 180, 0.4); 
   border-radius: 6px;
-  border: 1px solid rgba(0, 0, 0, 0.3); /* lekki kontrast jak w FF */
+  border: 1px solid rgba(0, 0, 0, 0.3);
 }
 
-/* Hover – delikatne rozjaśnienie */
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(200, 200, 200, 0.6);
-}
 
-/* Opcjonalnie: aktywny uchwyt przy kliknięciu */
-::-webkit-scrollbar-thumb:active {
-  background: rgba(220, 220, 220, 0.8);
-}
+
 header {
   width: 100%;
   background-color: var(--bg-layer-1);
@@ -1314,7 +1306,7 @@ section#dashboard nav button:not(.tab-button):hover {
 }
 .preview-markdown kbd.os-ui:hover {
   animation: smoke-pulse 1s ease-in-out infinite;
-  border-color: none !important;
+  border-color: transparent !important;
 }
 
 .preview-markdown .tab-button {

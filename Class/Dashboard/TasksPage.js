@@ -1,19 +1,21 @@
 import { RenderElements } from "../RenderElements.js";
 import { RenderMarkdown } from "../RenderMarkdown.js";
 
+import { SUBJECT_NAMES, STATUS_MAP, TASKS_DATA } from "./constants.js";
 
-import {
-  SUBJECT_NAMES,
-  STATUS_MAP,
-} from "./constants.js";
-
+/**
+ * Klasa renderująca stronę zadań studenta.
+ * Podział na listę zadań wg statusu (trwające, ukończone, przeterminowane)
+ * oraz podgląd treści zadania w Markdown.
+ */
 export class TasksPage {
-    static render() {
-    // Implementacja strony zarządzania zadaniami
-    // Podział na dwie sekcje: lista zadań i podgląd wybranego zadania ładowane z raw.githubusercontent.com markdown
-    // lewa sekcja to podzielone na przedmioty listy zadań oznaczone ikonami stanu (🟢, 🟡, 🔴) i małym opisem stanu
-    // Przedmioty to: ASO, SO, BD, PAI
-
+  /**
+   * Renderuje całą stronę zadań.
+   *
+   * @static
+   * @returns {HTMLElement} główny element sekcji zadań
+   */
+  static render() {
     const tasksPage = document.createElement("section");
     tasksPage.id = "tasks-page";
 
@@ -39,72 +41,15 @@ export class TasksPage {
     tasksPage.appendChild(navSubjectSection);
     tasksPage.appendChild(tasksHubSection);
 
-    const tasks = [
-      {
-        id: 1,
-        name: "Konfiguracja Domeny Active Directory",
-        subject: "aso",
-        status: "1",
-        link: "https://raw.githubusercontent.com/Edu-Koala-V/task-markdown/refs/heads/main/task10.md",
-        deadline: "2024-05-20",
-      },
-      {
-        id: 2,
-        name: "Sortowanie i filtrowanie danych w SQL",
-        subject: "bd",
-        status: "1",
-        link: "https://raw.githubusercontent.com/Edu-Koala-V/task-markdown/refs/heads/main/task7.md",
-        deadline: "2024-06-15",
-      },
-      {
-        id: 3,
-        name: "Aliasy nazw domenowych DNS",
-        subject: "aso",
-        status: "-1",
-        link: "https://raw.githubusercontent.com/Edu-Koala-V/task-markdown/refs/heads/main/task8.md",
-        deadline: "2026-05-10",
-      },
-      {
-        id: 4,
-        name: "Zarządzanie Użytkownikami w Domenie",
-        subject: "aso",
-        status: "0",
-        link: "https://raw.githubusercontent.com/Edu-Koala-V/task-markdown/refs/heads/main/task9.md",
-        deadline: "2026-05-25",
-      },
-      {
-        id: 5,
-        name: "Tworzenie bazy danych MySQL",
-        subject: "bd",
-        status: "0",
-        link: "https://raw.githubusercontent.com/Edu-Koala-V/task-markdown/refs/heads/main/task4.md",
-        deadline: "2026-06-15",
-      },
-    ];
+    const tasks = TASKS_DATA;
 
     // Wybór przedmiotu jeżeli jest ich więcej niż jeden
     const subjects = [...new Set(tasks.map((task) => task.subject))];
     if (subjects.length > 1) {
-      const subjectOptions = subjects.map((subject) => {
-        let subjectName = "";
-        switch (subject) {
-          case "aso":
-            subjectName = "Administracja Systemami Operacyjnymi";
-            break;
-          case "so":
-            subjectName = "Systemy Operacyjne";
-            break;
-          case "bd":
-            subjectName = "Bazy Danych";
-            break;
-          case "pai":
-            subjectName = "Programowanie Aplikacji Internetowych";
-            break;
-          default:
-            subjectName = subject;
-        }
-        return { value: subject, text: subjectName };
-      });
+      const subjectOptions = subjects.map((s) => ({
+        value: s,
+        text: SUBJECT_NAMES[s] || s,
+      }));
 
       subjectOptions.forEach((option) => {
         const button = RenderElements.renderButton(
@@ -158,128 +103,49 @@ export class TasksPage {
     return tasksPage;
   }
 
+  /**
+   * Renderuje listę zadań pogrupowaną wg statusu.
+   *
+   * @static
+   * @param {Array} tasks Tablica obiektów zadań
+   * @param {HTMLElement} previewSection Sekcja podglądu Markdown
+   * @returns {HTMLElement} kontener z sekcjami zadań
+   */
   static renderTaskListElements(tasks, previewSection) {
-    let ongoingTasks = [];
-    let completedTasks = [];
-    let overdueTasks = [];
-
+    const grouped = { ongoing: [], completed: [], overdue: [] };
     tasks.forEach((task) => {
-      if (task.status === "0") {
-        ongoingTasks.push(task);
-      } else if (task.status === "-1") {
-        overdueTasks.push(task);
-      } else {
-        completedTasks.push(task);
-      }
+      const status = STATUS_MAP[task.status]?.target || "completed";
+      grouped[status].push(task);
     });
-
-    const ulOngoing = document.createElement("ul");
-    ongoingTasks.forEach((task) => {
-      const li = document.createElement("li");
-      const taskName = document.createElement("p");
-      taskName.textContent = task.name;
-      li.appendChild(taskName);
-      const taskDeadline = document.createElement("p");
-      const smallDeadline = document.createElement("small");
-      smallDeadline.textContent = ` Termin: ${task.deadline}`;
-      taskDeadline.appendChild(smallDeadline);
-      li.appendChild(taskDeadline);
-      li.addEventListener("click", () => {
-        fetch(task.link)
-          .then((response) => response.text())
-          .then((data) => {
-            previewSection.innerHTML = "";
-            RenderMarkdown.renderMarkdownPreview(previewSection, data);
-          });
-      });
-      ulOngoing.appendChild(li);
-    });
-
-    const ongoingDetail = RenderElements.renderDetailsSummary(
-      "🟡 Zadania trwające",
-      ulOngoing
-    );
-    ongoingDetail.open = true;
-    ongoingDetail.appendChild(ulOngoing);
-
-    const ulCompleted = document.createElement("ul");
-    completedTasks.forEach((task) => {
-      const li = document.createElement("li");
-      const taskName = document.createElement("p");
-      taskName.textContent = task.name;
-      li.appendChild(taskName);
-      const taskDeadline = document.createElement("p");
-      const smallDeadline = document.createElement("small");
-      smallDeadline.textContent = ` Termin: ${task.deadline}`;
-      taskDeadline.appendChild(smallDeadline);
-      li.appendChild(taskDeadline);
-      li.addEventListener("click", () => {
-        fetch(task.link)
-          .then((response) => response.text())
-          .then((data) => {
-            previewSection.innerHTML = "";
-            RenderMarkdown.renderMarkdownPreview(previewSection, data);
-          });
-      });
-      ulCompleted.appendChild(li);
-    });
-    const completedDetail = RenderElements.renderDetailsSummary(
-      "🟢 Zadania ukończone",
-      ulCompleted
-    );
-    completedDetail.appendChild(ulCompleted);
-
-    const ulOverdue = document.createElement("ul");
-    overdueTasks.forEach((task) => {
-      const li = document.createElement("li");
-
-      const taskName = document.createElement("p");
-      taskName.textContent = task.name;
-      li.appendChild(taskName);
-      const taskDeadline = document.createElement("p");
-      const smallDeadline = document.createElement("small");
-      smallDeadline.textContent = ` Termin: ${task.deadline}`;
-      taskDeadline.appendChild(smallDeadline);
-      li.appendChild(taskDeadline);
-
-      li.addEventListener("click", () => {
-        fetch(task.link)
-          .then((response) => response.text())
-          .then((data) => {
-            previewSection.innerHTML = "";
-            RenderMarkdown.renderMarkdownPreview(previewSection, data);
-          });
-      });
-      ulOverdue.appendChild(li);
-    });
-    const overdueDetail = RenderElements.renderDetailsSummary(
-      "🔴 Zadania przeterminowane",
-      ulOverdue
-    );
-    overdueDetail.appendChild(ulOverdue);
 
     const container = document.createElement("div");
-    if (ongoingTasks.length > 0) {
-      container.appendChild(ongoingDetail);
-    }
-    if (overdueTasks.length > 0) {
-      container.appendChild(overdueDetail);
-    }
-    if (completedTasks.length > 0) {
-      container.appendChild(completedDetail);
-    }
+    Object.entries(grouped).forEach(([key, list]) => {
+      if (list.length > 0) {
+        const label = STATUS_MAP[list[0].status]?.label || "Zadania";
+        container.appendChild(this.renderTaskList(list, previewSection, label));
+      }
+    });
     return container;
   }
 
+  /**
+   * Generuje sekcję z listą zadań i obsługą kliknięcia (ładowanie Markdown do podglądu).
+   *
+   * @static
+   * @param {Array} tasks Tablica obiektów zadań
+   * @param {HTMLElement} previewSection Sekcja podglądu Markdown
+   * @param {string} label Etykieta sekcji (np. "🟡 Zadania trwające")
+   * @returns {HTMLElement} element <details> z listą zadań
+   */
   static renderTaskList(tasks, previewSection, label) {
-  const ul = document.createElement("ul");
-  tasks.forEach((task) => {
-    const li = document.createElement("li");
-    li.innerHTML = `
-      <p>${task.name}</p>
-      <p><small>Termin: ${task.deadline}</small></p>
-    `;
-    li.addEventListener("click", () => {
+    const ul = document.createElement("ul");
+
+    // delegacja zdarzeń zamiast listenera na każdym li
+    ul.addEventListener("click", (e) => {
+      const li = e.target.closest("li");
+      if (!li) return;
+      const index = Array.from(ul.children).indexOf(li);
+      const task = tasks[index];
       fetch(task.link)
         .then((res) => res.text())
         .then((data) => {
@@ -287,13 +153,17 @@ export class TasksPage {
           RenderMarkdown.renderMarkdownPreview(previewSection, data);
         });
     });
-    ul.appendChild(li);
-  });
 
-  const detail = RenderElements.renderDetailsSummary(label, ul);
-  detail.appendChild(ul);
-  return detail;
-}
+    tasks.forEach((task) => {
+      const li = document.createElement("li");
+      li.innerHTML = `
+        <p>${task.name}</p>
+        <p><small>Termin: ${task.deadline}</small></p>
+      `;
+      ul.appendChild(li);
+    });
 
-
+    const detail = RenderElements.renderDetailsSummary(label, ul);
+    return detail;
+  }
 }
