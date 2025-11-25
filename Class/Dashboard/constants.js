@@ -106,3 +106,24 @@ export const TASKS_DATA = [
     deadline: "2026-06-15",
   },
 ];
+
+export const TASK_STATUS = [
+  {
+    userNumber: 1,
+    userName: "Jan",
+    userLastName: "Kowalski",
+    status: true
+  },
+  {
+    userNumber: 2,
+    userName: "Katarzyna",
+    userLastName: "Kowalczyk",
+    status: false
+  },
+  {
+    userNumber: 3,
+    userName: "Tomasz",
+    userLastName: "Dąbrowski",
+    status: true
+  },
+];

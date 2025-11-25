@@ -1582,3 +1582,38 @@ section#dashboard nav button:not(.tab-button):hover {
     border-bottom-left-radius: 40px;
     text-align: center;
 }
+
+#tasks-status-page{
+  background-color: var(--bg-layer-2);
+  padding: 20px;
+  border-radius: 5px;
+  width: 100%;
+}
+
+#tasks-status-content-area {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  margin-top: 20px;
+}
+#tasks-status-content-area ul {
+  list-style-type: none;
+  padding-left: 0;
+}
+#tasks-status-content-area ul li {
+  margin-bottom: 8px;
+  color: var(--text-color);
+  border-bottom: 1px solid var(--bg-layer-4);
+}
+#tasks-status-content-area ul li:hover {
+  color: var(--link-hover-color);
+  cursor: pointer;
+}
+#tasks-status-content-area .status-section {
+  flex-grow: 1;
+  background-color: var(--bg-layer-3);
+  padding: 15px;
+  border-radius: 5px;
+  max-height: 80vh;
+  overflow-y: auto;
+}

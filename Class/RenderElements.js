@@ -132,7 +132,7 @@ export class RenderElements {
     } else if (type === "file" && acceptFiles.length > 0) {
       input.setAttribute("accept", acceptFiles.join(","));
     } else if (type === "checkbox" || type === "radio") {
-      input.checked = value === "true" ? true : false;
+      input.checked = value === "true" || value === true ? true : false;
     } else if (value) {
       input.setAttribute("value", value);
     }
