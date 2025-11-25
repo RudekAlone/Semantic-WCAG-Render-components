@@ -12,6 +12,8 @@ export const CLASS_OPTIONS = [
 ];
 
 export const SUBJECT_OPTIONS = [
+  { value: "", text: "Wybierz przedmiot" },
+  { value: "all", text: "Wszystkie przedmioty" },
   { value: "aso", text: "Administracja Systemami Operacyjnymi" },
   { value: "so", text: "Systemy Operacyjne" },
   { value: "bd", text: "Bazy Danych" },
@@ -57,50 +59,50 @@ export const SUBJECT_NAMES = {
 };
 
 export const STATUS_MAP = {
-  "0": { label: "🟡 Zadania trwające", target: "ongoing" },
-  "1": { label: "🟢 Zadania ukończone", target: "completed" },
+  0: { label: "🟡 Zadania trwające", target: "ongoing" },
+  1: { label: "🟢 Zadania ukończone", target: "completed" },
   "-1": { label: "🔴 Zadania przeterminowane", target: "overdue" },
 };
 
 export const TASKS_DATA = [
-      {
-        id: 1,
-        name: "Konfiguracja Domeny Active Directory",
-        subject: "aso",
-        status: "1",
-        link: "https://raw.githubusercontent.com/Edu-Koala-V/task-markdown/refs/heads/main/task10.md",
-        deadline: "2024-05-20",
-      },
-      {
-        id: 2,
-        name: "Sortowanie i filtrowanie danych w SQL",
-        subject: "bd",
-        status: "1",
-        link: "https://raw.githubusercontent.com/Edu-Koala-V/task-markdown/refs/heads/main/task7.md",
-        deadline: "2024-06-15",
-      },
-      {
-        id: 3,
-        name: "Aliasy nazw domenowych DNS",
-        subject: "aso",
-        status: "-1",
-        link: "https://raw.githubusercontent.com/Edu-Koala-V/task-markdown/refs/heads/main/task8.md",
-        deadline: "2026-05-10",
-      },
-      {
-        id: 4,
-        name: "Zarządzanie Użytkownikami w Domenie",
-        subject: "aso",
-        status: "0",
-        link: "https://raw.githubusercontent.com/Edu-Koala-V/task-markdown/refs/heads/main/task9.md",
-        deadline: "2026-05-25",
-      },
-      {
-        id: 5,
-        name: "Tworzenie bazy danych MySQL",
-        subject: "bd",
-        status: "0",
-        link: "https://raw.githubusercontent.com/Edu-Koala-V/task-markdown/refs/heads/main/task4.md",
-        deadline: "2026-06-15",
-      },
-    ];
+  {
+    id: 1,
+    name: "Konfiguracja Domeny Active Directory",
+    subject: "aso",
+    status: "1",
+    link: "https://raw.githubusercontent.com/Edu-Koala-V/task-markdown/refs/heads/main/task10.md",
+    deadline: "2024-05-20",
+  },
+  {
+    id: 2,
+    name: "Sortowanie i filtrowanie danych w SQL",
+    subject: "bd",
+    status: "1",
+    link: "https://raw.githubusercontent.com/Edu-Koala-V/task-markdown/refs/heads/main/task7.md",
+    deadline: "2024-06-15",
+  },
+  {
+    id: 3,
+    name: "Aliasy nazw domenowych DNS",
+    subject: "aso",
+    status: "-1",
+    link: "https://raw.githubusercontent.com/Edu-Koala-V/task-markdown/refs/heads/main/task8.md",
+    deadline: "2026-05-10",
+  },
+  {
+    id: 4,
+    name: "Zarządzanie Użytkownikami w Domenie",
+    subject: "aso",
+    status: "0",
+    link: "https://raw.githubusercontent.com/Edu-Koala-V/task-markdown/refs/heads/main/task9.md",
+    deadline: "2026-05-25",
+  },
+  {
+    id: 5,
+    name: "Tworzenie bazy danych MySQL",
+    subject: "bd",
+    status: "0",
+    link: "https://raw.githubusercontent.com/Edu-Koala-V/task-markdown/refs/heads/main/task4.md",
+    deadline: "2026-06-15",
+  },
+];

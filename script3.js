@@ -21,7 +21,7 @@ const pages = [
     },
     {
         name: 'Zalicz zadanie',
-        id: 'task-complete',
+        id: 'tasks-status',
         icon: '✅'
     },
     {
@@ -66,5 +66,5 @@ const pages = [
 main.appendChild(DashboardRender.render(pages));
 
 setTimeout(() => {
-    document.querySelector('#nav-users').click();
+    document.querySelector('#nav-tasks-status').click();
 }, 100);

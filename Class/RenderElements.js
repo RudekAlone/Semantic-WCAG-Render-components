@@ -579,7 +579,6 @@ export class RenderElements {
     direction = "row"
   ) {
     const select = document.createElement("select");
-
     options.forEach((optionData) => {
       const option = document.createElement("option");
       option.value = optionData.value ?? "";
