@@ -1,6 +1,16 @@
-import { RenderElements } from "./RenderElements.js";
+import { RenderButton } from "./Render/RenderButton.js";
+import { RenderInput } from "./Render/RenderInput.js";
+import { RenderDetails } from "./Render/RenderDetails.js";
 
 export class RenderQuiz {
+  /**
+   * Dostosowuje układ quizu do urządzeń mobilnych.
+   * Zmienia klasy CSS w zależności od szerokości okna przeglądarki.
+   *
+   * @param {HTMLElement} quizContainer - Główny kontener quizu.
+   * @param {HTMLElement} quizSectionsLeft - Lewa sekcja quizu (pytania).
+   * @param {HTMLElement} quizSectionsRight - Prawa sekcja quizu (wyjaśnienia).
+   */
   static responseQuizMobile(
     quizContainer,
     quizSectionsLeft,
@@ -23,6 +33,13 @@ export class RenderQuiz {
     }
   }
 
+  /**
+   * Renderuje główny widok quizu.
+   * Tworzy strukturę HTML dla quizu, w tym sekcje pytań i wyjaśnień.
+   *
+   * @param {Array<Object>} [questionData=null] - Tablica obiektów z pytaniami.
+   * @returns {HTMLElement} Kontener z wyrenderowanym quizem.
+   */
   static renderQuiz(questionData = null) {
     const quizContainer = document.createElement("section");
     quizContainer.classList.add(
@@ -121,6 +138,13 @@ export class RenderQuiz {
     return quizContainer;
   }
 
+  /**
+   * Obsługuje logikę sprawdzania poprawnej odpowiedzi.
+   * Wyświetla komunikat o sukcesie lub błędzie oraz blokuje możliwość zmiany odpowiedzi.
+   *
+   * @param {Object} questionData - Dane aktualnego pytania.
+   * @returns {boolean} Zwraca true, jeśli odpowiedź jest poprawna, w przeciwnym razie false.
+   */
   static handleCorrectAnswer(questionData) {
     const selectedOption = document.querySelector(
       '.quiz-sections input[type="radio"]:checked'
@@ -160,6 +184,14 @@ export class RenderQuiz {
     return isCorrect;
   }
 
+  /**
+   * Zarządza przepływem quizu (nawigacja między pytaniami).
+   * Obsługuje przycisk "Sprawdź odpowiedź" / "Następne pytanie".
+   *
+   * @param {Array<Object>} questions - Lista wszystkich pytań.
+   * @param {HTMLElement} quizSectionsLeft - Kontener na pytania.
+   * @param {HTMLElement} quizSectionsRight - Kontener na wyjaśnienia/przyciski.
+   */
   static quizManager(questions, quizSectionsLeft, quizSectionsRight) {
     let incorrectAnswersIds = [];
     let currentQuestionIndex = 0;
@@ -170,7 +202,7 @@ export class RenderQuiz {
       currentQuestionIndex
     );
 
-    const nextButton = RenderElements.renderButton(
+    const nextButton = RenderButton.renderButton(
       "Sprawdź odpowiedź",
       "primary",
       "button",
@@ -235,6 +267,12 @@ export class RenderQuiz {
     quizSectionsRight.insertAdjacentElement("afterbegin", nextButton);
   }
 
+  /**
+   * Sprawdza, czy użytkownik zaznaczył jakąkolwiek odpowiedź.
+   * Wyświetla alert, jeśli żadna opcja nie została wybrana.
+   *
+   * @returns {boolean} True jeśli odpowiedź została wybrana, false w przeciwnym razie.
+   */
   static validateCheckAnswer() {
     const selectedOption = document.querySelector(
       '.quiz-sections input[type="radio"]:checked'
@@ -246,6 +284,14 @@ export class RenderQuiz {
     return true;
   }
 
+  /**
+   * Ładuje pojedyncze pytanie do kontenera.
+   * Renderuje treść pytania, obrazek (jeśli istnieje) oraz opcje odpowiedzi.
+   *
+   * @param {HTMLElement} container - Kontener, do którego ma trafić pytanie.
+   * @param {Object} questionData - Dane pytania.
+   * @param {number} index - Indeks pytania.
+   */
   static loadQuestion(container, questionData, index) {
     container.innerHTML = "";
 
@@ -282,7 +328,7 @@ export class RenderQuiz {
       const name = `quiz-option-${index}`;
 
       // Twój RenderElements.renderInput zwraca wrapper z inputem
-      const inputWrapper = RenderElements.renderInput(
+      const inputWrapper = RenderInput.renderInput(
         option,
         name,
         inputId,
@@ -307,6 +353,13 @@ export class RenderQuiz {
     });
   }
 
+  /**
+   * Wyświetla ekran końcowy quizu z podsumowaniem wyników.
+   * Pokazuje listę błędnych odpowiedzi wraz z poprawnymi rozwiązaniami i wyjaśnieniami.
+   *
+   * @param {Array<string>} incorrectAnswersIds - Tablica ID pytań, na które udzielono błędnej odpowiedzi.
+   * @param {Array<Object>} questions - Lista wszystkich pytań.
+   */
   static endQuizPage(incorrectAnswersIds, questions) {
     const quizContainer = document.querySelector(".quiz-container");
     quizContainer.innerHTML = "";
@@ -390,7 +443,7 @@ export class RenderQuiz {
         explanationText.textContent = question.explanation;
         detailsContainer.appendChild(explanationText);
 
-        const details = RenderElements.renderDetailsSummary(
+        const details = RenderDetails.renderDetailsSummary(
           "Wyjaśnienie",
           detailsContainer
         );

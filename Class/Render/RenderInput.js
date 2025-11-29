@@ -1,0 +1,480 @@
+import { RenderUtils } from "./RenderUtils.js";
+
+/**
+ * Klasa odpowiedzialna za renderowanie pól formularza (input, textarea, select, file).
+ */
+export class RenderInput {
+  /**
+   * Tworzy i zwraca element <input> na podstawie przekazanych parametrów.
+   * @param {string|HTMLElement} labelText - Tekst etykiety lub element HTML dla etykiety.
+   * @param {string} name - Atrybut name dla elementu input.
+   * @param {string|number} id - Atrybut id dla elementu input.
+   * @param {string} [type="text"] - Typ inputu (np. "text", "email", "number", "password", "checkbox", "file", "color", "range").
+   * @param {string} [role="textbox"] - Dodatkowa informacja/rola używana przez WCAG (np. "textbox", "checkbox").
+   * @param {boolean} [required=true] - Czy pole jest wymagane.
+   * @param {string} [direction="row"] - Układ etykiety i inputa zapisywany w atrybucie data-layout (np. "row", "row-center", "column" lub "column-center").
+   * @param {string} [value=""] - Wstępna wartość inputa jeżeli "true" to zastosuje atrybut checked.
+   * @param {Array<string>} [acceptFiles=[]] - Tablica typów plików akceptowanych w przypadku typu "file".
+   * @param {string} [placeholder=""] - Tekst zastępczy (placeholder).
+   * @return {HTMLDivElement} Utworzony element <div> zawierający etykietę i input.
+   *
+   * @example
+   * ["application/pdf", "image/*"] // dla plików akceptowanych w input type="file"
+   */
+  static renderInput(
+    labelText,
+    name,
+    id,
+    type = "text",
+    role = "textbox",
+    required = true,
+    direction = "row",
+    value = "",
+    acceptFiles = [],
+    placeholder = ""
+  ) {
+    const wrapper = document.createElement("div");
+    wrapper.setAttribute("data-ui", "input-wrapper");
+    wrapper.setAttribute("data-layout", direction);
+
+    let label;
+    if (typeof labelText === "string") {
+      label = document.createElement("label");
+      label.textContent = labelText;
+      label.setAttribute("for", id);
+      label.setAttribute("data-ui", "input-label");
+      wrapper.appendChild(label);
+    } else if (labelText instanceof HTMLElement) {
+      label = labelText;
+      label.setAttribute("for", id);
+      label.setAttribute("data-ui", "input-label");
+      wrapper.appendChild(label);
+    }
+
+    const input = document.createElement("input");
+    input.setAttribute("type", type);
+    input.setAttribute("name", name);
+    input.setAttribute("id", id);
+    input.setAttribute("data-ui", "input");
+
+    // WCAG + semantyka
+    input.setAttribute("aria-required", required);
+
+    if (type !== "radio") {
+      input.setAttribute("tabindex", "0");
+    }
+
+    // Typowe wartości
+    if (type === "color") {
+      input.setAttribute("value", value === "" ? "#5d00e7" : value);
+      label.setAttribute("for", id);
+      label.addEventListener("click", () => {
+        input.focus();
+      });
+      label.addEventListener("mouseover", (event) => {
+        input.classList.add("hovered");
+      });
+      label.addEventListener("mouseout", (event) => {
+        input.classList.remove("hovered");
+      });
+    } else if (type === "file" && acceptFiles.length > 0) {
+      input.setAttribute("accept", acceptFiles.join(","));
+    } else if (type === "checkbox" || type === "radio") {
+      input.checked = value === "true" || value === true ? true : false;
+    } else if (value) {
+      input.setAttribute("value", value);
+    }
+
+    // WCAG fix dla checkbox/radio - widoczny fokus przy użyciu klawiatury i wykryty na dziecku przez myszkę
+    (function () {
+      const setTabbing = () => document.body.classList.add("user-is-tabbing");
+      const unsetTabbing = () =>
+        document.body.classList.remove("user-is-tabbing");
+
+      window.addEventListener("keydown", (e) => {
+        if (e.key === "Tab") setTabbing();
+      });
+
+      window.addEventListener("mousedown", unsetTabbing);
+      window.addEventListener("touchstart", unsetTabbing);
+    })();
+
+    if (RenderUtils.isFirefox) {
+      input.classList.add("ff-input");
+    }
+
+    if (label.textContent == "") {
+      label.classList.add("sr-only");
+      label.textContent = "Wpisz wartość";
+      if (placeholder !== "") {
+        input.placeholder = placeholder;
+      }
+    }
+
+    if (RenderUtils.isFirefox && type === "number") {
+      input.setAttribute("inputmode", "numeric"); // podpowiedź dla mobile
+      input.setAttribute("pattern", "[0-9]*"); // podpowiedź dla mobile
+
+      input.addEventListener("keypress", (e) => {
+        if (!/[0-9]/.test(e.key)) {
+          e.preventDefault(); // blokuje wpisanie litery
+        }
+      });
+
+      const butonArrowUp = document.createElement("button");
+      butonArrowUp.classList.add("ff-number-arrow", "ff-number-arrow-up");
+      butonArrowUp.textContent = "▲";
+      butonArrowUp.addEventListener("click", () => {
+        input.stepUp();
+        input.dispatchEvent(new InputEvent("input", { bubbles: true }));
+      });
+      const butonArrowDown = document.createElement("button");
+      butonArrowDown.classList.add("ff-number-arrow", "ff-number-arrow-down");
+      butonArrowDown.textContent = "▼";
+      butonArrowDown.addEventListener("click", () => {
+        input.stepDown();
+        input.dispatchEvent(new InputEvent("input", { bubbles: true }));
+      });
+
+      const numericInput = document.createElement("div");
+      numericInput.classList.add("numeric-input");
+      numericInput.appendChild(input);
+
+      numericInput.appendChild(butonArrowUp);
+      numericInput.appendChild(butonArrowDown);
+      wrapper.appendChild(numericInput);
+    } else {
+      wrapper.appendChild(input);
+    }
+
+    return wrapper;
+  }
+
+  /**
+   * Tworzy i zwraca element <div> zawierający etykietę i pole textarea na podstawie przekazanych parametrów.
+   *
+   * @param {string} labelText Tekst etykiety
+   * @param {string} name
+   * @param {string} id
+   * @param {int} rows ilość wierszy, domyślnie 4
+   * @param {int} cols ilość kolumn znakowych, domyślnie 50
+   * @param {boolean} required Czy pole jest wymagane
+   * @returns Element <div> zawierający etykietę i pole textarea
+   */
+  static renderTextArea(
+    labelText,
+    name,
+    id,
+    rows = 4,
+    cols = 50,
+    required = true
+  ) {
+    const wrapper = document.createElement("div");
+    wrapper.setAttribute("data-ui", "textarea-wrapper");
+
+    const label = document.createElement("label");
+    label.textContent = labelText;
+    label.setAttribute("for", id);
+    label.setAttribute("data-ui", "textarea-label");
+    wrapper.appendChild(label);
+
+    const textArea = document.createElement("textarea");
+    textArea.setAttribute("name", name);
+    textArea.setAttribute("id", id);
+    textArea.setAttribute("rows", rows);
+    textArea.setAttribute("cols", cols);
+    textArea.setAttribute("autocomplete", "on");
+    textArea.setAttribute("data-ui", "textarea");
+
+    // WCAG fix
+    textArea.setAttribute("aria-label", labelText);
+    textArea.setAttribute("aria-required", required);
+    textArea.setAttribute("role", "textbox");
+    textArea.setAttribute("tabindex", "0");
+
+    wrapper.appendChild(textArea);
+    return wrapper;
+  }
+
+  /**
+   * Tworzy i zwraca element <select> z opcjami na podstawie przekazanej tablicy obiektów.
+   *
+   * @param {string} label - Etykieta pola.
+   * @param {Array<Object>} options Tablica obiektów opisujących opcje selecta. Każdy obiekt powinien zawierać:
+   * - {string} value - Wartość atrybutu value dla opcji
+   * - {string} text  - Tekst wyświetlany dla opcji
+   * @param {string} name Atrybut name dla elementu select
+   * @param {string|number} id Atrybut id dla elementu select
+   * @param {boolean} required Czy pole jest wymagane
+   * @param {string} direction Kierunek układu.
+   * @returns Element <select> z dodanymi opcjami
+   *
+   * @example
+   * [
+   * { value: "", text: "Wybierz opcję" },
+   * { value: "option1", text: "Opcja 1" },
+   * { value: "option2", text: "Opcja 2" },
+   * { value: "option3", text: "Opcja 3" },
+   * ]
+   */
+  static selectInputOptions(
+    label = "",
+    options = [],
+    name = "",
+    id = "",
+    required = true,
+    direction = "row"
+  ) {
+    const select = document.createElement("select");
+    options.forEach((optionData) => {
+      const option = document.createElement("option");
+      option.value = optionData.value ?? "";
+      option.textContent = optionData.text;
+      select.appendChild(option);
+    });
+
+    // Atrybuty semantyczne
+    if (name) select.setAttribute("name", name);
+    if (id) select.setAttribute("id", id);
+    select.setAttribute("autocomplete", "on");
+
+    // WCAG
+    select.setAttribute("role", "listbox");
+    select.setAttribute("tabindex", "0");
+    select.setAttribute("aria-label", "Wybierz opcję");
+    select.setAttribute("aria-required", required);
+
+    const labelElement = document.createElement("label");
+    labelElement.textContent = label;
+    labelElement.setAttribute("for", id);
+    labelElement.setAttribute("data-ui", "select-label");
+    const wrapper = document.createElement("div");
+    wrapper.setAttribute("data-ui", "input-wrapper");
+    wrapper.setAttribute("data-layout", direction);
+    wrapper.appendChild(labelElement);
+    wrapper.appendChild(select);
+
+    if (label == "") {
+      labelElement.classList.add("sr-only");
+
+      labelElement.textContent = "Wybierz opcję";
+    }
+
+    return wrapper;
+  }
+
+  /**
+   * Tworzy element input typu file z podglądem wybranego pliku.
+   * Obsługuje podgląd obrazów, audio, wideo oraz plików tekstowych.
+   *
+   * @param {string} labelText - Tekst etykiety dla pola wyboru pliku.
+   * @param {string} name - Atrybut name dla inputa.
+   * @param {string} id - Atrybut id dla inputa.
+   * @returns {HTMLDivElement} Kontener zawierający etykietę, input i obszar podglądu.
+   */
+  static renderFileInputWithPreview(labelText, name, id) {
+    const wrapper = document.createElement("div");
+    wrapper.classList.add("file-wrapper");
+
+    const label = document.createElement("label");
+    label.setAttribute("for", id);
+    label.classList.add(
+      "bg-secondary",
+      "pd-10",
+      "br-5",
+      "cursor-pointer",
+      "text-center"
+    );
+    label.textContent = labelText;
+    label.setAttribute("aria-label", labelText);
+    label.setAttribute("aria-required", "true");
+    label.setAttribute("role", "button");
+    label.setAttribute("tabindex", "0");
+    label.addEventListener("keydown", (e) => {
+      if (e.key === " " || e.key === "Enter") {
+        e.preventDefault();
+        document.getElementById(id).click();
+      }
+    });
+
+    const input = document.createElement("input");
+    input.type = "file";
+    input.name = name;
+    input.id = id;
+    input.classList.add("file-input");
+    input.setAttribute("aria-label", labelText);
+    input.setAttribute("aria-required", "false");
+    input.setAttribute("role", "textbox");
+    input.setAttribute("tabindex", "0");
+
+    const fileName = document.createElement("div");
+    fileName.classList.add("file-name");
+    fileName.textContent = "Nie wybrano pliku";
+
+    const preview = document.createElement("div");
+    preview.classList.add("file-preview");
+
+    input.addEventListener("change", () => {
+      const file = input.files[0];
+      if (!file) return;
+
+      fileName.textContent = file.name;
+      preview.innerHTML = "";
+
+      const type = file.type;
+      const reader = new FileReader();
+
+      const allowedTypes = {
+        audio: [
+          "audio/mpeg",
+          "audio/wav",
+          "audio/ogg",
+          "audio/flac",
+          "audio/aac",
+          "audio/opus",
+          "audio/mp4",
+        ],
+        video: ["video/mp4", "video/webm", "video/ogg", "video/x-matroska"],
+      };
+
+      reader.onload = () => {
+        if (type.startsWith("image/")) {
+          const img = document.createElement("img");
+          img.src = reader.result;
+          img.alt = file.name;
+          img.style.maxWidth = "100%";
+          preview.appendChild(img);
+        } else if (type.startsWith("audio/")) {
+          const normalizedType = type === "audio/m4a" ? "audio/mp4" : type;
+          const isAllowed =
+            RenderUtils.isFirefox || allowedTypes.audio.includes(normalizedType);
+
+          if (!isAllowed) {
+            preview.appendChild(
+              this.createErrorMessage("audio", RenderUtils.isFirefox)
+            );
+            return;
+          }
+
+          const blob = new Blob([file], { type });
+          const url = URL.createObjectURL(blob);
+
+          const audio = document.createElement("audio");
+          audio.src = url;
+          audio.controls = true;
+          audio.style.width = "100%";
+
+          if (RenderUtils.isFirefox) {
+            audio.addEventListener("error", () => {
+              preview.innerHTML = "";
+              preview.appendChild(
+                this.createErrorMessage("audio", RenderUtils.isFirefox)
+              );
+            });
+          }
+
+          preview.appendChild(audio);
+        } else if (type.startsWith("video/")) {
+          const isAllowed = RenderUtils.isFirefox || allowedTypes.video.includes(type);
+
+          if (!isAllowed) {
+            preview.appendChild(
+              this.createErrorMessage("video", RenderUtils.isFirefox)
+            );
+            return;
+          }
+
+          const blob = new Blob([file], { type });
+          const url = URL.createObjectURL(blob);
+
+          const video = document.createElement("video");
+          video.src = url;
+          video.controls = true;
+          video.muted = true;
+          video.style.maxWidth = "100%";
+
+          if (RenderUtils.isFirefox) {
+            video.addEventListener("error", () => {
+              preview.innerHTML = "";
+              preview.appendChild(
+                this.createErrorMessage("video", RenderUtils.isFirefox)
+              );
+            });
+          }
+
+          preview.appendChild(video);
+        } else if (
+          type.startsWith("text/") ||
+          file.name.match(/\.(js|php|json|txt|md)$/)
+        ) {
+          const text = document.createElement("pre");
+          text.textContent = reader.result.slice(0, 1000);
+          text.style.whiteSpace = "pre-wrap";
+          preview.appendChild(text);
+        }
+      };
+
+      if (
+        type.startsWith("text/") ||
+        file.name.match(/\.(js|php|json|txt|md)$/)
+      ) {
+        reader.readAsText(file);
+      } else {
+        reader.readAsDataURL(file);
+      }
+
+      preview.classList.add("has-preview");
+
+      setTimeout(() => {
+        const tag = preview.firstChild?.tagName;
+        preview.style.top = tag === "AUDIO" ? "30%" : "-95%";
+      }, 50);
+    });
+
+    wrapper.appendChild(label);
+    wrapper.appendChild(input);
+    wrapper.appendChild(fileName);
+    wrapper.appendChild(preview);
+
+    return wrapper;
+  }
+
+  /**
+   * Tworzy komunikat o błędzie ładowania podglądu pliku wraz z listą obsługiwanych formatów.
+   *
+   * @param {string} type Rozszerzenie pliku którego nie udało się załadować
+   * @param {boolean} isFirefox Czy przeglądarka to Firefox
+   * @returns Komunikat o nie udanej próbie załadowania podglądu pliku i listy obsługiwanych formatów jako innerHTML
+   */
+  static createErrorMessage(type, isFirefox) {
+    const wrapper = document.createElement("div");
+
+    const heading = document.createElement("strong");
+    heading.textContent = `Nie można załadować podglądu tego pliku ${type}.`;
+    wrapper.appendChild(heading);
+
+    const info = document.createElement("p");
+    info.textContent = `Spróbuj użyć jednego z obsługiwanych formatów:`;
+    wrapper.appendChild(info);
+
+    const list = document.createElement("ul");
+
+    const formats =
+      type === "audio"
+        ? isFirefox
+          ? ["MP3", "WAV", "OGG", "Opus", "FLAC", "AAC", "M4A"]
+          : ["MP3", "WAV", "OGG", "Opus", "FLAC", "AAC"]
+        : isFirefox
+        ? ["MP4", "WebM", "OGG"]
+        : ["MP4", "WebM", "OGG", "MKV"];
+
+    formats.forEach((format) => {
+      const li = document.createElement("li");
+      li.textContent = format;
+      list.appendChild(li);
+    });
+
+    wrapper.appendChild(list);
+    return wrapper;
+  }
+}

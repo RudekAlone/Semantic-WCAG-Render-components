@@ -1,4 +1,5 @@
-import { RenderElements } from "../RenderElements.js";
+import { RenderButton } from "../Render/RenderButton.js";
+import { RenderDetails } from "../Render/RenderDetails.js";
 import { RenderMarkdown } from "../RenderMarkdown.js";
 
 import { SUBJECT_NAMES, STATUS_MAP, TASKS_DATA } from "./constants.js";
@@ -52,7 +53,7 @@ export class TasksPage {
       }));
 
       subjectOptions.forEach((option) => {
-        const button = RenderElements.renderButton(
+        const button = RenderButton.renderButton(
           option.text,
           "secondary",
           "button",
@@ -69,7 +70,7 @@ export class TasksPage {
             history.replaceState(
               null,
               "",
-              window.location.pathname + `#zadania-${option.value}`
+              window.location.pathname + `#tasks-${option.value}`
             );
 
             listTasksSection.appendChild(
@@ -163,7 +164,7 @@ export class TasksPage {
       ul.appendChild(li);
     });
 
-    const detail = RenderElements.renderDetailsSummary(label, ul);
+    const detail = RenderDetails.renderDetailsSummary(label, ul);
     return detail;
   }
 }

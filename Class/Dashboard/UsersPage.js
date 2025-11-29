@@ -1,4 +1,8 @@
-import { RenderElements } from "../RenderElements.js";
+import { RenderButton } from "../Render/RenderButton.js";
+import { RenderInput } from "../Render/RenderInput.js";
+import { RenderForm } from "../Render/RenderForm.js";
+import { RenderTable } from "../Render/RenderTable.js";
+import { RenderDetails } from "../Render/RenderDetails.js";
 
 import {
   ROLE_OPTIONS,
@@ -76,7 +80,7 @@ export class UsersPage {
         },
       ];
 
-      const form = RenderElements.renderForm(
+      const form = RenderForm.renderForm(
         userFormElements,
         "Dodaj użytkownika",
         (formData) => {
@@ -85,7 +89,7 @@ export class UsersPage {
         "column"
       );
 
-      const details = RenderElements.renderDetailsSummary(
+      const details = RenderDetails.renderDetailsSummary(
         "Dodawanie nowego użytkownika",
         form
       );
@@ -104,7 +108,7 @@ export class UsersPage {
 
     const data = USERS_DATA;
 
-    const selectLoad = RenderElements.selectInputOptions(
+    const selectLoad = RenderInput.selectInputOptions(
       "Wybierz użytkowników do załadowania",
       optionsLoad,
       "loadUsers",
@@ -114,7 +118,7 @@ export class UsersPage {
     );
     sectionOptionsLoad.appendChild(selectLoad);
     selectLoad.appendChild(
-      RenderElements.renderButton(
+      RenderButton.renderButton(
         "Załaduj tabelę",
         "secondary",
         "button",
@@ -182,7 +186,7 @@ export class UsersPage {
       return [...row.slice(0, 6), resetCell];
     });
 
-    const userListTable = RenderElements.renderResponsiveTable(
+    const userListTable = RenderTable.renderResponsiveTable(
       processedData,
       headers,
       false

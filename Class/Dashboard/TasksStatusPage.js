@@ -1,4 +1,5 @@
-import { RenderElements } from "../RenderElements.js";
+import { RenderForm } from "../Render/RenderForm.js";
+import { RenderTable } from "../Render/RenderTable.js";
 
 import { SUBJECT_OPTIONS, CLASS_OPTIONS, TASKS_DATA, TASK_STATUS } from "./constants.js";
 
@@ -44,7 +45,7 @@ export class TasksStatusPage {
       },
     ];
 
-    const form = RenderElements.renderForm(
+    const form = RenderForm.renderForm(
         elements,
         "Filtruj zadania",
         () =>{
@@ -112,7 +113,7 @@ export class TasksStatusPage {
     console.log(StudentsTasksData[0].status);
     console.log(StudentsTasksData[1].status);
     console.log(StudentsTasksData[2].status);
-    const statusList = RenderElements.renderResponsiveTable(elements, headers);
+    const statusList = RenderTable.renderResponsiveTable(elements, headers);
 
     container.appendChild(statusList);
   }

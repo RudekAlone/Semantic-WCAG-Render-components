@@ -1,4 +1,7 @@
-import { RenderElements } from "../RenderElements.js";
+import { RenderButton } from "../Render/RenderButton.js";
+import { RenderInput } from "../Render/RenderInput.js";
+import { RenderForm } from "../Render/RenderForm.js";
+import { RenderTable } from "../Render/RenderTable.js";
 import { RenderMarkdown } from "../RenderMarkdown.js";
 import { SUBJECT_OPTIONS, TASKS_DATA } from "./constants.js";
 
@@ -48,7 +51,7 @@ export class TasksEditorPage {
     footerTasksSection.classList.add("tasks-footer");
     tasksManagement.appendChild(footerTasksSection);
 
-    const saveButton = RenderElements.renderButton("Zapisz zadanie", "primary");
+    const saveButton = RenderButton.renderButton("Zapisz zadanie", "primary");
     saveButton.disabled = true;
     footerTasksSection.appendChild(saveButton);
 
@@ -88,8 +91,8 @@ export class TasksEditorPage {
    * @param {HTMLElement} previewSection
    * @param {HTMLButtonElement} buttonSave
    */
-  static taskEditor(editorSection, previewSection, buttonSave) {
-    const editor = RenderElements.renderTextArea("", "task-editor", "task-editor", 44, 80);
+  static taskEditor(editorSection, previewSection, buttonSave=null) {
+    const editor = RenderInput.renderTextArea("", "task-editor", "task-editor", 44, 80);
     editor.id = "task-editor-section";
 
     const headerEditor = document.createElement("h3");
@@ -109,7 +112,9 @@ export class TasksEditorPage {
     const textareaEditor = editor.querySelector("textarea");
 
     textareaEditor.addEventListener("input", () => {
-      buttonSave.disabled = textareaEditor.value === "";
+      if (buttonSave){
+        buttonSave.disabled = textareaEditor.value === "";
+      }
       RenderMarkdown.renderMarkdownPreview(preview, textareaEditor.value);
     });
 
@@ -167,16 +172,16 @@ export class TasksEditorPage {
       });
     });
 
-    // Załaduj przykładowy markdown (bez crasha na błąd sieci)
-    fetch("sample-task.md")
-      .then((response) => (response.ok ? response.text() : Promise.reject(response)))
-      .then((data) => {
-        textareaEditor.value = data;
-        textareaEditor.dispatchEvent(new Event("input"));
-      })
-      .catch(() => {
-        // spokojny fallback; brak logów produkcyjnych
-      });
+    // // Załaduj przykładowy markdown (bez crasha na błąd sieci)
+    // fetch("sample-task.md")
+    //   .then((response) => (response.ok ? response.text() : Promise.reject(response)))
+    //   .then((data) => {
+    //     textareaEditor.value = data;
+    //     textareaEditor.dispatchEvent(new Event("input"));
+    //   })
+    //   .catch(() => {
+    //     // spokojny fallback; brak logów produkcyjnych
+    //   });
   }
 
   /**
@@ -205,7 +210,7 @@ export class TasksEditorPage {
       },
     ];
 
-    const form = RenderElements.renderForm(
+    const form = RenderForm.renderForm(
       elementsInputs,
       "Dodaj nowe zadanie",
       (formData) => {
@@ -244,7 +249,7 @@ export class TasksEditorPage {
     // Konwersja SUBJECT_OPTIONS (tablica) + stałe pozycje
     const selectSubjectOptions = SUBJECT_OPTIONS;
 
-    const selectSubject = RenderElements.selectInputOptions(
+    const selectSubject = RenderInput.selectInputOptions(
       "Filtruj według przedmiotu",
       selectSubjectOptions,
       "filter-subject",
@@ -288,7 +293,7 @@ export class TasksEditorPage {
    * @returns {HTMLElement} tabela z zadaniami
    */
   static renderTaskElement(tasks, editorSection) {
-    const tasksListTable = RenderElements.renderResponsiveTable(
+    const tasksListTable = RenderTable.renderResponsiveTable(
       tasks.map((task) => [task.name, task.partName]),
       ["Nazwa zadania", "Rozdział"],
       false

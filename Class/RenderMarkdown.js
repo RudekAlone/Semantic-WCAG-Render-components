@@ -1,12 +1,26 @@
-import { RenderElements } from "./RenderElements.js";
+import { RenderButton } from "./Render/RenderButton.js";
 export class RenderMarkdown {
+  /**
+   * Renderuje podgląd Markdown w podanym kontenerze.
+   * Przetwarza Markdown na HTML, a następnie renderuje specyficzne elementy jak zakładki i quizy.
+   *
+   * @param {HTMLElement} container - Element DOM, w którym ma zostać wyrenderowana treść.
+   * @param {string} markdownContent - Treść w formacie Markdown.
+   */
   static renderMarkdownPreview(container, markdownContent) {
     this.convertMarkdownToHTML(container, markdownContent);
     this.renderTabs(container);
     this.renderQuiz(container);
   }
 
-static convertMarkdownToHTML(container, markdownContent) {
+  /**
+   * Konwertuje tekst Markdown na HTML i wstawia go do kontenera.
+   * Obsługuje również podświetlanie składni kodu oraz renderowanie wzorów matematycznych.
+   *
+   * @param {HTMLElement} container - Element DOM, do którego trafi skonwertowany HTML.
+   * @param {string} markdownContent - Treść w formacie Markdown.
+   */
+  static convertMarkdownToHTML(container, markdownContent) {
   const htmlContent = marked.parse(markdownContent);
   container.innerHTML = htmlContent;
 
@@ -30,6 +44,11 @@ static convertMarkdownToHTML(container, markdownContent) {
 }
 
 
+  /**
+   * Przekształca elementy <data-tabs> w interaktywne zakładki.
+   *
+   * @param {HTMLElement} containerHTML - Kontener, w którym szukane są elementy zakładek.
+   */
   static renderTabs(containerHTML) {
     const dataTabs = containerHTML.querySelectorAll("data-tabs");
 
@@ -48,7 +67,7 @@ static convertMarkdownToHTML(container, markdownContent) {
       tabContents.forEach((content, index) => {
         const label =
           content.querySelector("h2")?.textContent || `Tab ${index + 1}`;
-        const newButton = RenderElements.renderButton(
+        const newButton = RenderButton.renderButton(
           label,
           "tabButton",
           "button",
@@ -94,6 +113,11 @@ static convertMarkdownToHTML(container, markdownContent) {
     });
   }
 
+  /**
+   * Przekształca elementy <data-quiz> w interaktywne quizy.
+   *
+   * @param {HTMLElement} containerHTML - Kontener, w którym szukane są elementy quizów.
+   */
   static renderQuiz(containerHTML) {
     const dataQuizzes = containerHTML.querySelectorAll("data-quiz");
 

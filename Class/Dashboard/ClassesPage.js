@@ -1,4 +1,5 @@
-import { RenderElements } from "../RenderElements.js";
+import { RenderForm } from "../Render/RenderForm.js";
+import { RenderTable } from "../Render/RenderTable.js";
 
 
 
@@ -33,7 +34,7 @@ export class ClassesPage {
       },
     ];
 
-    const addNewClassForm = RenderElements.renderForm(
+    const addNewClassForm = RenderForm.renderForm(
       classElements,
       "Dodaj nową klasę",
       (e) => {
@@ -75,7 +76,7 @@ export class ClassesPage {
       });
     });
 
-    const classesTable = RenderElements.renderResponsiveTable(
+    const classesTable = RenderTable.renderResponsiveTable(
       tableClassesData,
       ["ID", "Nazwa klasy", "Rok szkolny", "Liczba uczniów", "Zarządzaj"],
       false,

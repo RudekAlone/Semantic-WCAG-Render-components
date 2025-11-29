@@ -1,4 +1,4 @@
-import { RenderElements } from "./Class/RenderElements.js";
+import { UIFacade } from "./Class/UIFacade.js";
 
 const main = document.querySelector("main");
 
@@ -6,7 +6,7 @@ const main = document.querySelector("main");
 const p = document.createElement("p");
 p.textContent = "To jest przykładowy paragraf dodany ręcznie.";
 
-const details = RenderElements.renderDetailsSummary(
+const details = UIFacade.createDetails(
   "Więcej informacji",
  p
 );
@@ -19,7 +19,7 @@ main.appendChild(details);
 
 
 
-const button = RenderElements.renderButton(
+const button = UIFacade.createButton(
   "Kliknij mnie",
   "primary",
   "button",
@@ -29,169 +29,158 @@ const button = RenderElements.renderButton(
 );
 main.appendChild(button);
 
-const button2 = RenderElements.renderButton("Kliknij mnie", "secondary", "reset", () => {
+const button2 = UIFacade.createButton("Kliknij mnie", "secondary", "reset", () => {
   alert("Reset kliknięty!");
 });
 main.appendChild(button2);
 
-const button3 = RenderElements.renderButton("Kliknij mnie", "tertiary", "submit", () => {
+const button3 = UIFacade.createButton("Kliknij mnie", "tertiary", "submit", () => {
   alert("Przycisk submit kliknięty!");
 });
 main.appendChild(button3);
 
-const button4 = RenderElements.renderButton("Kliknij mnie", "quaternary");
+const button4 = UIFacade.createButton("Kliknij mnie", "quaternary");
 main.appendChild(button4);
 
-const button5 = RenderElements.renderButton("Kliknij mnie", "fifth");
+const button5 = UIFacade.createButton("Kliknij mnie", "fifth");
 main.appendChild(button5);
 
-const input = RenderElements.renderInput(
+const input = UIFacade.createInput(
   "Wpisz swoje imię",
   "name",
   "name-input",
   "text",
-  "textbox",
-  true
+  true,
+  { role: "textbox" }
 );
 main.appendChild(input);
 
-const input2 = RenderElements.renderInput(
+const input2 = UIFacade.createInput(
   "Wpisz swój email",
   "email",
   "email-input",
   "email",
-  "textbox",
-  true
+  true,
+  { role: "textbox" }
 );
 main.appendChild(input2);
 
-const input3 = RenderElements.renderInput(
+const input3 = UIFacade.createInput(
   "Wpisz swój wiek",
   "age",
   "age-input",
   "number",
-  "spinbutton",
-  false
+  false,
+  { role: "spinbutton" }
 );
 main.appendChild(input3);
 
-const input4 = RenderElements.renderInput(
+const input4 = UIFacade.createInput(
   "Wpisz swoje hasło",
   "password",
   "password-input",
   "password",
-  "textbox",
-  true
+  true,
+  { role: "textbox" }
 );
 main.appendChild(input4);
 
-const input5 = RenderElements.renderInput(
+const input5 = UIFacade.createInput(
   "Wybierz datę",
   "dob",
   "dob-input",
   "date",
-  "textbox",
-  false
+  false,
+  { role: "textbox" }
 );
 main.appendChild(input5);
 
-const input6 = RenderElements.renderInput(
+const input6 = UIFacade.createInput(
   "Wybierz czas",
   "time",
   "time-input",
   "time",
-  "textbox",
-  false
+  false,
+  { role: "textbox" }
 );
 main.appendChild(input6);
 
-const input7 = RenderElements.renderInput(
+const input7 = UIFacade.createInput(
   "Wybierz kolor",
   "color",
   "color-input",
   "color",
-  "textbox",
-  false
+  false,
+  { role: "textbox" }
 );
 main.appendChild(input7);
 
-const input8 = RenderElements.renderInput(
+const input8 = UIFacade.createInput(
   "Wybierz plik",
   "file",
   "file-input",
   "file",
-  "textbox",
-  false
+  false,
+  { role: "textbox" }
 );
 main.appendChild(input8);
-const input9 = RenderElements.renderInput(
+const input9 = UIFacade.createInput(
   "Wybierz tylko pliki pdf lub obrazy",
   "file",
   "file-input-2",
   "file",
-  "textbox",
   false,
-  "row",
-  "",
-  ["application/pdf", "image/*"]
+  { role: "textbox", direction: "row", value: "", acceptFiles: ["application/pdf", "image/*"] }
 );
 main.appendChild(input9);
 
-const input10 = RenderElements.renderInput(
+const input10 = UIFacade.createInput(
   "CheckBox zaznaczony",
   "checkbox",
   "checkbox-input",
   "checkbox",
-  "checkbox",
   false,
-  "row",
-  "true"
+  { role: "checkbox", direction: "row", value: "true" }
 );
 main.appendChild(input10);
 
-const input10b = RenderElements.renderInput(
+const input10b = UIFacade.createInput(
   "CheckBox nie zaznaczony",
   "checkbox",
   "checkbox-input-2",
   "checkbox",
-  "checkbox",
   false,
-  "row",
-  "false"
+  { role: "checkbox", direction: "row", value: "false" }
 );
 main.appendChild(input10b);
 
-const input11 = RenderElements.renderInput(
+const input11 = UIFacade.createInput(
   "Radio",
   "radio",
   "radio-input",
   "radio",
-  "radio",
   false,
-  "row",
-  "true"
+  { role: "radio", direction: "row", value: "true" }
 );
 main.appendChild(input11);
 
-const input11b = RenderElements.renderInput(
+const input11b = UIFacade.createInput(
   "Radio 2",
   "radio",
   "radio-input-2",
   "radio",
-  "radio",
   false,
-  "row",
-  "false"
+  { role: "radio", direction: "row", value: "false" }
 );
 main.appendChild(input11b);
 
-const input12 = RenderElements.renderInput(
+const input12 = UIFacade.createInput(
   "Wybierz zakres",
   "range",
   "range-input",
   "range",
-  "slider",
-  false
+  false,
+  { role: "slider" }
 );
 main.appendChild(input12);
 
@@ -214,7 +203,7 @@ const loginFormDataInputs = [
   },
 ];
 
-const formLogin = RenderElements.renderForm(
+const formLogin = UIFacade.createForm(
   loginFormDataInputs,
   "Zaloguj się",
   (formData) => {
@@ -228,14 +217,14 @@ const formLogin = RenderElements.renderForm(
 
 main.appendChild(formLogin);
 
-const fileInputWithPreview = RenderElements.renderFileInputWithPreview(
+const fileInputWithPreview = UIFacade.createFileInputWithPreview(
   "Wybierz plik",
   "file",
   "file-input2"
 );
 main.appendChild(fileInputWithPreview);
 
-const textArea = RenderElements.renderTextArea(
+const textArea = UIFacade.createTextArea(
   "Wpisz swoją wiadomość",
   "message",
   "message-input",
@@ -252,7 +241,7 @@ const selectOptionsData = [
   { value: "option3", text: "Opcja 3" },
 ];
 
-const select = RenderElements.selectInputOptions("Lista wyboru", selectOptionsData);
+const select = UIFacade.createSelect("Lista wyboru", selectOptionsData);
 main.appendChild(select);
 
 const tableData = {
@@ -301,7 +290,7 @@ const tableData = {
   ],
 };
 
-const table = RenderElements.renderResponsiveTable(
+const table = UIFacade.createTable(
   tableData.rows,
   tableData.headers
 );

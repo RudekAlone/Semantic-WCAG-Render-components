@@ -20,13 +20,23 @@ const pages = [
         icon: '📊'
     },
     {
+        name: 'Kursy',
+        id: 'courses',
+        icon: '🎓'
+    },
+    {
+        name: "Quizzes",
+        id: 'quizzes',
+        icon: '❔'
+    },
+    {
         name: 'Zalicz zadanie',
         id: 'tasks-status',
         icon: '✅'
     },
     {
-        name: 'Zadania ucznia',
-        id: 'student-tasks',
+        name: 'Zadania uczniów',
+        id: 'students-tasks',
         icon: '📂'
     },
     {
@@ -45,11 +55,6 @@ const pages = [
         icon: '👥'
     },
     {
-        name: 'Ustawienia',
-        id: 'settings',
-        icon: '⚙️'
-    },
-    {
         name: 'Zarządzaj zadaniami',
         id: 'manage-tasks',
         icon: '📝'
@@ -65,6 +70,3 @@ const pages = [
 
 main.appendChild(DashboardRender.render(pages));
 
-setTimeout(() => {
-    document.querySelector('#nav-tasks-status').click();
-}, 100);

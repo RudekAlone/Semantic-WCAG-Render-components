@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dokument</title>
+  <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <header>
+    <h1>
+      <a href="../">
+        <img src="logo.png" alt="logo" />
+        Koala-V
+      </a>
+    </h1>
+  </header>
+  <main>
+    <section id="welcome-section">
+      <section id="welcome-message">
+        <h2>Witamy na stronie Koala-V!</h2>
+      <p>Twoje centrum materiałów edukacyjnych z dziedziny informatyki.</p>
+      <img src="/Resources/course/koalaWarrior.png" alt="Obrazek z koalą wojownikiem" />
+      </section>
+      <section id="login-section">
+        <h2>Sekcja logowania</h2>
+        <p>Jesteś moim uczniem? Zaloguj się.</p>
+        <form action="./login" data-ui="form" data-layout="column">
+          <label for="login">
+            Nazwa użytkownika:
+          </label>
+          <input type="text" id="login"
+          placeholder="Nazwa użytkownika" aria-label="Pole do wpisania nazwy użytkownika" required />
+        
+          <label for="password">
+            Hasło:
+          </label>
+          <input type="password" id="password"
+          placeholder="Hasło" aria-label="Pole do wpisania hasła" required />
+        
+          <button type="submit" class="bg-primary" data-ui="button"
+          aria-label="Przycisk do zalogowania się na konto użytkownika">
+            Zaloguj się
+          </button>
+        
+          </form>
+      </section>
+    </section>
+   
+    <section id="courses">
+      <h2>Kursy</h2>
+      <nav>
+        <ul>
+          <li>
+            <a href="#"><img src="/Resources/course/windows11.webp" alt="Windows 11" />
+              Windows 11
+              <div id="footer-course">
+                <hr>
+                <span>Koala-V</span>
+              </div>
+            </a>
+          </li>
+          <li><a href="#">
+              <img src="/Resources/course/UbuntuDesktop.webp" alt="Ubuntu 24 Desktop" />
+
+              Ubuntu 24 Desktop
+              <div id="footer-course">
+                <hr>
+                <span>Koala-V</span>
+              </div>
+            </a></li>
+          <li><a href="#">
+              <img src="/Resources/course/windowsServer2025.webp" alt="Windows Server 2025" />
+              Windows Server 2025
+              <div id="footer-course">
+                <hr>
+                <span>Koala-V</span>
+              </div>
+            </a></li>
+          <li><a href="#">
+              <img src="/Resources/course/VirtualBox.webp" alt="VirtualBox" />
+              VirtualBox
+              <div id="footer-course">
+                <hr>
+                <span>Koala-V</span>
+              </div>
+            </a></li>
+
+          <li><a href="#">
+              <img src="/Resources/course/javascript.webp" alt="JavaScript" />
+              JavaScript
+              <div id="footer-course">
+                <hr>
+                <span>Koala-V</span>
+              </div>
+            </a></li>
+        </ul>
+      </nav>
+    </section>
+
+  </main>
+  <footer>
+    <p>&copy; 2026 Koala-V</p>
+  </footer>
+  <script src="script-home.js" type="module"></script>
+</body>
+
+</html>
