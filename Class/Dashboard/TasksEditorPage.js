@@ -1,335 +1,121 @@
-import { RenderButton } from "../Render/RenderButton.js";
-import { RenderInput } from "../Render/RenderInput.js";
-import { RenderForm } from "../Render/RenderForm.js";
-import { RenderTable } from "../Render/RenderTable.js";
-import { RenderMarkdown } from "../RenderMarkdown.js";
-import { SUBJECT_OPTIONS, TASKS_DATA } from "./constants.js";
+import { UIFacade } from "../UIFacade.js";
+import { MarkdownEditorComponent } from "./Components/MarkdownEditorComponent.js";
+import { DataService } from "../Service/DataService.js";
 
-/**
- * Klasa renderująca stronę edycji i zarządzania zadaniami studenta.
- * - Edytor markdown + podgląd z synchronizacją przewijania
- * - Dodawanie nowego zadania
- * - Filtrowanie i ładowanie zadań do edytora
- */
 export class TasksEditorPage {
-  /**
-   * Renderuje całą stronę edytora zadań.
-   * @returns {HTMLElement} korzeń strony edytora zadań
-   */
-  static render() {
-    const tasksManagement = document.createElement("section");
-    tasksManagement.id = "tasks-management-page";
+  static renderTasksEditorPage() {
+    const container = document.createElement("section");
+    container.id = "tasks-editor-page";
+    const title = document.createElement("h2");
+    title.textContent = "Edytor zadań";
+    container.appendChild(title);
 
-    const tasksHeader = document.createElement("section");
-    tasksHeader.classList.add("task-header");
+    const contentContainer = document.createElement("div");
+    contentContainer.id = "tasks-editor-content";
+    contentContainer.innerHTML = '<div class="loader">Ładowanie edytora...</div>';
+    container.appendChild(contentContainer);
 
-    const addTaskSection = document.createElement("section");
-    addTaskSection.classList.add("add-task-section");
+    this._loadDataAndRender(contentContainer);
 
-    const filtersSection = document.createElement("section");
-    filtersSection.classList.add("filters-section");
-
-    tasksHeader.appendChild(addTaskSection);
-    tasksHeader.appendChild(filtersSection);
-
-    const tasksMain = document.createElement("section");
-    tasksMain.classList.add("tasks-main");
-
-    const editorSection = document.createElement("section");
-    editorSection.classList.add("editor-section");
-
-    const previewSection = document.createElement("section");
-    previewSection.classList.add("preview-section");
-
-    tasksMain.appendChild(editorSection);
-    tasksMain.appendChild(previewSection);
-
-    tasksManagement.appendChild(tasksHeader);
-    tasksManagement.appendChild(tasksMain);
-
-    const footerTasksSection = document.createElement("section");
-    footerTasksSection.classList.add("tasks-footer");
-    tasksManagement.appendChild(footerTasksSection);
-
-    const saveButton = RenderButton.renderButton("Zapisz zadanie", "primary");
-    saveButton.disabled = true;
-    footerTasksSection.appendChild(saveButton);
-
-    // Sekcje funkcjonalne
-    this.taskEditor(editorSection, previewSection, saveButton);
-    addTaskSection.appendChild(this.newTask(editorSection));
-    filtersSection.appendChild(this.taskFilters(editorSection));
-
-    return tasksManagement;
+    return container;
   }
 
-  /**
-   * Precyzyjnie wyrównuje scroll edytora względem podglądu, z dopasowaniem do wysokości linii.
-   * @param {HTMLTextAreaElement} textareaEditor
-   * @param {HTMLElement} preview
-   * @param {{activeSource: string|null}} state
-   */
-  static finalizeAlign(textareaEditor, preview, state) {
-    const ratio = preview.scrollTop / (preview.scrollHeight - preview.clientHeight);
-    let targetTop = ratio * (textareaEditor.scrollHeight - textareaEditor.clientHeight);
+  static async _loadDataAndRender(container) {
+      try {
+          const [subjectOptions, tasksData] = await Promise.all([
+              DataService.getSubjectOptions(),
+              DataService.getTasks()
+          ]);
+          
+          container.innerHTML = ""; // Clear loader
 
-    const lh =
-      parseFloat(getComputedStyle(textareaEditor).lineHeight) ||
-      parseFloat(getComputedStyle(textareaEditor).fontSize);
-    if (lh && Number.isFinite(lh)) {
-      targetTop = Math.round(targetTop / lh) * lh;
-    }
+          const formContainer = document.createElement("div");
+          formContainer.id = "add-task-form-container";
+          container.appendChild(formContainer);
+      
+          const listContainer = document.createElement("div");
+          listContainer.id = "tasks-list-container";
+          container.appendChild(listContainer);
 
-    state.activeSource = "preview";
-    textareaEditor.scrollTop = targetTop;
-    state.activeSource = null;
+          this.renderAddTaskForm(formContainer, subjectOptions);
+          this.renderTasksList(listContainer, tasksData);
+
+      } catch (error) {
+          console.error("Błąd ładowania edytora zadań:", error);
+          container.innerHTML = '<p class="error">Nie udało się pobrać danych.</p>';
+      }
   }
 
-  /**
-   * Renderuje edytor markdown i podgląd z synchronizacją przewijania.
-   * @param {HTMLElement} editorSection
-   * @param {HTMLElement} previewSection
-   * @param {HTMLButtonElement} buttonSave
-   */
-  static taskEditor(editorSection, previewSection, buttonSave=null) {
-    const editor = RenderInput.renderTextArea("", "task-editor", "task-editor", 44, 80);
-    editor.id = "task-editor-section";
-
-    const headerEditor = document.createElement("h3");
-    headerEditor.textContent = "Edytor zadania (markdown)";
-    editorSection.appendChild(headerEditor);
-    editorSection.appendChild(editor);
-
-    const preview = document.createElement("section");
-    preview.id = "task-preview-section";
-    preview.classList.add("preview-markdown");
-
-    const headerPreview = document.createElement("h3");
-    headerPreview.textContent = "Podgląd zadania";
-    previewSection.appendChild(headerPreview);
-    previewSection.appendChild(preview);
-
-    const textareaEditor = editor.querySelector("textarea");
-
-    textareaEditor.addEventListener("input", () => {
-      if (buttonSave){
-        buttonSave.disabled = textareaEditor.value === "";
-      }
-      RenderMarkdown.renderMarkdownPreview(preview, textareaEditor.value);
-    });
-
-    // Wspólny, lokalny stan synchronizacji
-    const state = {
-      activeSource: null,
-      skipPreviewSync: false,
-      finalizeTimer: null,
-    };
-
-    // Klawiatura w preview: tymczasowe wyłączenie sync
-    preview.addEventListener("keydown", (e) => {
-      if (["ArrowDown", "ArrowUp", "PageDown", "PageUp", "Home", "End"].includes(e.key)) {
-        state.skipPreviewSync = true;
-        if (state.finalizeTimer) {
-          clearTimeout(state.finalizeTimer);
-          state.finalizeTimer = null;
-        }
-      }
-    });
-
-    preview.addEventListener("keyup", (e) => {
-      if (["ArrowDown", "ArrowUp", "PageDown", "PageUp", "Home", "End"].includes(e.key)) {
-        state.skipPreviewSync = false;
-        state.finalizeTimer = setTimeout(() => {
-          this.finalizeAlign(textareaEditor, preview, state);
-          state.finalizeTimer = null;
-        }, 30);
-      }
-    });
-
-    // Sync edytor → preview (zawsze)
-    textareaEditor.addEventListener("scroll", () => {
-      if (state.activeSource === "preview") return;
-      state.activeSource = "editor";
-      requestAnimationFrame(() => {
-        const ratio =
-          textareaEditor.scrollTop /
-          (textareaEditor.scrollHeight - textareaEditor.clientHeight);
-        preview.scrollTop = ratio * (preview.scrollHeight - preview.clientHeight);
-        state.activeSource = null;
-      });
-    });
-
-    // Sync preview → edytor (tylko mysz/touchpad)
-    preview.addEventListener("scroll", () => {
-      if (state.activeSource === "editor") return;
-      if (state.skipPreviewSync) return;
-      state.activeSource = "preview";
-      requestAnimationFrame(() => {
-        const ratio = preview.scrollTop / (preview.scrollHeight - preview.clientHeight);
-        textareaEditor.scrollTop =
-          ratio * (textareaEditor.scrollHeight - textareaEditor.clientHeight);
-        state.activeSource = null;
-      });
-    });
-
-    // // Załaduj przykładowy markdown (bez crasha na błąd sieci)
-    // fetch("sample-task.md")
-    //   .then((response) => (response.ok ? response.text() : Promise.reject(response)))
-    //   .then((data) => {
-    //     textareaEditor.value = data;
-    //     textareaEditor.dispatchEvent(new Event("input"));
-    //   })
-    //   .catch(() => {
-    //     // spokojny fallback; brak logów produkcyjnych
-    //   });
-  }
-
-  /**
-   * Formularz tworzenia nowego zadania: czyści edytor, ustawia metadane i fokusuje textarea.
-   * @param {HTMLElement} editorSection
-   * @returns {HTMLFormElement}
-   */
-  static newTask(editorSection) {
-    const elementsInputs = [
+  static renderAddTaskForm(container, subjectOptions) {
+    const elements = [
       {
         label: "Nazwa zadania",
-        name: "taskName",
-        id: "task-name-input",
         type: "text",
-        role: "textbox",
+        id: "task-name",
         required: true,
+        placeholder: "Wpisz nazwę zadania",
       },
       {
         selectInputOptions: true,
         label: "Przedmiot",
-        options: SUBJECT_OPTIONS,
-        name: "subject",
-        id: "subject-select",
+        type: "select",
+        id: "task-subject",
+        options: subjectOptions,
         required: true,
-        layout: "row",
+      },
+      {
+        label: "Termin",
+        type: "date",
+        id: "task-deadline",
+        required: true,
       },
     ];
 
-    const form = RenderForm.renderForm(
-      elementsInputs,
-      "Dodaj nowe zadanie",
-      (formData) => {
-        const textArea = editorSection.querySelector("#task-editor-section textarea");
-        if (!textArea) return;
-
-        textArea.value = "";
-        textArea.dispatchEvent(new Event("input"));
-        textArea.focus();
-        textArea.scrollIntoView({ behavior: "smooth" });
-        textArea.setAttribute("data-subject", formData.get("subject"));
-        textArea.setAttribute("data-task-name", formData.get("taskName"));
-      },
-      "row"
-    );
-
-    // Rozciągnij pola na całą szerokość
-    form.querySelector("#task-name-input")?.classList.add("w-full");
-    form.querySelector("#subject-select")?.classList.add("w-full");
-    form.querySelectorAll('[data-ui="input-wrapper"]').forEach((wrapper) => {
-      wrapper.classList.add("w-full");
-    });
-
-    return form;
-  }
-
-  /**
-   * Sekcja filtrów i listy zadań do wczytania w edytor.
-   * @param {HTMLElement} editorSection - referencja do sekcji edytora
-   * @returns {HTMLElement} sekcja filtrów
-   */
-  static taskFilters(editorSection) {
-    const filtersSection = document.createElement("section");
-    filtersSection.id = "task-filters-section";
-
-    // Konwersja SUBJECT_OPTIONS (tablica) + stałe pozycje
-    const selectSubjectOptions = SUBJECT_OPTIONS;
-
-    const selectSubject = RenderInput.selectInputOptions(
-      "Filtruj według przedmiotu",
-      selectSubjectOptions,
-      "filter-subject",
-      "filter-subject",
-      false,
-      "column"
-    );
-    filtersSection.appendChild(selectSubject);
-
-    const tasksList = document.createElement("section");
-    tasksList.id = "tasks-list-section";
-    filtersSection.appendChild(tasksList);
-
-    const tasks = TASKS_DATA.slice(); // kopia defensywna
-
-    selectSubject.querySelector("select").addEventListener("change", (e) => {
-      const filterSubject = e.target.value;
-      tasksList.innerHTML = "";
-      const filteredTasks =
-        filterSubject === "all"
-          ? tasks
-          : tasks.filter((task) => task.subject === filterSubject);
-
-      if (filteredTasks.length === 0 && filterSubject !== "") {
-        tasksList.textContent = "Brak zadań do wyświetlenia.";
-        return;
+    const form = UIFacade.createForm(
+      elements,
+      "Dodaj zadanie",
+      () => {
+        alert("Funkcja dodawania zadania w przygotowaniu (wymaga backendu).");
       }
-      tasksList.appendChild(this.renderTaskElement(filteredTasks, editorSection));
-    });
-
-    // Initial load of all tasks
-    selectSubject.querySelector("select").dispatchEvent(new Event("change"));
-
-    return filtersSection;
-  }
-
-  /**
-   * Renderuje tabelę z listą zadań i obsługuje kliknięcie wiersza (ładowanie markdown do edytora).
-   * @param {Array<{name:string, partName:string, link:string}>} tasks
-   * @param {HTMLElement} editorSection - sekcja z textarea edytora
-   * @returns {HTMLElement} tabela z zadaniami
-   */
-  static renderTaskElement(tasks, editorSection) {
-    const tasksListTable = RenderTable.renderResponsiveTable(
-      tasks.map((task) => [task.name, task.partName]),
-      ["Nazwa zadania", "Rozdział"],
-      false
     );
 
-    const tableContainer = document.querySelector("#tasks-list-section");
-    if (tableContainer) {
-      tableContainer.innerHTML = "";
-      tableContainer.appendChild(tasksListTable);
+    // Add Markdown Editor
+    const editorContainer = document.createElement("div");
+    editorContainer.className = "markdown-editor-container";
+    
+    // Create editor component instance
+    const editor = new MarkdownEditorComponent("task-content-editor");
+    const editorElement = editor.render();
+    
+    // Insert editor before the submit button (last child of form)
+    form.insertBefore(editorElement, form.lastElementChild);
 
-      // Delegacja kliknięć na cały kontener tabeli
-      tableContainer.addEventListener("click", (e) => {
-        const row = e.target.closest("tr");
-        if (!row) return;
-        const allRows = [...tableContainer.querySelectorAll("tr")];
-        const index = allRows.indexOf(row);
-        if (index === 0) return; // pomiń nagłówek
+    container.appendChild(form);
+  }
 
-        const task = tasks[index - 1];
-        const editorTextarea = editorSection.querySelector("#task-editor-section textarea");
-        if (!editorTextarea) return;
+  static renderTasksList(container, tasksData) {
+    const headers = ["Lp.", "Nazwa", "Przedmiot", "Termin", "Akcje"];
+    const data = tasksData.map((task, index) => [
+      index + 1,
+      task.name,
+      task.subject,
+      task.deadline || "-",
+      {
+        type: "actions",
+        actions: [
+          {
+            label: "Edytuj",
+            action: () => alert(`Edycja zadania: ${task.name}`),
+          },
+          {
+            label: "Usuń",
+            action: () => alert(`Usuwanie zadania: ${task.name}`),
+          },
+        ],
+      },
+    ]);
 
-        fetch(task.link)
-          .then((response) => (response.ok ? response.text() : Promise.reject(response)))
-          .then((data) => {
-            editorTextarea.value = data;
-            editorTextarea.dispatchEvent(new Event("input"));
-          })
-          .catch(() => {
-            // Fallback: nie wczytano treści
-            editorTextarea.value = `Nie udało się wczytać treści zadania z ${task.link}`;
-            editorTextarea.dispatchEvent(new Event("input"));
-          });
-      });
-    }
-
-    return tasksListTable;
+    const table = UIFacade.createTable(data, headers);
+    container.appendChild(table);
   }
 }

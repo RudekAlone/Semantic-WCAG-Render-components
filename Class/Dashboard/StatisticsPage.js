@@ -1,16 +1,6 @@
 import { UIFacade } from "../UIFacade.js";
-import { 
-    USERS_DATA,
-    LOGIN_STATISTICS_DATA_STUDENT_0,
-    LOGIN_STATISTICS_DATA_ADMIN,
-    MONTH_NAMES_PL,
-    QUIZ_COMPLETED_DATA_STUDENT_0,
-    COURSES_COMPLETED_DATA_STUDENT_0,
-    COURSES_DATA,
-    BRANCHES,
-    TASKS_STUDENT_DATA_ASO_0,
-    TASKS_STUDENT_DATA_BD_0
- } from "./constants.js";
+import { DataService } from "../Service/DataService.js";
+import { MONTH_NAMES_PL } from "./constants.js";
 
 export class StatisticsPage {
     static renderStatisticsPage() {
@@ -19,88 +9,152 @@ export class StatisticsPage {
         const title = document.createElement("h2");
         title.textContent = "Statystyki";
         container.appendChild(title);
-        const statsSection = document.createElement("section");
-        statsSection.id = "statistics-section";
-        container.appendChild(statsSection);
-        const userData = USERS_DATA[0];
-        if(userData[5].split(" ")[1]==="Uczeń"){
-        this.loadUserStatistics(statsSection, userData);
-        } else {
-        this.loadAllUserStatistics(statsSection, USERS_DATA);
-        }
+        
+        const contentContainer = document.createElement("div");
+        contentContainer.id = "statistics-content";
+        contentContainer.innerHTML = '<div class="loader">Ładowanie statystyk...</div>';
+        container.appendChild(contentContainer);
+
+        this._loadDataAndRender(contentContainer);
+
         return container;
     }
-    static loadUserStatistics(container, userData) {
-        container.innerHTML = ""; // Clear previous content
-        
-        const loginStatsSection = document.createElement("section");
-        loginStatsSection.id = "login-statistics-section";
-        
-        const loginCanvas = document.createElement("canvas");
-        loginCanvas.id = "loginStatisticsChart";
-        loginStatsSection.appendChild(loginCanvas);
-        container.appendChild(loginStatsSection);
 
-        setTimeout(() => {
-            this.createLoginChart(LOGIN_STATISTICS_DATA_STUDENT_0, "loginStatisticsChart");
-        }, 0);
+    static async _loadDataAndRender(container) {
+        try {
+            const usersData = await DataService.getUsers();
+            const userData = usersData[0]; // Mock: current user is always index 0
 
-        const tasksStatusSection = document.createElement("section");
-        tasksStatusSection.id = "tasks-statistics-section";
-        const tasksCanvas = document.createElement("canvas");
-        tasksCanvas.id = "tasksStatusChart";
-        tasksStatusSection.appendChild(tasksCanvas);
-        container.appendChild(tasksStatusSection);
-        setTimeout(() => {
-            this.tasksChartCompletionStatusByStudent("tasksStatusChart");
-        }, 0);
+            container.innerHTML = ""; // Clear loader
+            
+            const statsSection = document.createElement("section");
+            statsSection.id = "statistics-section";
+            container.appendChild(statsSection);
 
-        const roadmapSection = document.createElement("section");
-        roadmapSection.id = "roadmap-statistics-section";
-        const roadmapCanvas = document.createElement("canvas");
-        roadmapCanvas.id = "roadmapChart";
-        roadmapSection.appendChild(roadmapCanvas);
-        container.appendChild(roadmapSection);
-        setTimeout(() => {
-            this.createChartRoadmap(
-                { quizzes: QUIZ_COMPLETED_DATA_STUDENT_0, courses: COURSES_COMPLETED_DATA_STUDENT_0, canvasId: "roadmapChart" }
-            );
-        }, 0);
+            if(userData[5].split(" ")[1]==="Uczeń"){
+                await this.loadUserStatistics(statsSection, userData);
+            } else {
+                await this.loadAllUserStatistics(statsSection, usersData);
+            }
 
-        const quizStatsSection = document.createElement("section");
-        quizStatsSection.id = "quiz-statistics-section";
-        const quizCanvas = document.createElement("canvas");
-        quizCanvas.id = "quizCompletionChart";
-        quizStatsSection.appendChild(quizCanvas);
-        container.appendChild(quizStatsSection);
-        setTimeout(() => {
-            this.createQuizCompletionChart(QUIZ_COMPLETED_DATA_STUDENT_0, "quizCompletionChart");
-        }, 0);
-
-        const coursesStatsSection = document.createElement("section");
-        coursesStatsSection.id = "courses-statistics-section";
-        const coursesCanvas = document.createElement("canvas");
-        coursesCanvas.id = "coursesCompletionChart";
-        coursesStatsSection.appendChild(coursesCanvas);
-        container.appendChild(coursesStatsSection);
-        setTimeout(() => {
-            this.createCoursesCompletionChart(COURSES_COMPLETED_DATA_STUDENT_0, "coursesCompletionChart");
-        }, 0);
+        } catch (error) {
+            console.error("Błąd ładowania statystyk:", error);
+            container.innerHTML = '<p class="error">Nie udało się pobrać danych statystycznych.</p>';
+        }
     }
-    static loadAllUserStatistics(container, usersData) {
-        container.innerHTML = "";
-       
-         const loginStatsSection = document.createElement("section");
-        loginStatsSection.id = "login-statistics-section";
-        
-        const loginCanvas = document.createElement("canvas");
-        loginCanvas.id = "loginStatisticsChart";
-        loginStatsSection.appendChild(loginCanvas);
-        container.appendChild(loginStatsSection);
 
-        setTimeout(() => {
-            this.createLoginChart(LOGIN_STATISTICS_DATA_ADMIN, "loginStatisticsChart");
-        }, 0);
+    static async loadUserStatistics(container, userData) {
+        container.innerHTML = '<div class="loader">Pobieranie szczegółowych danych...</div>';
+        
+        try {
+            const [
+                loginStats,
+                tasksASO,
+                tasksBD,
+                quizStats,
+                courseStats,
+                coursesData,
+                branches
+            ] = await Promise.all([
+                DataService.getLoginStatistics(false),
+                DataService.getStudentTasksASO(),
+                DataService.getStudentTasksBD(),
+                DataService.getQuizCompletedStatistics(),
+                DataService.getCoursesCompletedStatistics(),
+                DataService.getCourses(),
+                DataService.getBranches()
+            ]);
+
+            container.innerHTML = ""; // Clear loader
+
+            const loginStatsSection = document.createElement("section");
+            loginStatsSection.id = "login-statistics-section";
+            
+            const loginCanvas = document.createElement("canvas");
+            loginCanvas.id = "loginStatisticsChart";
+            loginStatsSection.appendChild(loginCanvas);
+            container.appendChild(loginStatsSection);
+    
+            setTimeout(() => {
+                this.createLoginChart(loginStats, "loginStatisticsChart");
+            }, 0);
+    
+            const tasksStatusSection = document.createElement("section");
+            tasksStatusSection.id = "tasks-statistics-section";
+            const tasksCanvas = document.createElement("canvas");
+            tasksCanvas.id = "tasksStatusChart";
+            tasksStatusSection.appendChild(tasksCanvas);
+            container.appendChild(tasksStatusSection);
+            setTimeout(() => {
+                this.tasksChartCompletionStatusByStudent("tasksStatusChart", tasksASO, tasksBD);
+            }, 0);
+    
+            const roadmapSection = document.createElement("section");
+            roadmapSection.id = "roadmap-statistics-section";
+            const roadmapCanvas = document.createElement("canvas");
+            roadmapCanvas.id = "roadmapChart";
+            roadmapSection.appendChild(roadmapCanvas);
+            container.appendChild(roadmapSection);
+            setTimeout(() => {
+                this.createChartRoadmap(
+                    { quizzes: quizStats, courses: courseStats, canvasId: "roadmapChart" },
+                    null,
+                    null,
+                    branches,
+                    coursesData
+                );
+            }, 0);
+    
+            const quizStatsSection = document.createElement("section");
+            quizStatsSection.id = "quiz-statistics-section";
+            const quizCanvas = document.createElement("canvas");
+            quizCanvas.id = "quizCompletionChart";
+            quizStatsSection.appendChild(quizCanvas);
+            container.appendChild(quizStatsSection);
+            setTimeout(() => {
+                this.createQuizCompletionChart(quizStats, "quizCompletionChart");
+            }, 0);
+    
+            const coursesStatsSection = document.createElement("section");
+            coursesStatsSection.id = "courses-statistics-section";
+            const coursesCanvas = document.createElement("canvas");
+            coursesCanvas.id = "coursesCompletionChart";
+            coursesStatsSection.appendChild(coursesCanvas);
+            container.appendChild(coursesStatsSection);
+            setTimeout(() => {
+                this.createCoursesCompletionChart(courseStats, "coursesCompletionChart");
+            }, 0);
+
+        } catch (error) {
+            console.error("Błąd pobierania szczegółów statystyk:", error);
+            container.innerHTML = '<p class="error">Błąd pobierania szczegółowych danych.</p>';
+        }
+    }
+
+    static async loadAllUserStatistics(container, usersData) {
+        container.innerHTML = '<div class="loader">Pobieranie statystyk administratora...</div>';
+        
+        try {
+            const loginStatsAdmin = await DataService.getLoginStatistics(true);
+            
+            container.innerHTML = "";
+           
+             const loginStatsSection = document.createElement("section");
+            loginStatsSection.id = "login-statistics-section";
+            
+            const loginCanvas = document.createElement("canvas");
+            loginCanvas.id = "loginStatisticsChart";
+            loginStatsSection.appendChild(loginCanvas);
+            container.appendChild(loginStatsSection);
+    
+            setTimeout(() => {
+                this.createLoginChart(loginStatsAdmin, "loginStatisticsChart");
+            }, 0);
+
+        } catch (error) {
+            console.error("Błąd pobierania statystyk admina:", error);
+            container.innerHTML = '<p class="error">Błąd pobierania danych.</p>';
+        }
     }
 
     static createLoginChart(data, canvasId) {
@@ -284,8 +338,8 @@ export class StatisticsPage {
         });
     }
 
-    static computeBranchScores(quizData = [], courseData = []) {
-        const branches = BRANCHES;
+    static computeBranchScores(quizData = [], courseData = [], branchesData = []) {
+        const branches = branchesData;
         const branchInfo = branches.map(b => ({
             key: b.key,
             score: 0,
@@ -352,8 +406,8 @@ export class StatisticsPage {
         return { filtered, branchInfo };
     }
 
-    static createChartRoadmap(quizData, courseData, canvasId) {
-        // Accept either (quizData, courseData, canvasId) or (dataObject, canvasId)
+    static createChartRoadmap(quizData, courseData, canvasId, branchesData, coursesData) {
+        // Accept either (quizData, courseData, canvasId) or (dataObject, canvasId, ...)
         if (!canvasId && quizData && quizData.canvasId) {
             canvasId = quizData.canvasId;
             courseData = quizData.courses;
@@ -364,7 +418,7 @@ export class StatisticsPage {
         if (!canvas || typeof Chart === 'undefined') return;
         const ctx = canvas.getContext('2d');
 
-        const { filtered } = this.computeBranchScores(quizData || [], courseData || []);
+        const { filtered } = this.computeBranchScores(quizData || [], courseData || [], branchesData);
 
         if (!filtered || filtered.length === 0) {
             const existing = Chart.getChart(canvasId);
@@ -571,7 +625,7 @@ export class StatisticsPage {
     }
 
 
-static tasksChartCompletionStatusByStudent(canvasId = "tasksStatusChart") {
+static tasksChartCompletionStatusByStudent(canvasId = "tasksStatusChart", tasksASO = [], tasksBD = []) {
 
 
     try {
@@ -581,8 +635,8 @@ static tasksChartCompletionStatusByStudent(canvasId = "tasksStatusChart") {
 
         // Collect task sources (safe if constants are undefined)
         const sources = [
-            { name: 'ASO', data: TASKS_STUDENT_DATA_ASO_0 || [] },
-            { name: 'BD', data: TASKS_STUDENT_DATA_BD_0 || [] }
+            { name: 'ASO', data: tasksASO || [] },
+            { name: 'BD', data: tasksBD || [] }
         ];
 
         const normalize = s => String(s || '').trim();

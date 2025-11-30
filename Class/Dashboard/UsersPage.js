@@ -1,212 +1,133 @@
-import { RenderButton } from "../Render/RenderButton.js";
-import { RenderInput } from "../Render/RenderInput.js";
-import { RenderForm } from "../Render/RenderForm.js";
-import { RenderTable } from "../Render/RenderTable.js";
-import { RenderDetails } from "../Render/RenderDetails.js";
-
-import {
-  ROLE_OPTIONS,
-  CLASS_OPTIONS,
-  LOAD_USER_OPTIONS_ADMIN,
-  LOAD_USER_OPTIONS_NON_ADMIN,
-  USERS_DATA,
-} from "../Dashboard/constants.js";
-
-/**
- * Klasa renderująca stronę zarządzania użytkownikami.
- * Obsługuje formularz dodawania nowych użytkowników oraz tabelę z listą użytkowników.
- */
+import { UIFacade } from "../UIFacade.js";
+import { DataService } from "../Service/DataService.js";
 
 export class UsersPage {
-  /**
-   * Renderuje sekcję zarządzania użytkownikami.
-   *
-   * @static
-   * @param {boolean} isAdmin - Czy użytkownik ma uprawnienia administratora
-   * @returns {HTMLElement} Sekcja zarządzania użytkownikami
-   */
-  static render(isAdmin = true) {
-    const userManagement = document.createElement("section");
-    userManagement.id = "user-management-page";
-
+  static renderUsersPage() {
+    const container = document.createElement("section");
+    container.id = "users-page";
     const title = document.createElement("h2");
-    title.textContent = "Zarządzanie użytkownikami";
-    userManagement.appendChild(title);
+    title.textContent = "Zarządzaj użytkownikami";
+    container.appendChild(title);
 
-    const content = document.createElement("section");
-    if (isAdmin) {
-      const userFormElements = [
-        {
-          label: "Imię",
-          name: "name",
-          id: "name-input",
-          type: "text",
-          role: "textbox",
-          required: true,
-        },
-        {
-          label: "Drugie imię",
-          name: "middleName",
-          id: "middle-name-input",
-          type: "text",
-          role: "textbox",
-          required: false,
-        },
-        {
-          label: "Nazwisko",
-          name: "lastName",
-          id: "last-name-input",
-          type: "text",
-          role: "textbox",
-          required: true,
-        },
-        {
-          selectInputOptions: true,
-          label: "Rola konta",
-          options: ROLE_OPTIONS,
-          name: "accountRole",
-          id: "account-role",
-          required: true,
-          layout: "row",
-        },
-        {
-          selectInputOptions: true,
-          label: "Przypisana klasa",
-          options: CLASS_OPTIONS,
-          name: "assignedClass",
-          id: "assignedClass",
-          required: true,
-          layout: "row",
-        },
-      ];
+    const contentContainer = document.createElement("div");
+    contentContainer.id = "users-content-container";
+    contentContainer.innerHTML = '<div class="loader">Ładowanie użytkowników...</div>';
+    container.appendChild(contentContainer);
 
-      const form = RenderForm.renderForm(
-        userFormElements,
-        "Dodaj użytkownika",
-        (formData) => {
-          console.log("Dodano użytkownika:", Object.fromEntries(formData));
-        },
-        "column"
-      );
+    this._loadDataAndRender(contentContainer);
 
-      const details = RenderDetails.renderDetailsSummary(
-        "Dodawanie nowego użytkownika",
-        form
-      );
-      content.appendChild(details);
-
-      if (window.innerWidth > 600) {
-        details.open = true;
-      }
-    }
-    const sectionOptionsLoad = document.createElement("section");
-    sectionOptionsLoad.id = "user-list-section";
-
-    const optionsLoad = isAdmin
-      ? LOAD_USER_OPTIONS_ADMIN
-      : LOAD_USER_OPTIONS_NON_ADMIN;
-
-    const data = USERS_DATA;
-
-    const selectLoad = RenderInput.selectInputOptions(
-      "Wybierz użytkowników do załadowania",
-      optionsLoad,
-      "loadUsers",
-      "load-users",
-      true,
-      "row"
-    );
-    sectionOptionsLoad.appendChild(selectLoad);
-    selectLoad.appendChild(
-      RenderButton.renderButton(
-        "Załaduj tabelę",
-        "secondary",
-        "button",
-        () => {
-          this.renderUserTable(data, isAdmin, sectionOptionsLoad);
-        }
-      )
-    );
-    selectLoad.classList.add("mr-10");
-    content.appendChild(sectionOptionsLoad);
-
-    userManagement.appendChild(content);
-    return userManagement;
+    return container;
   }
 
-  /**
-   * Renderuje tabelę użytkowników z przyciskami resetu hasła.
-   *
-   * @static
-   * @param {Array} data - Dane użytkowników
-   * @param {boolean} isAdmin - Czy użytkownik ma uprawnienia administratora
-   * @param {HTMLElement} parentSection - Sekcja, do której ma być dodana tabela
-   * @returns {void}
-   */
-  static renderUserTable(data, isAdmin, parentSection) {
-    const headers = [
-      "ID",
-      "Imię",
-      "Drugie imię",
-      "Nazwisko",
-      "Login",
-      "Rola",
-      "Reset hasła",
+  static async _loadDataAndRender(container) {
+      try {
+          const [usersData, roleOptions, classOptions] = await Promise.all([
+              DataService.getUsers(),
+              DataService.getRoleOptions(),
+              DataService.getClassOptions()
+          ]);
+          
+          container.innerHTML = ""; // Clear loader
+
+          const formContainer = document.createElement("div");
+          formContainer.id = "add-user-form-container";
+          container.appendChild(formContainer);
+      
+          const listContainer = document.createElement("div");
+          listContainer.id = "users-list-container";
+          container.appendChild(listContainer);
+      
+          this.renderAddUserForm(formContainer, roleOptions, classOptions);
+          this.renderUsersList(listContainer, usersData);
+
+      } catch (error) {
+          console.error("Błąd ładowania użytkowników:", error);
+          container.innerHTML = '<p class="error">Nie udało się pobrać danych użytkowników.</p>';
+      }
+  }
+
+  static renderAddUserForm(container, roleOptions, classOptions) {
+    const elements = [
+      {
+        label: "Imię",
+        type: "text",
+        id: "user-name",
+        required: true,
+        placeholder: "Wpisz imię",
+      },
+      {
+        label: "Drugie imię",
+        type: "text",
+        id: "user-middle-name",
+        placeholder: "Wpisz drugie imię",
+      },
+      {
+        label: "Nazwisko",
+        type: "text",
+        id: "user-last-name",
+        required: true,
+        placeholder: "Wpisz nazwisko",
+      },
+      {
+        label: "Email",
+        type: "email",
+        id: "user-email",
+        required: true,
+        placeholder: "Wpisz email",
+      },
+      {
+        selectInputOptions: true,
+        label: "Rola",
+        type: "select",
+        id: "user-role",
+        options: roleOptions,
+        required: true,
+      },
+      {
+        selectInputOptions: true,
+        label: "Klasa",
+        type: "select",
+        id: "user-class",
+        options: classOptions,
+      },
     ];
 
-    const roleButtonStyles = {
-      Uczeń: "tertiary",
-      Nauczyciel: "tertiary",
-      Administrator: isAdmin ? "quaternary" : null,
-    };
-
-    const processedData = data.map((row) => {
-      const roleText = row[5];
-      let resetCell;
-      if (roleText.includes("Uczeń"))
-        resetCell = {
-          type: "button",
-          label: "Resetuj hasło",
-          buttonStyle: roleButtonStyles["Uczeń"],
-        };
-      else if (roleText.includes("Nauczyciel"))
-        resetCell = {
-          type: "button",
-          label: "Resetuj hasło",
-          buttonStyle: roleButtonStyles["Nauczyciel"],
-        };
-      else if (roleText.includes("Administrator") && isAdmin)
-        resetCell = {
-          type: "button",
-          label: "Resetuj hasło",
-          buttonStyle: roleButtonStyles["Administrator"],
-        };
-      else resetCell = "Brak uprawnień";
-
-      return [...row.slice(0, 6), resetCell];
-    });
-
-    const userListTable = RenderTable.renderResponsiveTable(
-      processedData,
-      headers,
-      false
-    );
-
-    const sectionTable = document.createElement("section");
-    sectionTable.id = "user-list-table-section";
-    sectionTable.appendChild(userListTable);
-    parentSection.querySelector(".table-container")?.remove();
-    parentSection.appendChild(sectionTable);
-
-    sectionTable.addEventListener("click", (e) => {
-      const btn = e.target.closest("button");
-      if (!btn) return;
-      if (btn.textContent.includes("Resetuj hasło")) {
-        console.log(
-          "Reset hasła dla:",
-          btn.closest("tr").children[4].textContent
-        );
+    const form = UIFacade.createForm(
+      elements,
+      "Dodaj użytkownika",
+      () => {
+        alert("Funkcja dodawania użytkownika w przygotowaniu (wymaga backendu).");
       }
-    });
+    );
+    container.appendChild(form);
+  }
+
+  static renderUsersList(container, usersData) {
+    const headers = ["Lp.", "Imię", "Drugie imię", "Nazwisko", "Email", "Rola", "Klasa", "Akcje"];
+    const data = usersData.map((user, index) => [
+      index + 1,
+      user[0],
+      user[1],
+      user[2],
+      user[3],
+      user[5], // Role
+      user[6] || "-", // Class
+      {
+        type: "actions",
+        actions: [
+          {
+            label: "Edytuj",
+            action: () => alert(`Edycja użytkownika: ${user[0]} ${user[2]}`),
+          },
+          {
+            label: "Usuń",
+            action: () => alert(`Usuwanie użytkownika: ${user[0]} ${user[2]}`),
+          },
+        ],
+      },
+    ]);
+
+    const table = UIFacade.createTable(data, headers);
+    container.appendChild(table);
   }
 }

@@ -1,7 +1,6 @@
 import { UIFacade } from "../UIFacade.js";
-import { TasksEditorPage } from "./TasksEditorPage.js";
-
-import { COURSES_DATA} from "./constants.js"
+import { MarkdownEditorComponent } from "./Components/MarkdownEditorComponent.js";
+import { DataService } from "../Service/DataService.js";
 
 
 export class CoursesManagerPage{
@@ -12,24 +11,38 @@ export class CoursesManagerPage{
         title.textContent = "Zarządzaj kursami";
         container.appendChild(title);
 
-        const coursesCardList = document.createElement("nav");
-        coursesCardList.id = "courses";
-        container.appendChild(coursesCardList);
+        const contentContainer = document.createElement("div");
+        contentContainer.id = "courses-manager-content";
+        contentContainer.innerHTML = '<div class="loader">Ładowanie kursów...</div>';
+        container.appendChild(contentContainer);
 
-        const containerCourseEditor = document.createElement("section");
-        containerCourseEditor.id = "course-editor";
-
-        coursesCardList.appendChild(this.navCourses(containerCourseEditor, COURSES_DATA));
-
-
-        container.appendChild(containerCourseEditor);
-        
-        this.courseEditor(containerCourseEditor, COURSES_DATA);
-
-
-
+        this._loadDataAndRender(contentContainer);
 
         return container;
+    }
+
+    static async _loadDataAndRender(container) {
+        try {
+            const coursesData = await DataService.getCourses();
+            container.innerHTML = ""; // Clear loader
+
+            const coursesCardList = document.createElement("nav");
+            coursesCardList.id = "courses-content-container";
+            container.appendChild(coursesCardList);
+    
+            const containerCourseEditor = document.createElement("section");
+            containerCourseEditor.id = "course-editor";
+    
+            coursesCardList.appendChild(this.navCourses(containerCourseEditor, coursesData));
+    
+            container.appendChild(containerCourseEditor);
+            
+            this.courseEditor(containerCourseEditor, coursesData);
+
+        } catch (error) {
+            console.error("Błąd ładowania kursów:", error);
+            container.innerHTML = '<p class="error">Nie udało się pobrać listy kursów.</p>';
+        }
     }
 
     static navCourses(container, data) {
@@ -83,7 +96,7 @@ export class CoursesManagerPage{
         sectionEditCard.appendChild(wrapPreview);
 
         const navPreviews = document.createElement("nav");
-        navPreviews.id = "courses";
+        navPreviews.id = "courses-content-container";
         const previewsCard = document.createElement("ul");
         previewsCard.id = "previews-card";
         const liPreview = document.createElement("li");
@@ -212,40 +225,18 @@ export class CoursesManagerPage{
         });
 
         // Moduły i lekcje 
-
         const modulesCourse = document.createElement("section");
         modulesCourse.id = "modules-course";
 
-        
-        const editorModulesMarkDown = document.createElement("section");
-        editorModulesMarkDown.id = "editor-modules-markdown";
-        modulesCourse.appendChild(editorModulesMarkDown);
+        // Custom renderer dla modułów
+        const modulesPreviewRenderer = (previewElement, markdownText) => {
+            previewElement.innerHTML = "";
+            const previewListModules = document.createElement("ul");
+            previewElement.appendChild(previewListModules);
 
-        const textareaModules = UIFacade.createTextArea("Moduły i lekcje (Markdown):", "modules-lessons", "modules-lessons", true, { value: selectedCourse ? selectedCourse.modulesMarkdown : "" });
-        editorModulesMarkDown.appendChild(textareaModules);
-        sectionEditCard.appendChild(modulesCourse);
-
-        const previewModules = document.createElement("section");
-        previewModules.id = "preview-modules";
-        const previewListModules = document.createElement("ul");
-        previewModules.appendChild(previewListModules);
-        modulesCourse.appendChild(previewModules);
-
-        // na podstawie tekstu markdown w textarea generuj podgląd listy modułów i lekcji
-        // # Nazwa modułu
-        // ## Nazwa lekcji
-        // #### Nazwa zgrupowanych lekcji
-        // ### Nazwa lekcji 1
-        // ### Nazwa lekcji 2
-        // 
-        // Rozpoczęcie 4 razy hastag to wartość summary w details i należy dodać do niej kolejne lekcje które mają 3 hastagi aż napotkamy pustą linię 
-        // 
-
-        textareaModules.querySelector("textarea").addEventListener("input", (e) => {
-            const markdownText = e.target.value;
-            // czyść poprzedni podgląd
-            previewListModules.innerHTML = "";
             const lines = markdownText.split("\n");
+            let currentDetails = null; // To hold the current <details> element for grouped lessons
+
             lines.forEach((line) => {
                 let li;
                 if (line.startsWith("# ")) {
@@ -253,12 +244,14 @@ export class CoursesManagerPage{
                     li.textContent = line.slice(2).trim();
                     li.classList.add("module-item");
                     previewListModules.appendChild(li);
+                    currentDetails = null; // Reset current details on new module
                 } else if (line.startsWith("## ")) {
                     li = document.createElement("li");
                     li.textContent = line.slice(3).trim();
                     li.classList.add("lesson"); 
                     li.tabIndex = 0;
                     previewListModules.appendChild(li);
+                    currentDetails = null; // Reset current details on new lesson
                 } else if (line.startsWith("#### ")) {
                     // grupowane lekcje
                     const details = document.createElement("details");
@@ -268,26 +261,21 @@ export class CoursesManagerPage{
                     const ulGrouped = document.createElement("ul");
                     details.appendChild(ulGrouped);
                     previewListModules.appendChild(details);
-                    // dodawaj kolejne lekcje do tej grupy
-                    let nextIndex = lines.indexOf(line) + 1;
-                    while (nextIndex < lines.length) {
-                        const nextLine = lines[nextIndex];
-                        if (nextLine.startsWith("### ")) {
-                            const liGrouped = document.createElement("li");
-                            liGrouped.textContent = nextLine.slice(4).trim();
-                            liGrouped.classList.add("lesson");
-                            liGrouped.tabIndex = 0;
-                            ulGrouped.appendChild(liGrouped);
-                            nextIndex++;
-                        }
-                        else { break; } // przerwij jeśli nie lekcja
-                    }
+                    currentDetails = ulGrouped; // Set current details to this grouped ul
+                } else if (line.startsWith("### ") && currentDetails) {
+                    // Add grouped lessons to the current details if available
+                    const liGrouped = document.createElement("li");
+                    liGrouped.textContent = line.slice(4).trim();
+                    liGrouped.classList.add("lesson");
+                    liGrouped.tabIndex = 0;
+                    currentDetails.appendChild(liGrouped);
+                } else {
+                    currentDetails = null; // Reset if line doesn't match any pattern
                 }
-            }
-            );
+            });
+        };
 
-        });
-
+        const initialModulesValue = selectedCourse ? selectedCourse.modulesMarkdown : "";
         const testingText = `
 # Nazwa modułu
 ## Nazwa lekcji
@@ -295,11 +283,16 @@ export class CoursesManagerPage{
 ### Nazwa lekcji 1
 ### Nazwa lekcji 2
 `;
-        // inicjalny podgląd na podstawie istniejącego tekstu w textarea
-        textareaModules.querySelector("textarea").value = testingText
-        const event = new Event('input');
-        textareaModules.querySelector("textarea").dispatchEvent(event);
-
+        
+        const modulesEditor = new MarkdownEditorComponent(
+            "Moduły i lekcje (Markdown):", 
+            "modules-lessons", 
+            initialModulesValue || testingText, 
+            modulesPreviewRenderer
+        );
+        
+        modulesCourse.appendChild(modulesEditor.render());
+        sectionEditCard.appendChild(modulesCourse);
 
 
         const elements = [
@@ -357,16 +350,8 @@ export class CoursesManagerPage{
         const sectionLessonEditor = document.createElement("section");
         sectionLessonEditor.id = "lesson-editor";
 
-        const editorSection = document.createElement("section");
-        editorSection.id = "lesson-editor-section";
-        editorSection.classList.add("editor-section");
-        const previewSection = document.createElement("section");
-        previewSection.id = "lesson-preview-section";
-        previewSection.classList.add("preview-section");
-
-        TasksEditorPage.taskEditor(editorSection, previewSection)
-        sectionLessonEditor.appendChild(editorSection);
-        sectionLessonEditor.appendChild(previewSection);
+        const editorComponent = new MarkdownEditorComponent("Edytor lekcji", "lesson-editor");
+        sectionLessonEditor.appendChild(editorComponent.render());
 
         return sectionLessonEditor;
     }

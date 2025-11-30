@@ -11,6 +11,7 @@ import { CoursesManagerPage } from "./Dashboard/CoursesManagerPage.js";
 import { CoursesPage } from "./Dashboard/CoursesPage.js";
 import { StudentsTasks } from "./Dashboard/StudentsTasks.js";
 import { StatisticsPage } from "./Dashboard/StatisticsPage.js";
+import { DashboardPage } from "./Dashboard/DashboardPage.js";
 
 export class DashboardRender {
   static render(pages = []) {
@@ -40,6 +41,15 @@ export class DashboardRender {
       this.urlMapping(page, contentArea);
       this.loadPageContent(page, contentArea);
     });
+    navPanels.addEventListener("mousedown",  (e) => {
+      if (e.button === 1) {
+        const btn = e.target.closest("button[id^='nav-']");
+        if (!btn) return;
+        const page = { id: btn.dataset.pageId };
+        window.open(`#${page.id}`, "_blank");
+        e.preventDefault();
+      }
+    });
     this.urlMapping(pages, contentArea); // domyślna strona
     return dashboard;
   }
@@ -57,18 +67,18 @@ export class DashboardRender {
     contentArea.innerHTML = ""; // Clear previous content
 
     const PAGE_RENDERERS = {
-      dashboard: () => this.renderDashboard(),
+      dashboard: () => DashboardPage.render(),
       tasks: () => TasksPage.render(),
-      students: () => UsersPage.render(false),
+      students: () => UsersPage.renderUsersPage(),
       classes: () => ClassesPage.renderClassesPage(),
-      users: () => UsersPage.render(true),
-      "manage-tasks": () => TasksEditorPage.render(),
+      users: () => UsersPage.renderUsersPage(),
+      "manage-tasks": () => TasksEditorPage.renderTasksEditorPage(),
       "tasks-status": () => TasksStatusPage.render(),
       quizzes: () => QuizzesPage.renderQuizzesPage(),
       "manage-courses": () => CoursesManagerPage.renderCoursesManagerPage(),
-      "courses": () => CoursesPage.renderCoursesPage(),
+      courses: () => CoursesPage.renderCoursesPage(),
       "students-tasks": () => StudentsTasks.renderStudentsTasksPage(),
-      "statistics": () => StatisticsPage.renderStatisticsPage()
+      statistics: () => StatisticsPage.renderStatisticsPage(),
     };
     const renderer = PAGE_RENDERERS[page.id];
     if (renderer) {
@@ -80,63 +90,58 @@ export class DashboardRender {
     contentArea.appendChild(placeholder);
   }
 
-  static renderDashboard() {
-    const dashboard = document.createElement("section");
-    dashboard.id = "dashboard-page";
-    dashboard.textContent = "To jest strona Dashboard.";
-    return dashboard;
-  }
-
-static urlMapping(pages, contentArea) {
-  if (Array.isArray(pages)) {
-    // jeśli przekazano listę stron, ustaw domyślną (np. pierwszą)
-    if (pages.length > 0) {
-      const hash = window.location.hash.replace("#", "");
-      if(hash.includes("tasks-")){
-        const taskId = hash.split("tasks-")[1];
-        const page = { id: 'tasks' };
-        this.loadPageContent(page, contentArea);
-        // symuluj kliknięcie przycisku przedmiotu
-  setTimeout(() => {
-          const navSection = document.querySelector('#nav-subject-section');
-        const subjectButton = navSection.querySelector(`button[data-subject="${taskId}"]`);
-        if(subjectButton){
-          subjectButton.click();
+  static urlMapping(pages, contentArea) {
+    if (Array.isArray(pages)) {
+      // jeśli przekazano listę stron, ustaw domyślną (np. pierwszą)
+      if (pages.length > 0) {
+        const hash = window.location.hash.replace("#", "");
+        if (hash.includes("tasks-")) {
+          const taskId = hash.split("tasks-")[1];
+          const page = { id: "tasks" };
+          this.loadPageContent(page, contentArea);
+          // symuluj kliknięcie przycisku przedmiotu
+          setTimeout(() => {
+            const navSection = document.querySelector("#nav-subject-section");
+            const subjectButton = navSection.querySelector(
+              `button[data-subject="${taskId}"]`
+            );
+            if (subjectButton) {
+              subjectButton.click();
+            }
+          }, 100);
+          return;
+        } else if (hash.includes("course-")) {
+          const courseName = hash.split("course-")[1];
+          const page = { id: "manage-courses" };
+          this.loadPageContent(page, contentArea);
+          // symuluj kliknięcie przycisku przedmiotu
+          setTimeout(() => {
+            const navCourses = document.querySelector("#courses");
+            const courseLink = navCourses.querySelector(
+              `a[href="#course-${courseName}"]`
+            );
+            if (courseLink) {
+              courseLink.click();
+            }
+          }, 100);
+          return;
         }
-      }, 100);
-        return;
-      } else if(hash.includes("course-")){
-        const courseName = hash.split("course-")[1];
-        const page = { id: 'manage-courses' };
-        this.loadPageContent(page, contentArea);
-        // symuluj kliknięcie przycisku przedmiotu
-  setTimeout(() => {
-          const navCourses = document.querySelector('#courses');
-        const courseLink = navCourses.querySelector(`a[href="#course-${courseName}"]`);
-        if(courseLink){
-          courseLink.click();
+        const page = pages.find((p) => p.id === hash);
+        let defaultPage;
+        if (page) {
+          this.loadPageContent(page, contentArea);
+          window.location.hash = `#${page.id}`;
+          return;
+        } else {
+          defaultPage = pages[0];
         }
-      }, 100);
-        return;
+        this.loadPageContent(defaultPage, contentArea);
+        window.location.hash = `#${defaultPage.id}`;
       }
-      const page = pages.find(p => p.id === hash)
-      let defaultPage;
-      if (page) {
-        this.loadPageContent(page, contentArea);
-        window.location.hash = `#${page.id}`;
-        return;
-      }else{
-       defaultPage = pages[0];
-      }
-      this.loadPageContent(defaultPage, contentArea);
-      window.location.hash = `#${defaultPage.id}`;
+    } else {
+      // jeśli przekazano pojedynczą stronę
+      this.loadPageContent(pages, contentArea);
+      window.location.hash = `#${pages.id}`;
     }
-  } else {
-    // jeśli przekazano pojedynczą stronę
-    this.loadPageContent(pages, contentArea);
-    window.location.hash = `#${pages.id}`;
   }
-}
-
-
 }

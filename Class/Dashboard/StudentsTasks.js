@@ -1,8 +1,5 @@
 import { UIFacade } from "../UIFacade.js";
-
-import { CLASS_OPTIONS, SUBJECT_OPTIONS,
-    TASKS_STUDENT_DATA_BD, TASKS_STUDENT_DATA_ASO
-} from "./constants.js"
+import { DataService } from "../Service/DataService.js";
 
 export class StudentsTasks{
     static renderStudentsTasksPage() {
@@ -11,69 +8,105 @@ export class StudentsTasks{
         const title = document.createElement("h2");
         title.textContent = "Zadania uczniów";
         container.appendChild(title);
-        const formHeader = document.createElement("nav");
-        formHeader.id = "student-tasks";
-        container.appendChild(formHeader);
 
-        const hr = document.createElement("hr");
-        container.appendChild(hr);
+        const contentContainer = document.createElement("div");
+        contentContainer.id = "students-tasks-content-container";
+        contentContainer.innerHTML = '<div class="loader">Ładowanie opcji...</div>';
+        container.appendChild(contentContainer);
 
-        const studentTasksSection = document.createElement("section");
-        studentTasksSection.id = "student-tasks-section";
-        container.appendChild(studentTasksSection);
-
-        const elements = [
-            { selectInputOptions: true, label: "Wybierz klasę:", type: "select", id: "class-select", options: CLASS_OPTIONS },
-            { selectInputOptions: true, label: "Wybierz przedmiot:", type: "select", id: "subject-select", options: SUBJECT_OPTIONS },
-        ];
-
-        const form = UIFacade.createForm(elements, "Załaduj dane", () => {
-            this.loadStudentTasks(
-            form.querySelector("#class-select").value,
-                form.querySelector("#subject-select").value,
-                studentTasksSection
-            );
-        });
-        formHeader.appendChild(form);
-        form.dispatchEvent(new Event('submit')); // automatyczne załadowanie danych przy wejściu na stronę
+        this._loadDataAndRender(contentContainer);
 
         return container;
     }
 
-    static loadStudentTasks(classId, subjectId, container) {
-        container.innerHTML = ""; // Clear previous content
+    static async _loadDataAndRender(container) {
+        try {
+            const [classOptions, subjectOptions] = await Promise.all([
+                DataService.getClassOptions(),
+                DataService.getSubjectOptions()
+            ]);
+    
+            container.innerHTML = ""; // Clear loader
 
-       
+            const formHeader = document.createElement("nav");
+            formHeader.id = "student-tasks";
+            container.appendChild(formHeader);
+    
+            const hr = document.createElement("hr");
+            container.appendChild(hr);
+    
+            const studentTasksSection = document.createElement("section");
+            studentTasksSection.id = "student-tasks-section";
+            container.appendChild(studentTasksSection);
+    
+            const elements = [
+                { selectInputOptions: true, label: "Wybierz klasę:", type: "select", id: "class-select", options: classOptions },
+                { selectInputOptions: true, label: "Wybierz przedmiot:", type: "select", id: "subject-select", options: subjectOptions },
+            ];
+    
+            const form = UIFacade.createForm(elements, "Załaduj dane", () => {
+                this.loadStudentTasks(
+                form.querySelector("#class-select").value,
+                    form.querySelector("#subject-select").value,
+                    studentTasksSection
+                );
+            });
+            formHeader.appendChild(form);
+            
+            // Set default value if exists
+            const subjectSelect = form.querySelector("#subject-select");
+            if(subjectSelect && subjectSelect.options.length > 0) {
+                // Try to select 'aso' if exists, otherwise first
+                const asoOption = Array.from(subjectSelect.options).find(opt => opt.value === 'aso');
+                if(asoOption) subjectSelect.value = 'aso';
+            }
+
+            form.dispatchEvent(new Event('submit')); // automatyczne załadowanie danych przy wejściu na stronę
+        } catch (error) {
+            console.error("Błąd ładowania strony zadań uczniów:", error);
+            container.innerHTML = '<p class="error">Nie udało się pobrać danych.</p>';
+        }
+    }
+
+    static async loadStudentTasks(classId, subjectId, container) {
+        container.innerHTML = '<div class="loader">Ładowanie zadań...</div>';
+        
         const info = document.createElement("h2");
-
-        container.appendChild(info);
- const contentSection = document.createElement("section");
+        const contentSection = document.createElement("section");
         contentSection.id = "student-tasks-content";
-        container.appendChild(contentSection);
 
-        let tasksData = [];
-        if(subjectId === "aso"){
-            tasksData = TASKS_STUDENT_DATA_ASO;
-            info.textContent = `Wyświetlanie zadań dla klasy ${classId.toUpperCase()} i przedmiotu ASO.`;
-        const tasksList = this.renderSubjectList(tasksData);
-        contentSection.appendChild(tasksList);
+        try {
+            let tasksData = [];
+            if(subjectId === "aso"){
+                tasksData = await DataService.getStudentTasksASO();
+                info.textContent = `Wyświetlanie zadań dla klasy ${classId.toUpperCase()} i przedmiotu ASO.`;
+            } else if(subjectId === "bd"){
+                tasksData = await DataService.getStudentTasksBD();
+                info.textContent = `Wyświetlanie zadań dla klasy ${classId.toUpperCase()} i przedmiotu BD.`;
+            } else {
+                container.innerHTML = "";
+                info.textContent = `Brak dostępnych danych dla wybranego przedmiotu.`;
+                container.appendChild(info);
+                return;
+            }
 
-        } else if(subjectId === "bd"){
-            tasksData = TASKS_STUDENT_DATA_BD;
-            info.textContent = `Wyświetlanie zadań dla klasy ${classId.toUpperCase()} i przedmiotu BD.`;
+            container.innerHTML = ""; // Clear loader
+            container.appendChild(info);
+            container.appendChild(contentSection);
+
             const tasksList = this.renderSubjectList(tasksData);
             contentSection.appendChild(tasksList);
-        } else {
-            info.textContent = `Brak dostępnych danych dla wybranego przedmiotu.`;
-            container.appendChild(info);
-            return;
-        }
 
-        const tableStatus = document.createElement("section");
-        tableStatus.id = "student-tasks-status";
-        tableStatus.appendChild(document.createTextNode("Wybierz zadanie, aby zobaczyć statusy uczniów."));
-         contentSection.appendChild(tableStatus);
-        container.appendChild(tableStatus);
+            const tableStatus = document.createElement("section");
+            tableStatus.id = "student-tasks-status";
+            tableStatus.appendChild(document.createTextNode("Wybierz zadanie, aby zobaczyć statusy uczniów."));
+            contentSection.appendChild(tableStatus);
+            container.appendChild(tableStatus);
+
+        } catch (error) {
+            console.error("Błąd pobierania zadań studentów:", error);
+            container.innerHTML = '<p class="error">Błąd pobierania zadań.</p>';
+        }
 
     }
 
@@ -132,21 +165,7 @@ export class StudentsTasks{
         return studentCompletionPercentage;
     }
 
-//     TASKS_STUDENT_DATA_BD = [
-//   {
-//     name: "Sortowanie i filtrowanie danych w SQL",
-//     partName: "SQL",
-//     subject: "bd",
-//     status: "1",
-//     deadline: "2024-06-15",
-//     studentName: "Jan",
-//     studentMiddleName: "Marek",
-//     studentLastName: "Kowalski"
-//   },
     static renderTableStatusByTask(taskData, completionPercentages) {
-
-
-
         const table = UIFacade.createTable(
             taskData.map((task) => [
                 task.studentName,
