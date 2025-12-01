@@ -1,0 +1,92 @@
+@use "root";
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  text-shadow: 0 0 5px #00000080;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1e1e1e99;
+  border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #b4b4b466;
+  border-radius: 6px;
+  border: 1px solid #0000004d;
+}
+html,
+body {
+  background-color: root.$background-color;
+  color: root.$text-color;
+  font-family: root.$font-family-sans;
+  font-size: 1rem;
+  line-height: 1.8;
+}
+a {
+  color: var(--link-color);
+  text-decoration: none;
+  &:hover {
+    color: var(--link-hover-color);
+  }
+  &:visited {
+    color: var(--link-visited-color);
+    &:hover {
+      color: var(--link-visited-hover-color);
+    }
+  }
+  &:focus {
+    outline: var(--outline-focus);
+    outline-offset: 2px;
+  }
+}
+
+input,
+select,
+textarea {
+  :hover,
+  .hovered {
+    outline: var(--outline-hover);
+    outline-offset: 2px;
+  }
+  & {
+    accent-color: var(--accent-color);
+    background-color: var(--input-bg-color);
+    border: 1px solid var(--input-border-color);
+    color: var(--text-color);
+  }
+}
+
+input[type="number"] {
+  &::-webkit-inner-spin-button,
+  &::-webkit-outer-spin-button {
+    filter: invert(1);
+  }
+  &.ff-input {
+    appearance: textfield;
+    -moz-appearance: textfield;
+    -webkit-appearance: textfield;
+    padding-right: 10%;
+    background-color: root.$input-bg-color;
+  }
+}
+
+@mixin focus-outline {
+  outline: 2px solid var(--focus-outline-color);
+  outline-offset: 1px;
+}
+
+label:focus-visible,
+textarea:focus-visible,
+button:focus-visible,
+input:focus-visible:not([type="radio"]),
+select:focus-visible {
+  @include focus-outline;
+}
