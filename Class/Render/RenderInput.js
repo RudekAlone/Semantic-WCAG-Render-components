@@ -150,51 +150,99 @@ export class RenderInput {
     return wrapper;
   }
 
-  /**
-   * Tworzy i zwraca element <div> zawierający etykietę i pole textarea na podstawie przekazanych parametrów.
-   *
-   * @param {string} labelText Tekst etykiety
-   * @param {string} name
-   * @param {string} id
-   * @param {int} rows ilość wierszy, domyślnie 4
-   * @param {int} cols ilość kolumn znakowych, domyślnie 50
-   * @param {boolean} required Czy pole jest wymagane
-   * @returns Element <div> zawierający etykietę i pole textarea
-   */
-  static renderTextArea(
-    labelText,
-    name,
-    id,
-    rows = 4,
-    cols = 50,
-    required = true
-  ) {
-    const wrapper = document.createElement("div");
-    wrapper.setAttribute("data-ui", "textarea-wrapper");
+/**
+ * Tworzy i zwraca element <div> zawierający etykietę i pole textarea na podstawie przekazanych parametrów.
+ *
+ * @param {string} labelText Tekst etykiety
+ * @param {string} name
+ * @param {string} id
+ * @param {int} rows ilość wierszy, domyślnie 4
+ * @param {int} cols ilość kolumn znakowych, domyślnie 50
+ * @param {boolean} required Czy pole jest wymagane
+ * @returns Element <div> zawierający etykietę i pole textarea
+ */
+static renderTextArea(
+  labelText,
+  name,
+  id,
+  rows = 4,
+  cols = 50,
+  required = true
+) {
+  const wrapper = document.createElement("div");
+  wrapper.setAttribute("data-ui", "textarea-wrapper");
 
-    const label = document.createElement("label");
-    label.textContent = labelText;
-    label.setAttribute("for", id);
-    label.setAttribute("data-ui", "textarea-label");
-    wrapper.appendChild(label);
+  const label = document.createElement("label");
+  label.textContent = labelText;
+  label.setAttribute("for", id);
+  label.setAttribute("data-ui", "textarea-label");
+  wrapper.appendChild(label);
 
-    const textArea = document.createElement("textarea");
-    textArea.setAttribute("name", name);
-    textArea.setAttribute("id", id);
-    textArea.setAttribute("rows", rows);
-    textArea.setAttribute("cols", cols);
-    textArea.setAttribute("autocomplete", "on");
-    textArea.setAttribute("data-ui", "textarea");
+  const textArea = document.createElement("textarea");
+  textArea.setAttribute("name", name);
+  textArea.setAttribute("id", id);
+  textArea.setAttribute("rows", rows);
+  textArea.setAttribute("cols", cols);
+  textArea.setAttribute("autocomplete", "on");
+  textArea.setAttribute("data-ui", "textarea");
 
-    // WCAG fix
-    textArea.setAttribute("aria-label", labelText);
-    textArea.setAttribute("aria-required", required);
-    textArea.setAttribute("role", "textbox");
-    textArea.setAttribute("tabindex", "0");
+  // WCAG fix
+  textArea.setAttribute("aria-label", labelText);
+  textArea.setAttribute("aria-required", required);
+  textArea.setAttribute("role", "textbox");
+  textArea.setAttribute("tabindex", "0");
 
-    wrapper.appendChild(textArea);
-    return wrapper;
-  }
+  // --- Dodajemy obsługę Ctrl+] i Ctrl+[ ---
+  const indent = "  "; // dwie spacje
+
+  textArea.addEventListener("keydown", function (e) {
+    const value = this.value;
+    const start = this.selectionStart;
+    const end = this.selectionEnd;
+
+    const lineStart = value.lastIndexOf("\n", start - 1) + 1;
+    const lineEnd = value.indexOf("\n", end);
+    const sliceEnd = lineEnd === -1 ? value.length : lineEnd;
+
+    // INDENT: Ctrl+]
+    if (e.ctrlKey && e.key === "]") {
+      e.preventDefault();
+      const block = value.slice(lineStart, sliceEnd)
+        .split("\n")
+        .map(line => indent + line)
+        .join("\n");
+
+      this.value = value.slice(0, lineStart) + block + value.slice(sliceEnd);
+
+      this.selectionStart = start + indent.length;
+      this.selectionEnd = end + indent.length * block.split("\n").length;
+    }
+
+    // OUTDENT: Ctrl+[
+    if (e.ctrlKey && e.key === "[") {
+      e.preventDefault();
+      const lines = value.slice(lineStart, sliceEnd).split("\n");
+      let removedTotal = 0;
+
+      const block = lines.map(line => {
+        if (line.startsWith(indent)) {
+          removedTotal += indent.length;
+          return line.slice(indent.length);
+        }
+        return line;
+      }).join("\n");
+
+      this.value = value.slice(0, lineStart) + block + value.slice(sliceEnd);
+
+      this.selectionStart = Math.max(start - indent.length, lineStart);
+      this.selectionEnd = Math.max(end - removedTotal, this.selectionStart);
+    }
+  });
+
+  wrapper.appendChild(textArea);
+  return wrapper;
+}
+
 
   /**
    * Tworzy i zwraca element <select> z opcjami na podstawie przekazanej tablicy obiektów.

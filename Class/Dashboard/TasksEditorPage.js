@@ -2,12 +2,12 @@ import { RenderButton } from "../Render/RenderButton.js";
 import { RenderInput } from "../Render/RenderInput.js";
 import { RenderForm } from "../Render/RenderForm.js";
 import { RenderTable } from "../Render/RenderTable.js";
-import { RenderMarkdown } from "../RenderMarkdown.js";
+import { MarkdownEditorComponent } from "./Components/MarkdownEditorComponent.js";
 import { SUBJECT_OPTIONS, TASKS_DATA } from "./constants.js";
 
 /**
  * Klasa renderująca stronę edycji i zarządzania zadaniami studenta.
- * - Edytor markdown + podgląd z synchronizacją przewijania
+ * - Edytor markdown + podgląd z synchronizacją przewijania (z użyciem MarkdownEditorComponent)
  * - Dodawanie nowego zadania
  * - Filtrowanie i ładowanie zadań do edytora
  */
@@ -38,11 +38,20 @@ export class TasksEditorPage {
     const editorSection = document.createElement("section");
     editorSection.classList.add("editor-section");
 
-    const previewSection = document.createElement("section");
-    previewSection.classList.add("preview-section");
+    // Preview section is now handled inside the component, but the layout expects it separately?
+    // The original layout had editorSection and previewSection side-by-side in tasksMain.
+    // The new component encapsulates both.
+    // We need to adapt. The component returns a container with both.
+    // So we can append the component to tasksMain directly or wrap it.
+    // However, the original code passed editorSection and previewSection to taskEditor.
+    // Let's adjust the layout structure here.
+    
+    // We will use a single container for the editor component which includes preview.
+    const editorContainer = document.createElement("section");
+    editorContainer.classList.add("editor-container");
+    editorContainer.style.width = "100%"; // Ensure it takes full width
 
-    tasksMain.appendChild(editorSection);
-    tasksMain.appendChild(previewSection);
+    tasksMain.appendChild(editorContainer);
 
     tasksManagement.appendChild(tasksHeader);
     tasksManagement.appendChild(tasksMain);
@@ -56,140 +65,41 @@ export class TasksEditorPage {
     footerTasksSection.appendChild(saveButton);
 
     // Sekcje funkcjonalne
-    this.taskEditor(editorSection, previewSection, saveButton);
-    addTaskSection.appendChild(this.newTask(editorSection));
-    filtersSection.appendChild(this.taskFilters(editorSection));
+    this.taskEditor(editorContainer, saveButton);
+    
+    // Note: newTask and taskFilters need access to the editor instance or DOM.
+    // We pass editorContainer to help them find the textarea.
+    addTaskSection.appendChild(this.newTask(editorContainer));
+    filtersSection.appendChild(this.taskFilters(editorContainer));
 
     return tasksManagement;
   }
 
   /**
-   * Precyzyjnie wyrównuje scroll edytora względem podglądu, z dopasowaniem do wysokości linii.
-   * @param {HTMLTextAreaElement} textareaEditor
-   * @param {HTMLElement} preview
-   * @param {{activeSource: string|null}} state
-   */
-  static finalizeAlign(textareaEditor, preview, state) {
-    const ratio = preview.scrollTop / (preview.scrollHeight - preview.clientHeight);
-    let targetTop = ratio * (textareaEditor.scrollHeight - textareaEditor.clientHeight);
-
-    const lh =
-      parseFloat(getComputedStyle(textareaEditor).lineHeight) ||
-      parseFloat(getComputedStyle(textareaEditor).fontSize);
-    if (lh && Number.isFinite(lh)) {
-      targetTop = Math.round(targetTop / lh) * lh;
-    }
-
-    state.activeSource = "preview";
-    textareaEditor.scrollTop = targetTop;
-    state.activeSource = null;
-  }
-
-  /**
    * Renderuje edytor markdown i podgląd z synchronizacją przewijania.
-   * @param {HTMLElement} editorSection
-   * @param {HTMLElement} previewSection
+   * @param {HTMLElement} container
    * @param {HTMLButtonElement} buttonSave
    */
-  static taskEditor(editorSection, previewSection, buttonSave=null) {
-    const editor = RenderInput.renderTextArea("", "task-editor", "task-editor", 44, 80);
-    editor.id = "task-editor-section";
-
-    const headerEditor = document.createElement("h3");
-    headerEditor.textContent = "Edytor zadania (markdown)";
-    editorSection.appendChild(headerEditor);
-    editorSection.appendChild(editor);
-
-    const preview = document.createElement("section");
-    preview.id = "task-preview-section";
-    preview.classList.add("preview-markdown");
-
-    const headerPreview = document.createElement("h3");
-    headerPreview.textContent = "Podgląd zadania";
-    previewSection.appendChild(headerPreview);
-    previewSection.appendChild(preview);
-
-    const textareaEditor = editor.querySelector("textarea");
-
-    textareaEditor.addEventListener("input", () => {
-      if (buttonSave){
-        buttonSave.disabled = textareaEditor.value === "";
-      }
-      RenderMarkdown.renderMarkdownPreview(preview, textareaEditor.value);
-    });
-
-    // Wspólny, lokalny stan synchronizacji
-    const state = {
-      activeSource: null,
-      skipPreviewSync: false,
-      finalizeTimer: null,
-    };
-
-    // Klawiatura w preview: tymczasowe wyłączenie sync
-    preview.addEventListener("keydown", (e) => {
-      if (["ArrowDown", "ArrowUp", "PageDown", "PageUp", "Home", "End"].includes(e.key)) {
-        state.skipPreviewSync = true;
-        if (state.finalizeTimer) {
-          clearTimeout(state.finalizeTimer);
-          state.finalizeTimer = null;
-        }
-      }
-    });
-
-    preview.addEventListener("keyup", (e) => {
-      if (["ArrowDown", "ArrowUp", "PageDown", "PageUp", "Home", "End"].includes(e.key)) {
-        state.skipPreviewSync = false;
-        state.finalizeTimer = setTimeout(() => {
-          this.finalizeAlign(textareaEditor, preview, state);
-          state.finalizeTimer = null;
-        }, 30);
-      }
-    });
-
-    // Sync edytor → preview (zawsze)
-    textareaEditor.addEventListener("scroll", () => {
-      if (state.activeSource === "preview") return;
-      state.activeSource = "editor";
-      requestAnimationFrame(() => {
-        const ratio =
-          textareaEditor.scrollTop /
-          (textareaEditor.scrollHeight - textareaEditor.clientHeight);
-        preview.scrollTop = ratio * (preview.scrollHeight - preview.clientHeight);
-        state.activeSource = null;
+  static taskEditor(container, buttonSave = null) {
+    const editorComponent = new MarkdownEditorComponent("Edytor zadania (markdown)", "task-editor");
+    const editorElement = editorComponent.render();
+    
+    // Obsługa przycisku zapisu
+    if (buttonSave) {
+      editorElement.addEventListener("editor-change", (e) => {
+        buttonSave.disabled = e.detail.value === "";
       });
-    });
+    }
 
-    // Sync preview → edytor (tylko mysz/touchpad)
-    preview.addEventListener("scroll", () => {
-      if (state.activeSource === "editor") return;
-      if (state.skipPreviewSync) return;
-      state.activeSource = "preview";
-      requestAnimationFrame(() => {
-        const ratio = preview.scrollTop / (preview.scrollHeight - preview.clientHeight);
-        textareaEditor.scrollTop =
-          ratio * (textareaEditor.scrollHeight - textareaEditor.clientHeight);
-        state.activeSource = null;
-      });
-    });
-
-    // // Załaduj przykładowy markdown (bez crasha na błąd sieci)
-    // fetch("sample-task.md")
-    //   .then((response) => (response.ok ? response.text() : Promise.reject(response)))
-    //   .then((data) => {
-    //     textareaEditor.value = data;
-    //     textareaEditor.dispatchEvent(new Event("input"));
-    //   })
-    //   .catch(() => {
-    //     // spokojny fallback; brak logów produkcyjnych
-    //   });
+    container.appendChild(editorElement);
   }
 
   /**
    * Formularz tworzenia nowego zadania: czyści edytor, ustawia metadane i fokusuje textarea.
-   * @param {HTMLElement} editorSection
+   * @param {HTMLElement} container - kontener zawierający edytor
    * @returns {HTMLFormElement}
    */
-  static newTask(editorSection) {
+  static newTask(container) {
     const elementsInputs = [
       {
         label: "Nazwa zadania",
@@ -214,7 +124,8 @@ export class TasksEditorPage {
       elementsInputs,
       "Dodaj nowe zadanie",
       (formData) => {
-        const textArea = editorSection.querySelector("#task-editor-section textarea");
+        // Znajdź textarea wewnątrz komponentu
+        const textArea = container.querySelector("#task-editor-input");
         if (!textArea) return;
 
         textArea.value = "";
@@ -239,10 +150,10 @@ export class TasksEditorPage {
 
   /**
    * Sekcja filtrów i listy zadań do wczytania w edytor.
-   * @param {HTMLElement} editorSection - referencja do sekcji edytora
+   * @param {HTMLElement} container - kontener zawierający edytor
    * @returns {HTMLElement} sekcja filtrów
    */
-  static taskFilters(editorSection) {
+  static taskFilters(container) {
     const filtersSection = document.createElement("section");
     filtersSection.id = "task-filters-section";
 
@@ -277,7 +188,7 @@ export class TasksEditorPage {
         tasksList.textContent = "Brak zadań do wyświetlenia.";
         return;
       }
-      tasksList.appendChild(this.renderTaskElement(filteredTasks, editorSection));
+      tasksList.appendChild(this.renderTaskElement(filteredTasks, container));
     });
 
     // Initial load of all tasks
@@ -289,10 +200,10 @@ export class TasksEditorPage {
   /**
    * Renderuje tabelę z listą zadań i obsługuje kliknięcie wiersza (ładowanie markdown do edytora).
    * @param {Array<{name:string, partName:string, link:string}>} tasks
-   * @param {HTMLElement} editorSection - sekcja z textarea edytora
+   * @param {HTMLElement} container - kontener zawierający edytor
    * @returns {HTMLElement} tabela z zadaniami
    */
-  static renderTaskElement(tasks, editorSection) {
+  static renderTaskElement(tasks, container) {
     const tasksListTable = RenderTable.renderResponsiveTable(
       tasks.map((task) => [task.name, task.partName]),
       ["Nazwa zadania", "Rozdział"],
@@ -313,7 +224,7 @@ export class TasksEditorPage {
         if (index === 0) return; // pomiń nagłówek
 
         const task = tasks[index - 1];
-        const editorTextarea = editorSection.querySelector("#task-editor-section textarea");
+        const editorTextarea = container.querySelector("#task-editor-input");
         if (!editorTextarea) return;
 
         fetch(task.link)

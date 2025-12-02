@@ -452,7 +452,7 @@ export const TASKS_STUDENT_DATA_BD = [
     name: "Sortowanie i filtrowanie danych w SQL",
     partName: "SQL",
     subject: "bd",
-    status: "0",
+    status: "1",
     deadline: "2024-06-15",
     studentName: "Piotr",
     studentMiddleName: "-",
@@ -656,4 +656,30 @@ export const BRANCHES = [
     quizNames: [],
     courseNames: ["windows-11", "windows-server-2025", "ubuntu-24.04-desktop", "virtualbox"]
   }
+];
+
+export const EXAM_STUDENT_DATA_0 = [
+    {
+    name: "INF.02",
+    part: "teoretyczna",
+    date: "2024-06-22",
+    result: 90
+  },
+  {
+    name: "INF.02",
+    part: "praktyczna",
+    date: "2024-06-20",
+    result: -1
+  },
+  {
+    name: "INF.03",
+    part: "teoretyczna",
+    date: "2026-07-17",
+  },
+  {
+    name: "INF.03",
+    part: "praktyczna",
+    date: "2026-07-23",
+  },
+
 ];
