@@ -1,11 +1,12 @@
 // Definicje kolorów dla motywu ciemnego
-$background-color: #030303;
-$text-color: #ffffff;
+
+$text-color: #ebebeb;
 // Warstwy tła
-$bg-layer-1: #1a1a1a;
-$bg-layer-2: #282828;
-$bg-layer-3: #2e2e2e;
-$bg-layer-4: #444444;
+$background-color: #030303;
+$bg-layer-1: #161616;
+$bg-layer-2: #1d1d1d;
+$bg-layer-3: #232323;
+$bg-layer-4: #292929;
 
 // Gradients
 $bg-gradient-1: linear-gradient(
@@ -30,10 +31,10 @@ $bg-gradient-3: linear-gradient(
 //Inputs
 $focus-outline-color: #00FFBF;
 $accent-color: #009FFF;
-$input-bg-color: #1a1a1a;
-$input-bg-color-hover: #2a2a2a;
-$input-border: 1px solid #444444;
-$input-border-hover: 1px solid #666666;
+$input-bg-color: #101010;
+$input-bg-color-hover: #1a1a1a;
+$input-border: 1px solid #3a3a3a;
+$input-border-hover: 1px solid #9b9b9b;
 $outline-focus: 2px solid var(--focus-outline-color);
 $outline-hover: 1px solid var(--focus-outline-color);
 

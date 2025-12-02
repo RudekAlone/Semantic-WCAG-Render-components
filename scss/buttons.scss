@@ -1,0 +1,65 @@
+
+
+@mixin focus-outline {
+  outline: var(--outline-focus);
+  outline-offset: 1px;
+}
+
+@mixin shadow-box {
+  box-shadow: 2px 3px 5px rgba(0, 0, 0, 0.4);
+}
+
+button {
+  @include shadow-box;
+  & {
+    background-color: var(--button-bg-primary);
+    color: var(--text-color);
+    border: none;
+    padding: 10px 20px;
+    margin: 5px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+  }
+  &:hover,
+  &.hovered {
+    background-color: var(--button-bg-hover-primary);
+  }
+  &:focus-visible {
+    @include focus-outline;
+  }
+  &.bg-primary {
+    background-color: var(--button-bg-primary);
+  }
+  &:hover.bg-primary {
+    background-color: var(--button-bg-hover-primary);
+  }
+  &.bg-secondary {
+    background-color: var(--button-bg-secondary);
+  }
+  &:hover.bg-secondary {
+    background-color: var(--button-bg-hover-secondary);
+  }
+  &.bg-tertiary {
+    background-color: var(--button-bg-tertiary);
+  }
+  &:hover.bg-tertiary {
+    background-color: var(--button-bg-hover-tertiary);
+  }
+  &.bg-quaternary {
+    background-color: var(--button-bg-quaternary);
+  }
+  &:hover.bg-quaternary {
+    background-color: var(--button-bg-hover-quaternary);
+  }
+  &.bg-fifth {
+    background-color: var(--button-bg-fifth);
+  }
+  &:hover.bg-fifth {
+    background-color: var(--button-bg-hover-fifth);
+  }
+  &:disabled {
+    cursor: not-allowed;
+  }
+}

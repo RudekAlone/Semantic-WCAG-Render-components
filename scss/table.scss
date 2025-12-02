@@ -1,0 +1,91 @@
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: var(--bg-layer-3);
+}
+
+th {
+  background-color: var(--bg-layer-1);
+  color: var(--text-color);
+}
+
+th:hover,
+td:hover {
+  background-color: var(--bg-layer-2);
+}
+
+th,
+td {
+  border: 1px solid var(--bg-layer-4);
+  padding: 10px;
+  text-align: left;
+}
+
+.mobile-table {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.mobile-row {
+  background-color: var(--bg-layer-1);
+  border: 1px solid var(--bg-layer-4);
+  border-radius: 5px;
+  padding: 10px;
+}
+
+.mobile-cell {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  border-top: 1px solid var(--bg-layer-4);
+  border-bottom: 1px solid var(--bg-layer-4);
+}
+
+.mobile-cell:first-child {
+  border-top: none;
+}
+
+.mobile-cell:last-child {
+  margin-bottom: 0;
+  border-bottom: none;
+}
+
+.mobile-label {
+  font-weight: bold;
+  color: var(--text-color);
+  border-right: 1px solid var(--bg-layer-4);
+  width: 50%;
+}
+
+.mobile-value {
+  flex-grow: 1;
+  align-content: center;
+  color: var(--text-color);
+}
+
+table img,
+.mobile-value img {
+  max-width: 180px;
+  height: auto;
+  border-radius: 5px;
+}
+table .input-wrapper{
+  box-shadow: none;
+}
+
+.mobile-header-button {
+  background: var(--secondary-color);
+  border: none;
+  color: var(--text-color);
+  font-weight: bold;
+  cursor: pointer;
+  margin: 0 5px;
+  padding: 5px 10px;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+}
+
+.mobile-header-button:hover {
+  background-color: var(--hover-secondary-color);
+}

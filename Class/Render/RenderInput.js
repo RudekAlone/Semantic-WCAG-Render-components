@@ -21,138 +21,115 @@ export class RenderInput {
    * @example
    * ["application/pdf", "image/*"] // dla plików akceptowanych w input type="file"
    */
-  static renderInput(
-    labelText,
-    name,
-    id,
-    type = "text",
-    role = "textbox",
-    required = true,
-    direction = "row",
-    value = "",
-    acceptFiles = [],
-    placeholder = ""
-  ) {
-    const wrapper = document.createElement("div");
-    wrapper.classList.add("input-wrapper");
-    // wrapper.setAttribute("data-ui", "input-wrapper");
-    wrapper.classList.add(`layout-${direction}`);
-    // wrapper.setAttribute("data-layout", direction);
+static renderInput(
+  labelText,
+  name,
+  id,
+  type = "text",
+  role = "textbox",
+  required = true,
+  direction = "row",
+  value = "",
+  acceptFiles = [],
+  placeholder = ""
+) {
+  const wrapper = document.createElement("div");
+  wrapper.classList.add("input-wrapper", `layout-${direction}`);
 
-    let label;
+  // === LABEL ===
+  const label = (() => {
+    let lbl;
     if (typeof labelText === "string") {
-      label = document.createElement("label");
-      label.textContent = labelText;
-      // label.setAttribute("data-ui", "input-label");
+      lbl = document.createElement("label");
+      lbl.textContent = labelText;
     } else if (labelText instanceof HTMLElement) {
-      label = labelText;
-      // label.setAttribute("data-ui", "input-label");
-    }
-      label.setAttribute("for", id);
-
-    label.classList.add("input-label");
-      wrapper.appendChild(label);
-
-
-
-    const input = document.createElement("input");
-    input.setAttribute("type", type);
-    input.setAttribute("name", name);
-    input.setAttribute("id", id);
-    input.setAttribute("data-ui", "input");
-
-    // WCAG + semantyka
-    input.setAttribute("aria-required", required);
-
-    if (type !== "radio") {
-      input.setAttribute("tabindex", "0");
-    }
-
-    // Typowe wartości
-    if (type === "color") {
-      input.setAttribute("value", value === "" ? "#5d00e7" : value);
-      label.setAttribute("for", id);
-      label.addEventListener("click", () => {
-        input.focus();
-      });
-      label.addEventListener("mouseover", (event) => {
-        input.classList.add("hovered");
-      });
-      label.addEventListener("mouseout", (event) => {
-        input.classList.remove("hovered");
-      });
-    } else if (type === "file" && acceptFiles.length > 0) {
-      input.setAttribute("accept", acceptFiles.join(","));
-    } else if (type === "checkbox" || type === "radio") {
-      input.checked = value === "true" || value === true ? true : false;
-    } else if (value) {
-      input.setAttribute("value", value);
-    }
-
-    // WCAG fix dla checkbox/radio - widoczny fokus przy użyciu klawiatury i wykryty na dziecku przez myszkę
-    (function () {
-      const setTabbing = () => document.body.classList.add("user-is-tabbing");
-      const unsetTabbing = () =>
-        document.body.classList.remove("user-is-tabbing");
-
-      window.addEventListener("keydown", (e) => {
-        if (e.key === "Tab") setTabbing();
-      });
-
-      window.addEventListener("mousedown", unsetTabbing);
-      window.addEventListener("touchstart", unsetTabbing);
-    })();
-
-    if (RenderUtils.isFirefox) {
-      input.classList.add("ff-input");
-    }
-
-    if (label.textContent == "") {
-      label.classList.add("sr-only");
-      label.textContent = "Wpisz wartość";
-      if (placeholder !== "") {
-        input.placeholder = placeholder;
-      }
-    }
-
-    if (RenderUtils.isFirefox && type === "number") {
-      input.setAttribute("inputmode", "numeric"); // podpowiedź dla mobile
-      input.setAttribute("pattern", "[0-9]*"); // podpowiedź dla mobile
-
-      input.addEventListener("keypress", (e) => {
-        if (!/[0-9]/.test(e.key)) {
-          e.preventDefault(); // blokuje wpisanie litery
-        }
-      });
-
-      const butonArrowUp = document.createElement("button");
-      butonArrowUp.classList.add("ff-number-arrow", "ff-number-arrow-up");
-      butonArrowUp.textContent = "▲";
-      butonArrowUp.addEventListener("click", () => {
-        input.stepUp();
-        input.dispatchEvent(new InputEvent("input", { bubbles: true }));
-      });
-      const butonArrowDown = document.createElement("button");
-      butonArrowDown.classList.add("ff-number-arrow", "ff-number-arrow-down");
-      butonArrowDown.textContent = "▼";
-      butonArrowDown.addEventListener("click", () => {
-        input.stepDown();
-        input.dispatchEvent(new InputEvent("input", { bubbles: true }));
-      });
-
-      const numericInput = document.createElement("div");
-      numericInput.classList.add("numeric-input");
-      numericInput.appendChild(input);
-
-      numericInput.appendChild(butonArrowUp);
-      numericInput.appendChild(butonArrowDown);
-      wrapper.appendChild(numericInput);
+      lbl = labelText;
     } else {
-      wrapper.appendChild(input);
+      lbl = document.createElement("label");
+      lbl.textContent = "";
     }
+    lbl.classList.add("input-label");
+    lbl.setAttribute("for", id);
+    return lbl;
+  })();
+  wrapper.appendChild(label);
 
-    return wrapper;
+  // === INPUT ===
+  const input = document.createElement("input");
+  input.type = type;
+  input.name = name;
+  input.id = id;
+  input.setAttribute("data-ui", "input");
+
+  if (role) input.setAttribute("role", role);
+  if (required) input.required = true;
+  if (type !== "radio") input.setAttribute("tabindex", "0");
+
+  // Typowe wartości
+  if (type === "color") {
+    input.value = value || "#008be7";
+    label.addEventListener("click", () => input.focus());
+  } else if (type === "file" && acceptFiles.length > 0) {
+    input.accept = acceptFiles.join(",");
+  } else if (["checkbox", "radio"].includes(type)) {
+    input.checked = value === "true" || value === true;
+  } else if (value) {
+    input.defaultValue = value;
   }
+
+  // Label pusty → sr-only + placeholder
+  if (!label.textContent) {
+    label.classList.add("sr-only");
+    label.textContent = "Wpisz wartość";
+    if (placeholder) input.placeholder = placeholder;
+  }
+
+  // === Obsługa number (uniwersalna) ===
+  if (type === "number") {
+    input.setAttribute("inputmode", "numeric");
+    input.setAttribute("pattern", "[0-9]*");
+    input.addEventListener("keypress", (e) => {
+      if (!/[0-9]/.test(e.key)) e.preventDefault();
+    });
+
+    const buttonUp = document.createElement("button");
+    buttonUp.type = "button";
+    buttonUp.classList.add("koala-number-arrow", "koala-number-arrow-up");
+    buttonUp.textContent = "▲";
+    buttonUp.setAttribute("aria-label", "Increase value");
+    buttonUp.addEventListener("click", () => {
+      input.stepUp();
+      input.dispatchEvent(new InputEvent("input", { bubbles: true }));
+    });
+
+    const buttonDown = document.createElement("button");
+    buttonDown.type = "button";
+    buttonDown.classList.add("koala-number-arrow", "koala-number-arrow-down");
+    buttonDown.textContent = "▼";
+    buttonDown.setAttribute("aria-label", "Decrease value");
+    buttonDown.addEventListener("click", () => {
+      input.stepDown();
+      input.dispatchEvent(new InputEvent("input", { bubbles: true }));
+    });
+
+    const numericInput = document.createElement("div");
+    numericInput.classList.add("numeric-input");
+    const numericArrowWrapper = document.createElement("div");
+    numericArrowWrapper.classList.add("numeric-arrow-wrapper");
+
+    numericInput.appendChild(input);
+    numericArrowWrapper.appendChild(buttonUp);
+    numericArrowWrapper.appendChild(buttonDown);
+    numericInput.appendChild(numericArrowWrapper);
+
+    wrapper.appendChild(numericInput);
+  } else {
+    wrapper.appendChild(input);
+  }
+
+  return wrapper;
+}
+
 
 /**
  * Tworzy i zwraca element <div> zawierający etykietę i pole textarea na podstawie przekazanych parametrów.
@@ -174,7 +151,8 @@ static renderTextArea(
   required = true
 ) {
   const wrapper = document.createElement("div");
-  wrapper.setAttribute("data-ui", "textarea-wrapper");
+  // wrapper.setAttribute("data-ui", "textarea-wrapper");
+  wrapper.classList.add("textarea-wrapper");
 
   const label = document.createElement("label");
   label.textContent = labelText;
@@ -479,7 +457,7 @@ static renderTextArea(
 
       setTimeout(() => {
         const tag = preview.firstChild?.tagName;
-        preview.style.top = tag === "AUDIO" ? "30%" : "-95%";
+        preview.style.top = tag === "AUDIO" ? "30%" : "-65%";
       }, 50);
     });
 
