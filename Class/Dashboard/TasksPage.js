@@ -1,8 +1,7 @@
 import { RenderButton } from "../Render/RenderButton.js";
 import { RenderDetails } from "../Render/RenderDetails.js";
 import { RenderMarkdown } from "../RenderMarkdown.js";
-
-import { SUBJECT_NAMES, STATUS_MAP, TASKS_DATA } from "./constants.js";
+import { DataService } from "../Service/DataService.js";
 
 /**
  * Klasa renderująca stronę zadań studenta.
@@ -20,88 +19,115 @@ export class TasksPage {
     const tasksPage = document.createElement("section");
     tasksPage.id = "tasks-page";
 
-    const tasksHubSection = document.createElement("section");
-    tasksHubSection.id = "tasks-hub-page";
-
+    const header = document.createElement("header");
     const title = document.createElement("h2");
     title.textContent = "Twoje zadania";
-    tasksPage.appendChild(title);
+    header.appendChild(title);
+    tasksPage.appendChild(header);
 
-    const navSubjectSection = document.createElement("nav");
-    navSubjectSection.id = "nav-subject-section";
+    const contentContainer = document.createElement("div");
+    contentContainer.id = "tasks-content-container";
+    contentContainer.innerHTML = '<div class="loader">Ładowanie zadań...</div>';
+    tasksPage.appendChild(contentContainer);
 
-    const listTasksSection = document.createElement("section");
-    listTasksSection.id = "list-tasks-section";
-    tasksHubSection.appendChild(listTasksSection);
+    this._loadDataAndRender(contentContainer);
 
-    const taskPreviewSection = document.createElement("section");
-    taskPreviewSection.id = "task-preview-section";
-    taskPreviewSection.classList.add("preview-markdown");
-    tasksHubSection.appendChild(taskPreviewSection);
+    return tasksPage;
+  }
 
-    tasksPage.appendChild(navSubjectSection);
-    tasksPage.appendChild(tasksHubSection);
+  /**
+   * Pobiera dane i renderuje zawartość strony.
+   * @param {HTMLElement} container
+   */
+  static async _loadDataAndRender(container) {
+    try {
+      const [tasks, subjectNames, statusMap] = await Promise.all([
+        DataService.getTasks(),
+        DataService.getSubjectNames(),
+        DataService.getStatusMap()
+      ]);
 
-    const tasks = TASKS_DATA;
+      container.innerHTML = ""; // Clear loader
 
-    // Wybór przedmiotu jeżeli jest ich więcej niż jeden
-    const subjects = [...new Set(tasks.map((task) => task.subject))];
-    if (subjects.length > 1) {
-      const subjectOptions = subjects.map((s) => ({
-        value: s,
-        text: SUBJECT_NAMES[s] || s,
-      }));
+      const tasksHubSection = document.createElement("section");
+      tasksHubSection.id = "tasks-hub-page";
 
-      subjectOptions.forEach((option) => {
-        const button = RenderButton.renderButton(
-          option.text,
-          "secondary",
-          "button",
-          () => {
-            const filteredTasks = tasks.filter(
-              (task) => task.subject === option.value
-            );
-            listTasksSection.innerHTML = "";
-            const buttons = navSubjectSection.querySelectorAll("button");
-            buttons.forEach((btn) => btn.classList.remove("active"));
-            button.classList.add("active");
+      const navSubjectSection = document.createElement("nav");
+      navSubjectSection.id = "nav-subject-section";
 
-            // set url as #subject-value
-            history.replaceState(
-              null,
-              "",
-              window.location.pathname + `#tasks-${option.value}`
-            );
+      const listTasksSection = document.createElement("section");
+      listTasksSection.id = "list-tasks-section";
+      tasksHubSection.appendChild(listTasksSection);
 
-            listTasksSection.appendChild(
-              this.renderTaskListElements(filteredTasks, taskPreviewSection)
-            );
-          }
+      const taskPreviewSection = document.createElement("section");
+      taskPreviewSection.id = "task-preview-section";
+      taskPreviewSection.classList.add("preview-markdown");
+      tasksHubSection.appendChild(taskPreviewSection);
+
+      container.appendChild(navSubjectSection);
+      container.appendChild(tasksHubSection);
+
+      // Wybór przedmiotu jeżeli jest ich więcej niż jeden
+      const subjects = [...new Set(tasks.map((task) => task.subject))];
+      if (subjects.length > 1) {
+        const subjectOptions = subjects.map((s) => ({
+          value: s,
+          text: subjectNames[s] || s,
+        }));
+
+        subjectOptions.forEach((option) => {
+          const button = RenderButton.renderButton(
+            option.text,
+            "secondary",
+            "button",
+            () => {
+              const filteredTasks = tasks.filter(
+                (task) => task.subject === option.value
+              );
+              listTasksSection.innerHTML = "";
+              const buttons = navSubjectSection.querySelectorAll("button");
+              buttons.forEach((btn) => btn.classList.remove("active"));
+              button.classList.add("active");
+
+              // set url as #subject-value
+              history.replaceState(
+                null,
+                "",
+                window.location.pathname + `#tasks-${option.value}`
+              );
+
+              listTasksSection.appendChild(
+                this.renderTaskListElements(filteredTasks, taskPreviewSection, statusMap)
+              );
+            }
+          );
+          button.dataset.subject = option.value;
+          navSubjectSection.appendChild(button);
+        });
+      }
+
+      // Initial load
+      const hash = window.location.hash;
+      let initialSubject = subjects[0];
+
+      if (hash.startsWith("#zadania-")) {
+        initialSubject = hash.replace("#zadania-", "");
+        const button = navSubjectSection.querySelector(
+          "button[data-subject='" + initialSubject + "']"
         );
-        button.dataset.subject = option.value;
-        navSubjectSection.appendChild(button);
-      });
-    }
-
-    // Initial load
-    const hash = window.location.hash;
-    let initialSubject = subjects[0];
-
-    if (hash.startsWith("#zadania-")) {
-      initialSubject = hash.replace("#zadania-", "");
-      const button = navSubjectSection.querySelector(
-        "button[data-subject='" + initialSubject + "']"
-      );
-      if (button) {
-        button.click();
+        if (button) {
+          button.click();
+        } else {
+          navSubjectSection.querySelector("button")?.click();
+        }
       } else {
         navSubjectSection.querySelector("button")?.click();
       }
-    } else {
-      navSubjectSection.querySelector("button")?.click();
-    }
 
-    return tasksPage;
+    } catch (error) {
+      console.error("Błąd ładowania zadań:", error);
+      container.innerHTML = '<p class="error">Nie udało się pobrać listy zadań.</p>';
+    }
   }
 
   /**
@@ -110,19 +136,32 @@ export class TasksPage {
    * @static
    * @param {Array} tasks Tablica obiektów zadań
    * @param {HTMLElement} previewSection Sekcja podglądu Markdown
+   * @param {Object} statusMap Mapa statusów
    * @returns {HTMLElement} kontener z sekcjami zadań
    */
-  static renderTaskListElements(tasks, previewSection) {
+  static renderTaskListElements(tasks, previewSection, statusMap) {
     const grouped = { ongoing: [], completed: [], overdue: [] };
     tasks.forEach((task) => {
-      const status = STATUS_MAP[task.status]?.target || "completed";
-      grouped[status].push(task);
+      const status = statusMap[task.status]?.target || "completed";
+      if (grouped[status]) {
+          grouped[status].push(task);
+      } else {
+          // Fallback if status is unknown
+          grouped.completed.push(task);
+      }
     });
 
     const container = document.createElement("div");
     Object.entries(grouped).forEach(([key, list]) => {
       if (list.length > 0) {
-        const label = STATUS_MAP[list[0].status]?.label || "Zadania";
+        // Find label for this target group (reverse lookup or simplified)
+        // Since statusMap keys are "0", "1", "-1", we need to find which one maps to 'key'
+        // But here we can just use hardcoded labels or find first match
+        let label = "Zadania";
+        if (key === 'ongoing') label = "🟡 Zadania trwające";
+        if (key === 'completed') label = "🟢 Zadania ukończone";
+        if (key === 'overdue') label = "🔴 Zadania przeterminowane";
+        
         container.appendChild(this.renderTaskList(list, previewSection, label));
       }
     });

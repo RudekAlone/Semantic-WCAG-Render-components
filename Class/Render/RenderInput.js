@@ -34,22 +34,26 @@ export class RenderInput {
     placeholder = ""
   ) {
     const wrapper = document.createElement("div");
-    wrapper.setAttribute("data-ui", "input-wrapper");
-    wrapper.setAttribute("data-layout", direction);
+    wrapper.classList.add("input-wrapper");
+    // wrapper.setAttribute("data-ui", "input-wrapper");
+    wrapper.classList.add(`layout-${direction}`);
+    // wrapper.setAttribute("data-layout", direction);
 
     let label;
     if (typeof labelText === "string") {
       label = document.createElement("label");
       label.textContent = labelText;
-      label.setAttribute("for", id);
-      label.setAttribute("data-ui", "input-label");
-      wrapper.appendChild(label);
+      // label.setAttribute("data-ui", "input-label");
     } else if (labelText instanceof HTMLElement) {
       label = labelText;
-      label.setAttribute("for", id);
-      label.setAttribute("data-ui", "input-label");
-      wrapper.appendChild(label);
+      // label.setAttribute("data-ui", "input-label");
     }
+      label.setAttribute("for", id);
+
+    label.classList.add("input-label");
+      wrapper.appendChild(label);
+
+
 
     const input = document.createElement("input");
     input.setAttribute("type", type);

@@ -1,6 +1,6 @@
 import { UIFacade } from "../UIFacade.js";
 import { MarkdownEditorComponent } from "./Components/MarkdownEditorComponent.js";
-import { COURSES_DATA} from "./constants.js"
+import { DataService } from "../Service/DataService.js";
 
 
 export class CoursesManagerPage{
@@ -11,24 +11,38 @@ export class CoursesManagerPage{
         title.textContent = "Zarządzaj kursami";
         container.appendChild(title);
 
-        const coursesCardList = document.createElement("nav");
-        coursesCardList.id = "courses";
-        container.appendChild(coursesCardList);
+        const contentContainer = document.createElement("div");
+        contentContainer.id = "courses-manager-content";
+        contentContainer.innerHTML = '<div class="loader">Ładowanie kursów...</div>';
+        container.appendChild(contentContainer);
 
-        const containerCourseEditor = document.createElement("section");
-        containerCourseEditor.id = "course-editor";
-
-        coursesCardList.appendChild(this.navCourses(containerCourseEditor, COURSES_DATA));
-
-
-        container.appendChild(containerCourseEditor);
-        
-        this.courseEditor(containerCourseEditor, COURSES_DATA);
-
-
-
+        this._loadDataAndRender(contentContainer);
 
         return container;
+    }
+
+    static async _loadDataAndRender(container) {
+        try {
+            const coursesData = await DataService.getCourses();
+            container.innerHTML = ""; // Clear loader
+
+            const coursesCardList = document.createElement("nav");
+            coursesCardList.id = "courses-content-container";
+            container.appendChild(coursesCardList);
+    
+            const containerCourseEditor = document.createElement("section");
+            containerCourseEditor.id = "course-editor";
+    
+            coursesCardList.appendChild(this.navCourses(containerCourseEditor, coursesData));
+    
+            container.appendChild(containerCourseEditor);
+            
+            this.courseEditor(containerCourseEditor, coursesData);
+
+        } catch (error) {
+            console.error("Błąd ładowania kursów:", error);
+            container.innerHTML = '<p class="error">Nie udało się pobrać listy kursów.</p>';
+        }
     }
 
     static navCourses(container, data) {
@@ -82,7 +96,7 @@ export class CoursesManagerPage{
         sectionEditCard.appendChild(wrapPreview);
 
         const navPreviews = document.createElement("nav");
-        navPreviews.id = "courses";
+        navPreviews.id = "courses-content-container";
         const previewsCard = document.createElement("ul");
         previewsCard.id = "previews-card";
         const liPreview = document.createElement("li");
@@ -211,7 +225,6 @@ export class CoursesManagerPage{
         });
 
         // Moduły i lekcje 
-
         const modulesCourse = document.createElement("section");
         modulesCourse.id = "modules-course";
 

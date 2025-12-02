@@ -69,10 +69,10 @@ export class DashboardRender {
     const PAGE_RENDERERS = {
       dashboard: () => DashboardPage.render(),
       tasks: () => TasksPage.render(),
-      students: () => UsersPage.render(false),
+      students: () => UsersPage.renderUsersPage(),
       classes: () => ClassesPage.renderClassesPage(),
-      users: () => UsersPage.render(true),
-      "manage-tasks": () => TasksEditorPage.render(),
+      users: () => UsersPage.renderUsersPage(),
+      "manage-tasks": () => TasksEditorPage.renderTasksEditorPage(),
       "tasks-status": () => TasksStatusPage.render(),
       quizzes: () => QuizzesPage.renderQuizzesPage(),
       "manage-courses": () => CoursesManagerPage.renderCoursesManagerPage(),

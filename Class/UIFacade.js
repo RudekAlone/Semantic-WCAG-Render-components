@@ -5,6 +5,7 @@ import { RenderTable } from "./Render/RenderTable.js";
 import { RenderDetails } from "./Render/RenderDetails.js";
 import { RenderMarkdown } from "./RenderMarkdown.js";
 import { RenderQuiz } from "./RenderQuiz.js";
+import { RenderCard } from "./Render/RenderCard.js";
 
 /**
  * Fasada (Facade) dla systemu renderowania elementów interfejsu użytkownika.
@@ -147,5 +148,16 @@ export class UIFacade {
    */
   static createFileInputWithPreview(label, name, id) {
     return RenderInput.renderFileInputWithPreview(label, name, id);
+  }
+
+  /**
+   * Tworzy kartę kursu
+   * @param {string} title - Tytuł karty.
+   * @param {string} image - URL obrazka.
+   * @param {string} hash - Hash do nawigacji.
+   * @return {HTMLDivElement} Kontener z kartą kursu.
+   */
+  static createCourseCard(title, image, hash) {
+    return RenderCard.createCourseCard(title, image, hash);
   }
 }
