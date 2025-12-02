@@ -28,10 +28,12 @@ $bg-gradient-3: linear-gradient(
 );
 
 //Inputs
-$focus-outline-color: #ff4ff0;
-$accent-color: #5d00e7;
+$focus-outline-color: #00FFBF;
+$accent-color: #009FFF;
 $input-bg-color: #1a1a1a;
-$input-border-color: #444444;
+$input-bg-color-hover: #2a2a2a;
+$input-border: 1px solid #444444;
+$input-border-hover: 1px solid #666666;
 $outline-focus: 2px solid var(--focus-outline-color);
 $outline-hover: 1px solid var(--focus-outline-color);
 
@@ -47,6 +49,8 @@ $button-bg-hover-secondary: #2f3941;
 $button-bg-hover-tertiary: #0c4b1a;
 $button-bg-hover-quaternary: #7e121d;
 $button-bg-hover-fifth: #493608;
+
+$hr-color: #0056ab;
 
 // Links
 $link-color: #64b5f6;
@@ -98,7 +102,9 @@ $hint-danger-border-color: #f44336;
   --focus-outline-color: #{$focus-outline-color};
   --accent-color: #{$accent-color};
   --input-bg-color: #{$input-bg-color};
-  --input-border-color: #{$input-border-color};
+  --input-bg-color-hover: #{$input-bg-color-hover};
+  --input-border: #{$input-border};
+  --input-border-hover: #{$input-border-hover};
   --outline-focus: #{$outline-focus};
   --outline-hover: #{$outline-hover};
 
@@ -114,6 +120,8 @@ $hint-danger-border-color: #f44336;
   --button-bg-hover-quaternary: #{$button-bg-hover-quaternary};
   --button-bg-hover-fifth: #{$button-bg-hover-fifth};
 
+
+  --hr-color: #{$hr-color};
   /* Links */
   --link-color: #{$link-color};
   --link-hover-color: #{$link-hover-color};
@@ -161,4 +169,30 @@ $font-family-comic-sans: 'Comic Sans MS', cursive, sans-serif;
   --font-family-arial: #{$font-family-arial};
   --font-family-verdana: #{$font-family-verdana};
   --font-family-comic-sans: #{$font-family-comic-sans};
+}
+
+// Zmienne
+$breakpoint-sm: 576px;
+$breakpoint-md: 768px;
+$breakpoint-lg: 992px;
+$breakpoint-xl: 1200px;
+$breakpoint-xxl: 1400px;
+
+// Mixiny dla wygody
+@mixin respond-to($breakpoint) {
+  @if $breakpoint == sm {
+    @media (max-width: #{$breakpoint-sm}) { @content; }
+  }
+  @else if $breakpoint == md {
+    @media (max-width: #{$breakpoint-md}) { @content; }
+  }
+  @else if $breakpoint == lg {
+    @media (max-width: #{$breakpoint-lg}) { @content; }
+  }
+  @else if $breakpoint == xl {
+    @media (max-width: #{$breakpoint-xl}) { @content; }
+  }
+  @else if $breakpoint == xxl {
+    @media (max-width: #{$breakpoint-xxl}) { @content; }
+  }
 }

@@ -13,10 +13,12 @@
   --bg-gradient-2: linear-gradient(90deg, rgb(155, 42, 123) 0%, rgb(199, 87, 133) 50%, rgb(237, 83, 221) 100%);
   --bg-gradient-3: linear-gradient(90deg, rgb(123, 155, 42) 0%, rgb(199, 133, 87) 50%, rgb(221, 237, 83) 100%);
   /* Inputs */
-  --focus-outline-color: #ff4ff0;
-  --accent-color: #5d00e7;
+  --focus-outline-color: #00FFBF;
+  --accent-color: #009FFF;
   --input-bg-color: #1a1a1a;
-  --input-border-color: #444444;
+  --input-bg-color-hover: #2a2a2a;
+  --input-border: 1px solid #444444;
+  --input-border-hover: 1px solid #666666;
   --outline-focus: 2px solid var(--focus-outline-color);
   --outline-hover: 1px solid var(--focus-outline-color);
   /* Buttons */
@@ -30,6 +32,7 @@
   --button-bg-hover-tertiary: #0c4b1a;
   --button-bg-hover-quaternary: #7e121d;
   --button-bg-hover-fifth: #493608;
+  --hr-color: #0056ab;
   /* Links */
   --link-color: #64b5f6;
   --link-hover-color: #90caf9;
