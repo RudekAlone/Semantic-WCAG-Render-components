@@ -51,6 +51,13 @@ $button-bg-hover-tertiary: #0c4b1a;
 $button-bg-hover-quaternary: #7e121d;
 $button-bg-hover-fifth: #493608;
 
+// Form elements
+
+$form-bg-color: #353535;
+$form-border: 1px solid #606060;
+$form-input-wrapper-bg-color: #444444;
+
+
 $hr-color: #0056ab;
 
 // Links
@@ -61,6 +68,7 @@ $link-visited-hover-color: #b39ddb;
 
 // Quiz colors
 
+$quiz-text-color: #cdcdcd;
 $quiz-correct-color: #00c853;
 $quiz-incorrect-color: #d50000;
 
@@ -121,6 +129,10 @@ $hint-danger-border-color: #f44336;
   --button-bg-hover-quaternary: #{$button-bg-hover-quaternary};
   --button-bg-hover-fifth: #{$button-bg-hover-fifth};
 
+  /* Form elements */
+  --form-bg-color: #{$form-bg-color};
+  --form-border: #{$form-border};
+  --form-input-wrapper-bg-color: #{$form-input-wrapper-bg-color};
 
   --hr-color: #{$hr-color};
   /* Links */
@@ -130,6 +142,7 @@ $hint-danger-border-color: #f44336;
   --link-visited-hover-color: #{$link-visited-hover-color};
 
   /* Quiz colors */
+  --quiz-text-color: #{$quiz-text-color};
   --quiz-correct-color: #{$quiz-correct-color};
   --quiz-incorrect-color: #{$quiz-incorrect-color};
 

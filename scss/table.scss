@@ -3,8 +3,16 @@ table {
   border-collapse: collapse;
 }
 
+
 th {
-  background-color: var(--bg-layer-1);
+  &{
+    background-color: var(--bg-layer-1);
+  }
+  &:focus,
+  &:focus-visible {
+    outline: 2px solid var(--focus-outline-color);
+    outline-offset: 2px;
+  }
 }
 
 th:hover,
@@ -87,7 +95,7 @@ th.active,
   font-weight: bold;
   color: var(--text-color);
   border-right: 1px solid var(--bg-layer-4);
-  min-width: 50%;
+  width: 50%;
 }
 
 .mobile-value {

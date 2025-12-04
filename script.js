@@ -200,6 +200,7 @@ const loginFormDataInputs = [
     type: "password",
     role: "textbox",
     required: true,
+    isPasswordStrengthIndicator: false
   },
 ];
 
@@ -285,8 +286,8 @@ const tableData = {
       },
     ],
     [5, "Element 5", 500, "Edytuj", "Aktywny", { type: "button", label: "Kliknij", buttonStyle: "tertiary", onClick: () => {alert("Hasło pokazane!")} }],
-    [6, "Element 6", 600, "Edytuj", "Nieaktywny", {type: "number", value: 42, ariaLabel: "Ilość próbek"}],
-    [7, "Element 7", 700, "Edytuj", "Aktywny", {type: "password", value: "Przykładowy tekst", ariaLabel: "Hasło użytkownika"}],
+    [6, "Element 6", 600, "Edytuj", "Nieaktywny", {type: "number", value: 42, label: "Ilość próbek"}],
+    [7, "Element 7", 700, "Edytuj", "Aktywny", {type: "password", value: "Przykładowy tekst", label: "Hasło użytkownika"}],
   ],
 };
 

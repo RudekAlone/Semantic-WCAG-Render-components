@@ -1,3 +1,4 @@
+```js
 import { RenderButton } from "./Render/RenderButton.js";
 import { RenderInput } from "./Render/RenderInput.js";
 import { RenderDetails } from "./Render/RenderDetails.js";
@@ -473,3 +474,4 @@ export class RenderQuiz {
     }
   }
 }
+```

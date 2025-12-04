@@ -28,12 +28,13 @@ export class RenderTable {
     headers.forEach((headerText, index) => {
       const th = document.createElement("th");
 
-//Dodanie dwóch spacji jako entity przed tekstem nagłówka dla lepszego oddzielenia strzałki sortowania
-      th.textContent = "\u00A0\u00A0" + headerText;
+      th.innerHTML ='<span style="color:transparent">↓ </span>' +
+        headerText;
 
       th.setAttribute("scope", "col");
       th.setAttribute("aria-sort", ariaSort);
       th.style.cursor = "pointer";
+      th.tabIndex = 0 ;
       th.setAttribute("title", `Kliknij, aby posortować po ${headerText}`);
       th.addEventListener("click", (e) => {
         sortCallback?.(index);
@@ -43,6 +44,11 @@ export class RenderTable {
             ? "descending"
             : "ascending"
         );
+      });
+      th.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.target.click();
+        }
       });
       headerRow.appendChild(th);
     });
@@ -59,6 +65,7 @@ export class RenderTable {
           const img = document.createElement("img");
           img.src = cellData.src;
           td.appendChild(img);
+          img.alt = cellData.alt || headers[index] || "";
         } else if (
           typeof cellData === "object" &&
           (cellData.type === "text" ||
@@ -219,13 +226,10 @@ export class RenderTable {
     headerRow.classList.add("mobile-header");
     headers.forEach((headerText, index) => {
       const header = document.createElement("button");
-      header.textContent = headerText;
+      header.innerHTML = '<span style="color:transparent">↓</span>' + headerText;
       header.classList.add("mobile-header-button");
       header.setAttribute("aria-label", `Sortuj po ${headerText}`);
       header.setAttribute("aria-sort", ariaSort);
-      header.textContent =
-        (header.getAttribute("aria-sort") === "ascending" ? "  " : "  ") +
-        headerText;
       header.setAttribute("title", `Kliknij, aby posortować po ${headerText}`);
       header.addEventListener("click", (e) => {
         sortCallback?.(index);
@@ -341,7 +345,7 @@ container.appendChild(viewWrapper);
     let currentMode = window.innerWidth < 768 ? "mobile" : "desktop";
     let currentData = [...data];
     let sortedIndex = null;
-    let ascending = true;
+    let ascending = false;
 
 const render = (ariaSort = "ascending") => {
   const newView =
@@ -369,9 +373,6 @@ this.lockContainerHeight(container);
 while (viewWrapper.firstChild) {
   viewWrapper.removeChild(viewWrapper.firstChild);
 }
-
-viewWrapper.appendChild(newView);
-
 
   // Przygotuj nowy widok do wejścia
   newView.classList.add("fade-in");
@@ -414,6 +415,7 @@ viewWrapper.appendChild(newView);
   });
 
   if (typeof newFunction === "function") newFunction(container);
+  this.unlockContainerHeight(container);
 };
 
 
@@ -442,6 +444,10 @@ window.addEventListener("resize", () => {
 });
 
     render();
+
+    // renderowanie na start tabeli posortowanej po pierwszej kolumnie rosnąco
+
+    handleSort(0);
 
     return container;
   }
@@ -555,13 +561,13 @@ window.addEventListener("resize", () => {
 
   static lockContainerHeight(container) {
   const h = container.offsetHeight;
-  if (h > 0) container.style.minHeight = h + "px";
+  if (h > 0) container.style.height = h + "px";
 }
 
 static unlockContainerHeight(container) {
   // zwolnij po następnym frame, żeby layout się ustabilizował
   requestAnimationFrame(() => {
-    container.style.minHeight = "";
+    container.style.height = "";
   });
 }
 
@@ -573,16 +579,16 @@ static updateActiveSortIndicators(viewEl, mode, headers, sortedIndex, ascending)
     ths.forEach((th, i) => {
       th.classList.toggle("active", i === sortedIndex);
       th.setAttribute("aria-sort", i === sortedIndex ? (ascending ? "ascending" : "descending") : "none");
-      const headerText = headers[i] ?? th.textContent.replace(/^↓ |^↑ /, "");
-      th.textContent = (i === sortedIndex ? (ascending ? "↓ " : "↑ ") : "") + headerText;
+      const headerText = headers[i] ?? th.innerHTML.replace(/^↓ |^↑ /, '');
+      th.innerHTML = (i === sortedIndex ? (ascending ? '<span>↓ </span>' : '<span>↑ </span>') : '<span style="color:transparent">↓</span>') + headerText;
     });
   } else {
     const btns = Array.from(viewEl.querySelectorAll(".mobile-header-button"));
     btns.forEach((btn, i) => {
       btn.classList.toggle("active", i === sortedIndex);
       btn.setAttribute("aria-sort", i === sortedIndex ? (ascending ? "ascending" : "descending") : "none");
-      const headerText = headers[i] ?? btn.textContent.replace(/^↓ |^↑ /, "");
-      btn.textContent = (i === sortedIndex ? (ascending ? "↓ " : "↑ ") : "") + headerText;
+      const headerText = headers[i] ?? btn.innerHTML.replace(/^↓ |^↑ /, '');
+      btn.innerHTML = (i === sortedIndex ? (ascending ? '<span>↓ </span>' : '<span>↑ </span>') : '<span style="color:transparent">↓</span>') + headerText;
     });
   }
 }
@@ -619,15 +625,7 @@ static restoreSpansOnTable(tableEl, spans) {
   } catch (_) {}
 }
 
-static lockContainerHeight(container) {
-  const h = container.offsetHeight;
-  if (h > 0) container.style.height = h + "px";
-}
 
-static unlockContainerHeight(container) {
-  // zwolnij po zakończeniu animacji, sterowane w render()
-  container.style.height = "";
-}
 
 
 }

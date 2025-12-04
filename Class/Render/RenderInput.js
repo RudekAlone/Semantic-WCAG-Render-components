@@ -12,7 +12,7 @@ export class RenderInput {
    * @param {string} [type="text"] - Typ inputu (np. "text", "email", "number", "password", "checkbox", "file", "color", "range").
    * @param {string} [role="textbox"] - Dodatkowa informacja/rola używana przez WCAG (np. "textbox", "checkbox").
    * @param {boolean} [required=true] - Czy pole jest wymagane.
-   * @param {string} [direction="row"] - Układ etykiety i inputa zapisywany w atrybucie data-layout (np. "row", "row-center", "column" lub "column-center").
+   * @param {string} [direction="row"] - Układ etykiety i inputa zapisywany w atrybucie data-layout (np. "row", "row-center","layout-row-full", "column", "column-center" lub "layout-column-full").
    * @param {string} [value=""] - Wstępna wartość inputa jeżeli "true" to zastosuje atrybut checked.
    * @param {Array<string>} [acceptFiles=[]] - Tablica typów plików akceptowanych w przypadku typu "file".
    * @param {string} [placeholder=""] - Tekst zastępczy (placeholder).
@@ -31,10 +31,12 @@ export class RenderInput {
     direction = "row",
     value = "",
     acceptFiles = [],
-    placeholder = ""
+    placeholder = "",
+    isPasswordStrengthIndicator = true
   ) {
     const wrapper = document.createElement("div");
     wrapper.classList.add("input-wrapper", `layout-${direction}`);
+
 
     if( name === "") {
       name = this._generateId();
@@ -134,7 +136,7 @@ export class RenderInput {
       wrapper.appendChild(input);
     }
     // === Obsługa password (uniwersalna) ===
-    if (type === "password") {
+    if (type === "password" && isPasswordStrengthIndicator) {
       input.setAttribute("autocomplete", "new-password");
       const indicator = document.createElement("div");
       indicator.classList.add("password-strength-indicator");

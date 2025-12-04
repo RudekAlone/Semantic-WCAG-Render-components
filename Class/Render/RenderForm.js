@@ -46,13 +46,19 @@ export class RenderForm {
     elements = [],
     submitButtonText = "Submit",
     onSubmitMethod = null,
-    direction = "column"
+    direction = "column-full"
   ) {
     const form = document.createElement("form");
     form.setAttribute("data-ui", "form");
-    form.setAttribute("data-layout", direction);
+    form.classList.add(`layout-${direction}`);
+
 
     elements.forEach((element) => {
+
+      if(element.direction === undefined){
+        element.direction = direction.includes("column") ? "row-full" : "column-full";
+      }
+
       let inputWrapper;
       if (!element.selectInputOptions) {
         inputWrapper = RenderInput.renderInput(
@@ -61,7 +67,12 @@ export class RenderForm {
           element.id,
           element.type,
           element.role,
-          element.required
+          element.required,
+          element.direction,
+          element.value,
+          element.acceptFiles,
+          element.placeholder,
+          element.isPasswordStrengthIndicator
         );
 
         const input = inputWrapper.querySelector("input");

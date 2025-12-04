@@ -165,6 +165,12 @@ details {
     margin-bottom: 1rem;
     width: 100%;
   }
+  & img {
+        width: 80%;
+    height: auto;
+    margin: auto;
+    display: block;
+  }
 }
 
 summary {
@@ -361,4 +367,21 @@ input[type="radio"] {
 
 .password-strength-indicator.strong {
   border-color: green;
+}
+
+form{
+  &{
+  display: flex;
+  gap: 10px;
+  padding: 20px;
+  background-color: var(--form-bg-color);
+  border: var(--form-border);
+  border-radius: 5px;
+  }
+  & button[type="submit"] {
+    margin-top: 10px;
+  }
+  & .input-wrapper {
+    background-color: var(--form-input-wrapper-bg-color);
+  }
 }

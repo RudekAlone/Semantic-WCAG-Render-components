@@ -32,6 +32,10 @@
   --button-bg-hover-tertiary: #0c4b1a;
   --button-bg-hover-quaternary: #7e121d;
   --button-bg-hover-fifth: #493608;
+  /* Form elements */
+  --form-bg-color: #353535;
+  --form-border: 1px solid #606060;
+  --form-input-wrapper-bg-color: #444444;
   --hr-color: #0056ab;
   /* Links */
   --link-color: #64b5f6;
@@ -39,6 +43,7 @@
   --link-visited-color: #9575cd;
   --link-visited-hover-color: #b39ddb;
   /* Quiz colors */
+  --quiz-text-color: #cdcdcd;
   --quiz-correct-color: #00c853;
   --quiz-incorrect-color: #d50000;
   /* ============MARKDOWN_PREVIEW================= */

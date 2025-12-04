@@ -29,8 +29,8 @@ export class RenderTable {
     headers.forEach((headerText, index) => {
       const th = document.createElement("th");
 
-      th.textContent =
-        ariaSort === "ascending" ? "↓ " + headerText : "↑ " + headerText;
+      th.innerHTML ='<span style="color:transparent">↓ </span>' +
+        headerText;
 
       th.setAttribute("scope", "col");
       th.setAttribute("aria-sort", ariaSort);
@@ -60,6 +60,7 @@ export class RenderTable {
           const img = document.createElement("img");
           img.src = cellData.src;
           td.appendChild(img);
+          img.alt = cellData.alt || headers[index] || "";
         } else if (
           typeof cellData === "object" &&
           (cellData.type === "text" ||
@@ -220,13 +221,10 @@ export class RenderTable {
     headerRow.classList.add("mobile-header");
     headers.forEach((headerText, index) => {
       const header = document.createElement("button");
-      header.textContent = headerText;
+      header.innerHTML = '<span style="color:transparent">↓</span>' + headerText;
       header.classList.add("mobile-header-button");
       header.setAttribute("aria-label", `Sortuj po ${headerText}`);
       header.setAttribute("aria-sort", ariaSort);
-      header.textContent =
-        (header.getAttribute("aria-sort") === "ascending" ? "↓ " : "↑ ") +
-        headerText;
       header.setAttribute("title", `Kliknij, aby posortować po ${headerText}`);
       header.addEventListener("click", (e) => {
         sortCallback?.(index);
@@ -342,7 +340,7 @@ container.appendChild(viewWrapper);
     let currentMode = window.innerWidth < 768 ? "mobile" : "desktop";
     let currentData = [...data];
     let sortedIndex = null;
-    let ascending = true;
+    let ascending = false;
 
 const render = (ariaSort = "ascending") => {
   const newView =
@@ -363,7 +361,16 @@ const render = (ariaSort = "ascending") => {
   const oldView = viewWrapper.firstChild;
 
   // Zablokuj wysokość kontenera do końca animacji
-  this.lockContainerHeight(container);
+ // 4) podmień widok atomowo
+this.lockContainerHeight(container);
+
+// usuń wszystkie stare dzieci (fade-out niepotrzebne przy zmianie trybu)
+while (viewWrapper.firstChild) {
+  viewWrapper.removeChild(viewWrapper.firstChild);
+}
+
+viewWrapper.appendChild(newView);
+
 
   // Przygotuj nowy widok do wejścia
   newView.classList.add("fade-in");
@@ -420,10 +427,24 @@ window.addEventListener("resize", () => {
   const newMode = window.innerWidth < 768 ? "mobile" : "desktop";
   if (newMode !== currentMode) {
     currentMode = newMode;
-    render();
+    // przy zmianie trybu: bez animacji
+    while (viewWrapper.firstChild) {
+      viewWrapper.removeChild(viewWrapper.firstChild);
+    }
+    const newView =
+      currentMode === "mobile"
+        ? this.renderTableMobile(currentData, headers, handleSort, ascending ? "ascending" : "descending")
+        : this.renderTableDesktop(currentData, headers, handleSort, ascending ? "ascending" : "descending");
+    viewWrapper.appendChild(newView);
+    this.updateActiveSortIndicators(newView, currentMode, headers, sortedIndex, ascending);
   }
 });
+
     render();
+
+    // renderowanie na start tabeli posortowanej po pierwszej kolumnie rosnąco
+
+    handleSort(0);
 
     return container;
   }
@@ -555,16 +576,16 @@ static updateActiveSortIndicators(viewEl, mode, headers, sortedIndex, ascending)
     ths.forEach((th, i) => {
       th.classList.toggle("active", i === sortedIndex);
       th.setAttribute("aria-sort", i === sortedIndex ? (ascending ? "ascending" : "descending") : "none");
-      const headerText = headers[i] ?? th.textContent.replace(/^↓ |^↑ /, "");
-      th.textContent = (i === sortedIndex ? (ascending ? "↓ " : "↑ ") : "") + headerText;
+      const headerText = headers[i] ?? th.innerHTML.replace(/^↓ |^↑ /, '');
+      th.innerHTML = (i === sortedIndex ? (ascending ? '<span>↓ </span>' : '<span>↑ </span>') : '<span style="color:transparent">↓</span>') + headerText;
     });
   } else {
     const btns = Array.from(viewEl.querySelectorAll(".mobile-header-button"));
     btns.forEach((btn, i) => {
       btn.classList.toggle("active", i === sortedIndex);
       btn.setAttribute("aria-sort", i === sortedIndex ? (ascending ? "ascending" : "descending") : "none");
-      const headerText = headers[i] ?? btn.textContent.replace(/^↓ |^↑ /, "");
-      btn.textContent = (i === sortedIndex ? (ascending ? "↓ " : "↑ ") : "") + headerText;
+      const headerText = headers[i] ?? btn.innerHTML.replace(/^↓ |^↑ /, '');
+      btn.innerHTML = (i === sortedIndex ? (ascending ? '<span>↓ </span>' : '<span>↑ </span>') : '<span style="color:transparent">↓</span>') + headerText;
     });
   }
 }
@@ -613,6 +634,5 @@ static unlockContainerHeight(container) {
 
 
 }
-
 
 ```
