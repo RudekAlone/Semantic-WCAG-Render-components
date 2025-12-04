@@ -119,10 +119,13 @@ export class UIFacade {
    * Tworzy pole wyboru (select).
    * @param {string} label - Etykieta pola.
    * @param {Array<Object>} options - Lista opcji ({value, text}).
+   * @param {string} [name] - Atrybut name.
+   * @param {string} [id] - Atrybut id.
+   * @param {boolean} [required=true] - Czy pole jest wymagane.
    * @returns {HTMLDivElement} Kontener z selectem.
    */
-  static createSelect(label, options) {
-    return RenderInput.selectInputOptions(label, options);
+  static createSelect(label, options, name, id, required) {
+    return RenderInput.selectInputOptions(label, options, name, id, required);
   }
 
   /**

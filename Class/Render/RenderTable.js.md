@@ -1,3 +1,4 @@
+```js
 import { RenderInput } from "./RenderInput.js";
 import { RenderButton } from "./RenderButton.js";
 
@@ -28,8 +29,8 @@ export class RenderTable {
     headers.forEach((headerText, index) => {
       const th = document.createElement("th");
 
-//Dodanie dwóch spacji jako entity przed tekstem nagłówka dla lepszego oddzielenia strzałki sortowania
-      th.textContent = "\u00A0\u00A0" + headerText;
+      th.textContent =
+        ariaSort === "ascending" ? "↓ " + headerText : "↑ " + headerText;
 
       th.setAttribute("scope", "col");
       th.setAttribute("aria-sort", ariaSort);
@@ -224,7 +225,7 @@ export class RenderTable {
       header.setAttribute("aria-label", `Sortuj po ${headerText}`);
       header.setAttribute("aria-sort", ariaSort);
       header.textContent =
-        (header.getAttribute("aria-sort") === "ascending" ? "  " : "  ") +
+        (header.getAttribute("aria-sort") === "ascending" ? "↓ " : "↑ ") +
         headerText;
       header.setAttribute("title", `Kliknij, aby posortować po ${headerText}`);
       header.addEventListener("click", (e) => {
@@ -362,16 +363,7 @@ const render = (ariaSort = "ascending") => {
   const oldView = viewWrapper.firstChild;
 
   // Zablokuj wysokość kontenera do końca animacji
- // 4) podmień widok atomowo
-this.lockContainerHeight(container);
-
-// usuń wszystkie stare dzieci (fade-out niepotrzebne przy zmianie trybu)
-while (viewWrapper.firstChild) {
-  viewWrapper.removeChild(viewWrapper.firstChild);
-}
-
-viewWrapper.appendChild(newView);
-
+  this.lockContainerHeight(container);
 
   // Przygotuj nowy widok do wejścia
   newView.classList.add("fade-in");
@@ -428,19 +420,9 @@ window.addEventListener("resize", () => {
   const newMode = window.innerWidth < 768 ? "mobile" : "desktop";
   if (newMode !== currentMode) {
     currentMode = newMode;
-    // przy zmianie trybu: bez animacji
-    while (viewWrapper.firstChild) {
-      viewWrapper.removeChild(viewWrapper.firstChild);
-    }
-    const newView =
-      currentMode === "mobile"
-        ? this.renderTableMobile(currentData, headers, handleSort, ascending ? "ascending" : "descending")
-        : this.renderTableDesktop(currentData, headers, handleSort, ascending ? "ascending" : "descending");
-    viewWrapper.appendChild(newView);
-    this.updateActiveSortIndicators(newView, currentMode, headers, sortedIndex, ascending);
+    render();
   }
 });
-
     render();
 
     return container;
@@ -631,3 +613,6 @@ static unlockContainerHeight(container) {
 
 
 }
+
+
+```

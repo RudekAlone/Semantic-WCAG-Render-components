@@ -1,12 +1,10 @@
 table {
   width: 100%;
   border-collapse: collapse;
-  background-color: var(--bg-layer-3);
 }
 
 th {
   background-color: var(--bg-layer-1);
-  color: var(--text-color);
 }
 
 th:hover,
@@ -16,9 +14,44 @@ td:hover {
 
 th,
 td {
-  border: 1px solid var(--bg-layer-4);
+  border: 1px solid var(--background-color);
   padding: 10px;
   text-align: left;
+}
+
+th.active,
+.mobile-header-button.active {
+  color: var(--accent-color);
+  font-weight: bold;
+}
+
+.table-view {
+  display: grid;
+  width: 100%;
+}
+
+.table-view > * {
+  grid-area: 1/1;
+  opacity: 1;
+  transition: opacity 0.25s ease;
+}
+
+.table-view .fade-in {
+  opacity: 0;
+}
+
+.table-view .fade-in.show {
+  opacity: 1;
+}
+
+.table-view .fade-out {
+  opacity: 0;
+}
+
+.export-buttons-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
 }
 
 .mobile-table {
@@ -55,7 +88,7 @@ td {
   font-weight: bold;
   color: var(--text-color);
   border-right: 1px solid var(--bg-layer-4);
-  width: 50%;
+  min-width: 50%;
 }
 
 .mobile-value {
@@ -71,8 +104,10 @@ table img,
   border-radius: 5px;
 }
 
-table .input-wrapper {
+table .input-wrapper,
+.mobile-value .input-wrapper {
   box-shadow: none;
+  flex-direction: column;
 }
 
 .mobile-header-button {

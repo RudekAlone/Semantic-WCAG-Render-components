@@ -15,9 +15,6 @@
   box-shadow: 2px 3px 5px rgba(0, 0, 0, 0.4);
 }
 
-
-
-
 .textarea-wrapper {
   width: 100%;
   display: flex;
@@ -47,7 +44,8 @@ textarea {
 }
 input[type="date"]::-webkit-calendar-picker-indicator,
 input[type="time"]::-webkit-calendar-picker-indicator,
-input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+input[type="datetime-local"]::-webkit-calendar-picker-indicator,
+input[type="password"]::-webkit-password-toggle-button {
   filter: invert(1);
 }
 
@@ -64,8 +62,6 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 .numeric-input {
-  display: inline-flex;
-  align-items: center;
   position: relative;
 }
 
@@ -261,7 +257,6 @@ input[type="radio"] {
   @include shadow-box;
 }
 
-
 #test-color-palette {
   display: flex;
   flex-wrap: wrap;
@@ -345,4 +340,25 @@ input[type="radio"] {
 .file-name:hover + .file-preview.has-preview,
 .file-name:focus + .file-preview.has-preview {
   display: block;
+}
+
+.password-strength-indicator {
+  padding: 5px 5px 0;
+  border-bottom: 2px solid gray;
+  font-size: 0.8rem;
+  font-weight: bold;
+  margin: 0 0 0.5rem 5px;
+  white-space: nowrap;
+}
+
+.password-strength-indicator.weak {
+  border-color: red;
+}
+
+.password-strength-indicator.medium {
+  border-color: orange;
+}
+
+.password-strength-indicator.strong {
+  border-color: green;
 }

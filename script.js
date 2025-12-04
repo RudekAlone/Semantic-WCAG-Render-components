@@ -264,7 +264,7 @@ const tableData = {
       "Aktywny",
       {
         type: "image",
-        src: "https://raw.githubusercontent.com/Code-V-Craft/Filmo-Sfera/refs/heads/main/Obrazy_do_README.md/katalog_projektu.webp",
+        src: "/logo.png",
         alt: "Obrazek",
       },
     ],
