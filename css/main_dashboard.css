@@ -1,0 +1,109 @@
+:root {
+  --text-color: #ebebeb;
+  --background-color: #030303;
+  --bg-layer-1: #161616;
+  --bg-layer-2: #1d1d1d;
+  --bg-layer-3: #232323;
+  --bg-layer-4: #292929;
+  --bg-gradient-1: linear-gradient(142deg, rgb(0, 140, 195) 0%, rgb(47, 187, 105) 50%, rgb(243, 227, 85) 100%);
+  --bg-gradient-2: linear-gradient(90deg, rgb(155, 42, 123) 0%, rgb(199, 87, 133) 50%, rgb(237, 83, 221) 100%);
+  --bg-gradient-3: linear-gradient(90deg, rgb(123, 155, 42) 0%, rgb(199, 133, 87) 50%, rgb(221, 237, 83) 100%);
+  --focus-outline-color: #00FFBF;
+  --accent-color: #009FFF;
+  --input-bg-color: #101010;
+  --input-bg-color-hover: #1a1a1a;
+  --input-border: 1px solid #3a3a3a;
+  --input-border-hover: 1px solid #9b9b9b;
+  --outline-focus: 2px solid var(--focus-outline-color);
+  --outline-hover: 1px solid var(--focus-outline-color);
+  --button-bg-primary: #004C98;
+  --button-bg-secondary: #464E55;
+  --button-bg-tertiary: #005614;
+  --button-bg-quaternary: #991825;
+  --button-bg-fifth: #68471E;
+  --button-bg-hover-primary: #113F70;
+  --button-bg-hover-secondary: #30363B;
+  --button-bg-hover-tertiary: #0E491B;
+  --button-bg-hover-quaternary: #7e121d;
+  --button-bg-hover-fifth: #4B3418;
+  --form-bg-color: #353535;
+  --form-border: 1px solid #606060;
+  --form-input-wrapper-bg-color: #444444;
+  --hr-color: #0056ab;
+  --link-color: #64b5f6;
+  --link-hover-color: #90caf9;
+  --link-visited-color: #9575cd;
+  --link-visited-hover-color: #b39ddb;
+  --quiz-text-color: #cdcdcd;
+  --quiz-correct-color: #00c853;
+  --quiz-incorrect-color: #d50000;
+  --task-text-color: #f3f3f3;
+  --task-bold-color: #3bff65;
+  --task-italic-color: #81d4fa;
+  --task-italic-bold-color: #ffab40;
+  --task-bold-italic-color: #ff6e40;
+  --hint-info-background-color: #263238;
+  --hint-info-border-color: #2196f3;
+  --hint-text-color: #ffffff;
+  --hint-success-background-color: rgba(27, 94, 32, 0.2196078431);
+  --hint-success-border-color: #4caf50;
+  --hint-warning-background-color: rgba(245, 193, 23, 0.2196078431);
+  --hint-warning-border-color: #ffc400;
+  --hint-danger-background-color: rgba(183, 28, 28, 0.2196078431);
+  --hint-danger-border-color: #f44336;
+  --font-family-sans: Segoe UI, Tahoma, Geneva, Verdana, sans-serif;
+  --font-family-mono: Courier New, Courier, monospace;
+  --font-family-gill-sans: Gill Sans, Gill Sans MT, Calibri, Trebuchet MS, sans-serif;
+  --font-family-georgia: Georgia, Times New Roman, Times, serif;
+  --font-family-arial: Arial, Helvetica, sans-serif;
+  --font-family-verdana: Verdana, Geneva, Tahoma, sans-serif;
+  --font-family-comic-sans: Comic Sans MS, cursive, sans-serif;
+}
+
+#dashboard {
+  width: 100%;
+}
+
+#dashboard-content {
+  background-color: var(--bg-layer-1);
+  margin-top: 20px;
+  padding: 20px;
+}
+
+#dashboard nav {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+#dashboard nav button {
+  flex-grow: 1;
+  flex-basis: calc(20% - 10px);
+  text-align: center;
+  text-shadow: 0 0 2px #000;
+  transition: 400ms background-color, 200ms transform ease-in-out, 0 outline;
+}
+#dashboard nav button:focus, #dashboard nav button:hover {
+  background-color: var(--bg-layer-3);
+  transform: scale(1.04);
+  border-radius: 0;
+  transition: transform 0.2s;
+  text-shadow: 1px 2px 0px #000;
+  z-index: 1;
+  transition: 400ms background-color, 200ms transform ease-in-out, 0 outline;
+}
+@media (max-width: 1200px) {
+  #dashboard nav button {
+    flex-basis: calc(25% - 10px);
+  }
+}
+@media (max-width: 992px) {
+  #dashboard nav button {
+    flex-basis: calc(33.33% - 10px);
+  }
+}
+@media (max-width: 576px) {
+  #dashboard nav button {
+    flex-basis: calc(50% - 10px);
+  }
+}

@@ -1,0 +1,110 @@
+@use "../root" as *;
+
+.dashboard-widgets {
+  display: flex;
+  gap: 20px;
+  min-height: 570px;
+
+  @include respond-to(sm) {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+.exam-section,
+.subject-summary-widget {
+  @include shadow-box;
+  margin: 15px;
+  border-radius: 5px;
+  width: 50%;
+}
+
+.exam-section {
+  padding: 10px;
+}
+
+.exam-section h2,
+.subject-summary-widget h2 {
+  text-align: center;
+  margin-bottom: 15px;
+  font-size: 1.5rem;
+  background-color: var(--bg-layer-4);
+}
+
+.subject-summary-list {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  padding: 20px;
+  width: 100%;
+  min-width: 460px;
+
+  @include respond-to(md) {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+.subject-card {
+  background-color: var(--bg-layer-3);
+  padding: 15px;
+  border-radius: 5px;
+  min-width: 200px;
+  text-align: center;
+  border: 1px solid var(--bg-layer-4);
+  @include shadow-box;
+
+  &-header h3 {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+    text-align: center;
+    text-transform: uppercase;
+  }
+  &-footer,
+  &-header {
+    background-color: var(--bg-layer-4);
+    @include shadow-box;
+  }
+}
+
+.subject-emoji { font-size: 3rem; }
+.subject-status-text { font-size: small; margin-bottom: 5px; }
+
+.exam-list { list-style: none; padding-left: 0; }
+
+.exam-item {
+  margin-bottom: 10px;
+  padding: 10px;
+  border: 1px solid var(--bg-layer-4);
+  border-radius: 5px;
+  background-color: var(--bg-layer-3);
+  cursor: pointer;
+  transition: 300ms background-color ease;
+  @include shadow-box;
+
+  &:hover { background-color: var(--bg-layer-2); }
+
+  h4 {
+    margin: 0 0 5px;
+
+    span {
+      width: 50%;
+      display: inline-block;
+      font-size: 1rem;
+      font-weight: bold;
+      text-align: left;
+      color: var(--link-hover-color);
+
+      &.exam-passed { text-align: right; font-size: 0.9rem; color: var(--quiz-correct-color); }
+      &.exam-failed { text-align: right; font-size: 0.9rem; color: var(--quiz-incorrect-color); }
+      &.exam-empty { text-align: right; font-size: 0.9rem; color: var(--hint-warning-border-color); }
+    }
+  }
+
+  p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: var(--quiz-text-color);
+  }
+}

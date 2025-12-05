@@ -1,0 +1,77 @@
+@charset "UTF-8";
+:root {
+  /* Podstawowe kolory */
+  --background-color: #030303;
+  --text-color: #ebebeb;
+  /* Warstwy tła */
+  --bg-layer-1: #161616;
+  --bg-layer-2: #1d1d1d;
+  --bg-layer-3: #232323;
+  --bg-layer-4: #292929;
+  /* Gradients */
+  --bg-gradient-1: linear-gradient(142deg, rgb(0, 140, 195) 0%, rgb(47, 187, 105) 50%, rgb(243, 227, 85) 100%);
+  --bg-gradient-2: linear-gradient(90deg, rgb(155, 42, 123) 0%, rgb(199, 87, 133) 50%, rgb(237, 83, 221) 100%);
+  --bg-gradient-3: linear-gradient(90deg, rgb(123, 155, 42) 0%, rgb(199, 133, 87) 50%, rgb(221, 237, 83) 100%);
+  /* Inputs */
+  --focus-outline-color: #00FFBF;
+  --accent-color: #009FFF;
+  --input-bg-color: #101010;
+  --input-bg-color-hover: #1a1a1a;
+  --input-border: 1px solid #3a3a3a;
+  --input-border-hover: 1px solid #9b9b9b;
+  --outline-focus: 2px solid var(--focus-outline-color);
+  --outline-hover: 1px solid var(--focus-outline-color);
+  /* Buttons */
+  --button-bg-primary: #0056ab;
+  --button-bg-secondary: #495a67;
+  --button-bg-tertiary: #176429;
+  --button-bg-quaternary: #ab202e;
+  --button-bg-fifth: #6f5300;
+  --button-bg-hover-primary: #024083;
+  --button-bg-hover-secondary: #2f3941;
+  --button-bg-hover-tertiary: #0c4b1a;
+  --button-bg-hover-quaternary: #7e121d;
+  --button-bg-hover-fifth: #493608;
+  /* Form elements */
+  --form-bg-color: #353535;
+  --form-border: 1px solid #606060;
+  --form-input-wrapper-bg-color: #444444;
+  --hr-color: #0056ab;
+  /* Links */
+  --link-color: #64b5f6;
+  --link-hover-color: #90caf9;
+  --link-visited-color: #9575cd;
+  --link-visited-hover-color: #b39ddb;
+  /* Quiz colors */
+  --quiz-text-color: #cdcdcd;
+  --quiz-correct-color: #00c853;
+  --quiz-incorrect-color: #d50000;
+  /* ============MARKDOWN_PREVIEW================= */
+  /* Task Preview */
+  --task-text-color: #f3f3f3;
+  --task-bold-color: #3bff65;
+  --task-italic-color: #81d4fa;
+  --task-italic-bold-color: #ffab40;
+  --task-bold-italic-color: #ff6e40;
+  /* Hint box */
+  --hint-info-background-color: #263238;
+  --hint-info-border-color: #2196f3;
+  --hint-text-color: #ffffff;
+  --hint-success-background-color: rgba(27, 94, 32, 0.2196078431);
+  --hint-success-border-color: #4caf50;
+  --hint-warning-background-color: rgba(245, 193, 23, 0.2196078431);
+  --hint-warning-border-color: #ffc400;
+  --hint-danger-background-color: rgba(183, 28, 28, 0.2196078431);
+  --hint-danger-border-color: #f44336;
+}
+
+:root {
+  /* Fonts */
+  --font-family-sans: Segoe UI, Tahoma, Geneva, Verdana, sans-serif;
+  --font-family-mono: Courier New, Courier, monospace;
+  --font-family-gill-sans: Gill Sans, Gill Sans MT, Calibri, Trebuchet MS, sans-serif;
+  --font-family-georgia: Georgia, Times New Roman, Times, serif;
+  --font-family-arial: Arial, Helvetica, sans-serif;
+  --font-family-verdana: Verdana, Geneva, Tahoma, sans-serif;
+  --font-family-comic-sans: Comic Sans MS, cursive, sans-serif;
+}
