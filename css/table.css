@@ -5,6 +5,7 @@ table {
 
 th {
   background-color: var(--bg-layer-1);
+  text-shadow: none;
 }
 th:focus, th:focus-visible {
   outline: 2px solid var(--focus-outline-color);

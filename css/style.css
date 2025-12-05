@@ -643,6 +643,7 @@ table {
 
 th {
   background-color: var(--bg-layer-1);
+  text-shadow: none;
 }
 th:focus, th:focus-visible {
   outline: 2px solid var(--focus-outline-color);
@@ -1215,8 +1216,16 @@ table .input-wrapper,
   justify-content: space-between;
   gap: 10px;
 }
-
-@media (max-width: 960px) {
+#tasks-page #list-tasks-section {
+  max-height: 850px;
+  max-width: 600px;
+  width: 100%;
+  background-color: var(--bg-layer-2);
+  padding: 15px;
+  border-radius: 5px;
+  overflow-y: auto;
+}
+@media (max-width: 1200px) {
   #tasks-page {
     padding: 20px 0;
   }
@@ -1228,41 +1237,33 @@ table .input-wrapper,
     width: 100%;
   }
 }
-#tasks-page #list-tasks-section {
-  max-height: 850px;
-  width: 600px;
-  background-color: var(--bg-layer-2);
-  padding: 15px;
-  border-radius: 5px;
-  overflow-y: auto;
+@media (max-width: 576px) {
+  #tasks-page #tasks-hub-page {
+    flex-direction: column;
+    align-items: center;
+  }
 }
-
 #tasks-page #list-tasks-section ul small {
   color: var(--link-visited-color);
 }
-
 #tasks-page #list-tasks-section ul {
   list-style-type: none;
   padding-left: 5px;
 }
-
 #tasks-page #list-tasks-section ul li {
   margin-bottom: 8px;
   color: var(--text-color);
   border-bottom: 1px solid var(--bg-layer-4);
 }
-
 #tasks-page #list-tasks-section ul li:hover {
   color: var(--link-hover-color);
   cursor: pointer;
 }
-
 #tasks-page #task-detail-section {
   flex-grow: 1;
   max-width: 750px;
   margin-left: 20px;
 }
-
 #tasks-page #task-preview-section {
   min-height: 770px;
   height: 100%;
@@ -1275,7 +1276,6 @@ table .input-wrapper,
   overflow-x: hidden;
   contain: layout paint size;
 }
-
 #tasks-page #task-preview-section :is(h1, h2, h3, h4, h5, h6):first-child {
   color: var(--hint-info-border-color);
   background-color: var(--bg-layer-4);

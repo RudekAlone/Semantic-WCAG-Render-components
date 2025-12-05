@@ -28,7 +28,7 @@ export class RenderTable {
     headers.forEach((headerText, index) => {
       const th = document.createElement("th");
 
-      th.innerHTML ='<span style="color:transparent">↓ </span>' +
+      th.innerHTML ='<span style="opacity:0">↓ </span>' +
         headerText;
 
       th.setAttribute("scope", "col");
@@ -226,7 +226,7 @@ export class RenderTable {
     headerRow.classList.add("mobile-header");
     headers.forEach((headerText, index) => {
       const header = document.createElement("button");
-      header.innerHTML = '<span style="color:transparent">↓</span>' + headerText;
+      header.innerHTML = '<span style="opacity:0">↓</span>' + headerText;
       header.classList.add("mobile-header-button");
       header.setAttribute("aria-label", `Sortuj po ${headerText}`);
       header.setAttribute("aria-sort", ariaSort);
@@ -580,7 +580,7 @@ static updateActiveSortIndicators(viewEl, mode, headers, sortedIndex, ascending)
       th.classList.toggle("active", i === sortedIndex);
       th.setAttribute("aria-sort", i === sortedIndex ? (ascending ? "ascending" : "descending") : "none");
       const headerText = headers[i] ?? th.innerHTML.replace(/^↓ |^↑ /, '');
-      th.innerHTML = (i === sortedIndex ? (ascending ? '<span>↓ </span>' : '<span>↑ </span>') : '<span style="color:transparent">↓</span>') + headerText;
+      th.innerHTML = (i === sortedIndex ? (ascending ? '<span>↓ </span>' : '<span>↑ </span>') : '<span style="opacity:0">↓</span>') + headerText;
     });
   } else {
     const btns = Array.from(viewEl.querySelectorAll(".mobile-header-button"));
@@ -588,7 +588,7 @@ static updateActiveSortIndicators(viewEl, mode, headers, sortedIndex, ascending)
       btn.classList.toggle("active", i === sortedIndex);
       btn.setAttribute("aria-sort", i === sortedIndex ? (ascending ? "ascending" : "descending") : "none");
       const headerText = headers[i] ?? btn.innerHTML.replace(/^↓ |^↑ /, '');
-      btn.innerHTML = (i === sortedIndex ? (ascending ? '<span>↓ </span>' : '<span>↑ </span>') : '<span style="color:transparent">↓</span>') + headerText;
+      btn.innerHTML = (i === sortedIndex ? (ascending ? '<span>↓ </span>' : '<span>↑ </span>') : '<span style="opacity:0">↓</span>') + headerText;
     });
   }
 }

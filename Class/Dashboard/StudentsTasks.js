@@ -61,7 +61,7 @@ export class StudentsTasks{
                 if(asoOption) subjectSelect.value = 'aso';
             }
 
-            form.dispatchEvent(new Event('submit')); // automatyczne załadowanie danych przy wejściu na stronę
+            // form.dispatchEvent(new Event('submit')); // automatyczne załadowanie danych przy wejściu na stronę
         } catch (error) {
             console.error("Błąd ładowania strony zadań uczniów:", error);
             container.innerHTML = '<p class="error">Nie udało się pobrać danych.</p>';
