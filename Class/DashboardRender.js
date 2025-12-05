@@ -108,7 +108,7 @@ export class DashboardRender {
             if (subjectButton) {
               subjectButton.click();
             }
-          }, 100);
+          }, 300);
           return;
         } else if (hash.includes("course-")) {
           const courseName = hash.split("course-")[1];

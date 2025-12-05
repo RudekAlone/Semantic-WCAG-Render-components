@@ -1,212 +1,150 @@
-// Definicje kolorów dla motywu ciemnego
+@use "sass:map";
 
-$text-color: #ebebeb;
-// Warstwy tła
-$background-color: #030303;
-$bg-layer-1: #161616;
-$bg-layer-2: #1d1d1d;
-$bg-layer-3: #232323;
-$bg-layer-4: #292929;
+// Definicje kolorów dla motywu ciemnego
+$dark-theme-colors: (
+  text-color: #ebebeb,
+  // Warstwy tła
+  background-color: #030303,
+  bg-layer-1: #161616,
+  bg-layer-2: #1d1d1d,
+  bg-layer-3: #232323,
+  bg-layer-4: #292929,
 
 // Gradients
-$bg-gradient-1: linear-gradient(
+bg-gradient-1: linear-gradient(
   142deg,
   rgb(0 140 195) 0%,
   rgb(47 187 105) 50%,
   rgb(243 227 85) 100%
-);
-$bg-gradient-2: linear-gradient(
+),
+bg-gradient-2: linear-gradient(
   90deg,
   rgba(155, 42, 123, 1) 0%,
   rgba(199, 87, 133, 1) 50%,
   rgba(237, 83, 221, 1) 100%
-);
-$bg-gradient-3: linear-gradient(
+),
+bg-gradient-3: linear-gradient(
   90deg,
   rgba(123, 155, 42, 1) 0%,
   rgba(199, 133, 87, 1) 50%,
   rgba(221, 237, 83, 1) 100%
-);
+),
 
 //Inputs
-$focus-outline-color: #00FFBF;
-$accent-color: #009FFF;
-$input-bg-color: #101010;
-$input-bg-color-hover: #1a1a1a;
-$input-border: 1px solid #3a3a3a;
-$input-border-hover: 1px solid #9b9b9b;
-$outline-focus: 2px solid var(--focus-outline-color);
-$outline-hover: 1px solid var(--focus-outline-color);
+focus-outline-color: #00FFBF,
+accent-color: #009FFF,
+input-bg-color: #101010,
+input-bg-color-hover: #1a1a1a,
+input-border: 1px solid #3a3a3a,
+input-border-hover: 1px solid #9b9b9b,
+outline-focus: 2px solid var(--focus-outline-color),
+outline-hover: 1px solid var(--focus-outline-color),
 
 // Buttons
-$button-bg-primary: #0056ab;
-$button-bg-secondary: #495a67;
-$button-bg-tertiary: #176429;
-$button-bg-quaternary: #ab202e;
-$button-bg-fifth: #6f5300;
+button-bg-primary: #004C98,
+button-bg-secondary: #464E55,
+button-bg-tertiary: #005614,
+button-bg-quaternary: #991825,
+button-bg-fifth: #68471E,
 
-$button-bg-hover-primary: #024083;
-$button-bg-hover-secondary: #2f3941;
-$button-bg-hover-tertiary: #0c4b1a;
-$button-bg-hover-quaternary: #7e121d;
-$button-bg-hover-fifth: #493608;
+button-bg-hover-primary: #113F70,
+button-bg-hover-secondary: #30363B,
+button-bg-hover-tertiary: #0E491B,
+button-bg-hover-quaternary: #7e121d,
+button-bg-hover-fifth: #4B3418,
 
 // Form elements
 
-$form-bg-color: #353535;
-$form-border: 1px solid #606060;
-$form-input-wrapper-bg-color: #444444;
+form-bg-color: #353535,
+form-border: 1px solid #606060,
+form-input-wrapper-bg-color: #444444,
 
 
-$hr-color: #0056ab;
+hr-color: #0056ab,
 
 // Links
-$link-color: #64b5f6;
-$link-hover-color: #90caf9;
-$link-visited-color: #9575cd;
-$link-visited-hover-color: #b39ddb;
-
+link-color: #64b5f6,
+link-hover-color: #90caf9,
+link-visited-color: #9575cd,
+link-visited-hover-color: #b39ddb,
 // Quiz colors
 
-$quiz-text-color: #cdcdcd;
-$quiz-correct-color: #00c853;
-$quiz-incorrect-color: #d50000;
+quiz-text-color: #cdcdcd,
+quiz-correct-color: #00c853,
+quiz-incorrect-color: #d50000,
 
 // ============MARKDOWN_PREVIEW=================
 
 // Task Preview
-$task-text-color: #f3f3f3;
-$task-bold-color: #3bff65;
-$task-italic-color: #81d4fa;
-$task-italic-bold-color: #ffab40;
-$task-bold-italic-color: #ff6e40;
+task-text-color: #f3f3f3,
+task-bold-color: #3bff65,
+task-italic-color: #81d4fa,
+task-italic-bold-color: #ffab40,
+task-bold-italic-color: #ff6e40,
 
 // Hint box
-$hint-info-background-color: #263238;
-$hint-info-border-color: #2196f3;
-$hint-text-color: #ffffff;
-$hint-success-background-color: #1b5e2038;
-$hint-success-border-color: #4caf50;
-$hint-warning-background-color: #f5c11738;
-$hint-warning-border-color: #ffc400;
-$hint-danger-background-color: #b71c1c38;
-$hint-danger-border-color: #f44336;
+hint-info-background-color: #263238,
+hint-info-border-color: #2196f3,
+hint-text-color: #ffffff,
+hint-success-background-color: #1b5e2038,
+hint-success-border-color: #4caf50,
+hint-warning-background-color: #f5c11738,
+hint-warning-border-color: #ffc400,
+hint-danger-background-color: #b71c1c38,
+hint-danger-border-color: #f44336,
+);
 
-:root {
-  /* Podstawowe kolory */
-  --background-color: #{$background-color};
-  --text-color: #{$text-color};
+// ======================= FONTS =======================
+$fonts: (
+  sans: "Segoe UI, Tahoma, Geneva, Verdana, sans-serif",
+  mono: "Courier New, Courier, monospace",
+  gill-sans: "Gill Sans, Gill Sans MT, Calibri, Trebuchet MS, sans-serif",
+  georgia: "Georgia, Times New Roman, Times, serif",
+  arial: "Arial, Helvetica, sans-serif",
+  verdana: "Verdana, Geneva, Tahoma, sans-serif",
+  comic-sans: "Comic Sans MS, cursive, sans-serif"
+);
 
-  /* Warstwy tła */
-  --bg-layer-1: #{$bg-layer-1};
-  --bg-layer-2: #{$bg-layer-2};
-  --bg-layer-3: #{$bg-layer-3};
-  --bg-layer-4: #{$bg-layer-4};
-  /* Gradients */
-  --bg-gradient-1: #{$bg-gradient-1};
-  --bg-gradient-2: #{$bg-gradient-2};
-  --bg-gradient-3: #{$bg-gradient-3};
 
-  /* Inputs */
-  --focus-outline-color: #{$focus-outline-color};
-  --accent-color: #{$accent-color};
-  --input-bg-color: #{$input-bg-color};
-  --input-bg-color-hover: #{$input-bg-color-hover};
-  --input-border: #{$input-border};
-  --input-border-hover: #{$input-border-hover};
-  --outline-focus: #{$outline-focus};
-  --outline-hover: #{$outline-hover};
+// ======================= BREAKPOINTS =======================
+$breakpoints: (
+  sm: 576px,
+  md: 768px,
+  lg: 992px,
+  xl: 1200px,
+  xxl: 1400px
+);
 
-  /* Buttons */
-  --button-bg-primary: #{$button-bg-primary};
-  --button-bg-secondary: #{$button-bg-secondary};
-  --button-bg-tertiary: #{$button-bg-tertiary};
-  --button-bg-quaternary: #{$button-bg-quaternary};
-  --button-bg-fifth: #{$button-bg-fifth};
-  --button-bg-hover-primary: #{$button-bg-hover-primary};
-  --button-bg-hover-secondary: #{$button-bg-hover-secondary};
-  --button-bg-hover-tertiary: #{$button-bg-hover-tertiary};
-  --button-bg-hover-quaternary: #{$button-bg-hover-quaternary};
-  --button-bg-hover-fifth: #{$button-bg-hover-fifth};
+// ======================= MIXINS =======================
 
-  /* Form elements */
-  --form-bg-color: #{$form-bg-color};
-  --form-border: #{$form-border};
-  --form-input-wrapper-bg-color: #{$form-input-wrapper-bg-color};
-
-  --hr-color: #{$hr-color};
-  /* Links */
-  --link-color: #{$link-color};
-  --link-hover-color: #{$link-hover-color};
-  --link-visited-color: #{$link-visited-color};
-  --link-visited-hover-color: #{$link-visited-hover-color};
-
-  /* Quiz colors */
-  --quiz-text-color: #{$quiz-text-color};
-  --quiz-correct-color: #{$quiz-correct-color};
-  --quiz-incorrect-color: #{$quiz-incorrect-color};
-
-  /* ============MARKDOWN_PREVIEW================= */
-  /* Task Preview */
-  --task-text-color: #{$task-text-color};
-  --task-bold-color: #{$task-bold-color};
-  --task-italic-color: #{$task-italic-color};
-  --task-italic-bold-color: #{$task-italic-bold-color};
-  --task-bold-italic-color: #{$task-bold-italic-color};
-  /* Hint box */
-  --hint-info-background-color: #{$hint-info-background-color};
-  --hint-info-border-color: #{$hint-info-border-color};
-  --hint-text-color: #{$hint-text-color};
-  --hint-success-background-color: #{$hint-success-background-color};
-  --hint-success-border-color: #{$hint-success-border-color};
-  --hint-warning-background-color: #{$hint-warning-background-color};
-  --hint-warning-border-color: #{$hint-warning-border-color};
-  --hint-danger-background-color: #{$hint-danger-background-color};
-  --hint-danger-border-color: #{$hint-danger-border-color};
+@mixin respond-to($size) {
+  @media (max-width: map.get($breakpoints, $size)) {
+    @content;
+  }
 }
 
-// =======================FONTS======================================
-$font-family-sans: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-$font-family-mono: 'Courier New', Courier, monospace;
-$font-family-gill-sans: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-$font-family-georgia: Georgia, 'Times New Roman', Times, serif;
-$font-family-arial: Arial, Helvetica, sans-serif;
-$font-family-verdana: Verdana, Geneva, Tahoma, sans-serif;
-$font-family-comic-sans: 'Comic Sans MS', cursive, sans-serif;
 
-:root {
-    /* Fonts */
-  --font-family-sans: #{$font-family-sans};
-  --font-family-mono: #{$font-family-mono};
-  --font-family-gill-sans: #{$font-family-gill-sans};
-  --font-family-georgia: #{$font-family-georgia};
-  --font-family-arial: #{$font-family-arial};
-  --font-family-verdana: #{$font-family-verdana};
-  --font-family-comic-sans: #{$font-family-comic-sans};
+@mixin outline($type) {
+  outline: var(--outline-#{$type});
+  outline-offset: 1px;
 }
 
-// Zmienne
-$breakpoint-sm: 576px;
-$breakpoint-md: 768px;
-$breakpoint-lg: 992px;
-$breakpoint-xl: 1200px;
-$breakpoint-xxl: 1400px;
+@mixin shadow-box($x:2px, $y:3px, $blur:5px, $color:rgba(0,0,0,0.4)) {
+  box-shadow: $x $y $blur $color;
+}
 
-// Mixiny dla wygody
-@mixin respond-to($breakpoint) {
-  @if $breakpoint == sm {
-    @media (max-width: #{$breakpoint-sm}) { @content; }
+@mixin input-hover {
+  background-color: var(--input-bg-color-hover);
+  border: var(--input-border-hover);
+}
+
+// ======================= EXPORT TO :root =======================
+:root {
+  @each $name, $value in $dark-theme-colors {
+    --#{$name}: #{$value};
   }
-  @else if $breakpoint == md {
-    @media (max-width: #{$breakpoint-md}) { @content; }
-  }
-  @else if $breakpoint == lg {
-    @media (max-width: #{$breakpoint-lg}) { @content; }
-  }
-  @else if $breakpoint == xl {
-    @media (max-width: #{$breakpoint-xl}) { @content; }
-  }
-  @else if $breakpoint == xxl {
-    @media (max-width: #{$breakpoint-xxl}) { @content; }
+
+  @each $name, $value in $fonts {
+    --font-family-#{$name}: #{$value};
   }
 }

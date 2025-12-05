@@ -1,7 +1,5 @@
-@use "root";
-@mixin shadow-box {
-  box-shadow: 2px 3px 5px rgba(0, 0, 0, 0.4);
-}
+@use "root" as *;
+
 
 * {
   margin: 0;
@@ -83,14 +81,14 @@ main {
     background-color: var(--bg-layer-4);
   }
 
-  @include root.respond-to(lg) {
+  @include respond-to(lg) {
     padding: 15px;
   }
 
-  @include root.respond-to(md) {
+  @include respond-to(md) {
     padding: 10px;
   }
-  @include root.respond-to(sm) {
+  @include respond-to(sm) {
     padding: 5px;
   }
 }

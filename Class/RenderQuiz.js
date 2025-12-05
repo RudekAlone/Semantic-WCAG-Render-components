@@ -3,35 +3,6 @@ import { RenderInput } from "./Render/RenderInput.js";
 import { RenderDetails } from "./Render/RenderDetails.js";
 
 export class RenderQuiz {
-  /**
-   * Dostosowuje układ quizu do urządzeń mobilnych.
-   * Zmienia klasy CSS w zależności od szerokości okna przeglądarki.
-   *
-   * @param {HTMLElement} quizContainer - Główny kontener quizu.
-   * @param {HTMLElement} quizSectionsLeft - Lewa sekcja quizu (pytania).
-   * @param {HTMLElement} quizSectionsRight - Prawa sekcja quizu (wyjaśnienia).
-   */
-  static responseQuizMobile(
-    quizContainer,
-    quizSectionsLeft,
-    quizSectionsRight
-  ) {
-    if (window.innerWidth <= 768) {
-      // quizContainer.classList.remove("h-vh-full");
-      // quizSectionsLeft.classList.remove("w-60", "h-100");
-      // quizSectionsRight.classList.remove("w-40", "h-100");
-      // quizSectionsLeft.classList.add("w-full");
-      // quizSectionsRight.classList.add("w-full", "mt-20");
-      // quizSectionsLeft.parentElement.setAttribute("data-layout", "column");
-    } else {
-      // quizContainer.classList.add("h-vh-full");
-      // quizSectionsLeft.classList.add("w-60", "h-100");
-      // quizSectionsRight.classList.add("w-40", "h-100");
-      // quizSectionsLeft.classList.remove("w-full");
-      // quizSectionsRight.classList.remove("w-full", "mt-20");
-      // quizSectionsLeft.parentElement.removeAttribute("data-layout");
-    }
-  }
 
   /**
    * Renderuje główny widok quizu.
@@ -132,15 +103,6 @@ export class RenderQuiz {
     // Logika quizu
     this.quizManager(questionData, quizSectionsLeft, quizSectionsRight);
 
-    // Responsywność
-    window.addEventListener("resize", () => {
-      this.responseQuizMobile(
-        quizContainer,
-        quizSectionsLeft,
-        quizSectionsRight
-      );
-    });
-    this.responseQuizMobile(quizContainer, quizSectionsLeft, quizSectionsRight);
 
     return quizContainer;
   }

@@ -1,13 +1,5 @@
 
-
-@mixin focus-outline {
-  outline: var(--outline-focus);
-  outline-offset: 1px;
-}
-
-@mixin shadow-box {
-  box-shadow: 2px 3px 5px rgba(0, 0, 0, 0.4);
-}
+@use "root" as *;
 
 button {
   @include shadow-box;
@@ -27,7 +19,7 @@ button {
     background-color: var(--button-bg-hover-primary);
   }
   &:focus-visible {
-    @include focus-outline;
+    @include outline("focus");
   }
   &.bg-primary {
     background-color: var(--button-bg-primary);

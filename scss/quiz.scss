@@ -1,8 +1,5 @@
-@use "root";
+@use "root" as *;
 
-@mixin shadow-box {
-  box-shadow: 2px 3px 5px rgba(0, 0, 0, 0.4);
-}
 
 // =====================
 // Główny kontener quizu
@@ -15,13 +12,13 @@
   color: var(--quiz-text-color);
   border-radius: 5px;
 
-  @include root.respond-to(lg) {
+  @include respond-to(lg) {
     padding: 10px;
   }
-  @include root.respond-to(md) {
+  @include respond-to(md) {
     padding: 5px;
   }
-  @include root.respond-to(sm) {
+  @include respond-to(sm) {
     padding: 0;
   }
 
@@ -41,11 +38,11 @@
   flex-direction: row;
   gap: 20px;
 
-  @include root.respond-to(xl) {
+  @include respond-to(xl) {
     flex-direction: column;
     gap: 10px;
   }
-  @include root.respond-to(md) {
+  @include respond-to(md) {
     flex-direction: column;
     gap: 5px;
   }
@@ -268,17 +265,3 @@
   
 }
 
-// =====================
-// Utility
-// =====================
-.visually-hidden {
-  position: absolute !important;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
-}

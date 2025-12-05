@@ -1,19 +1,5 @@
-@mixin hover-outline {
-  outline: var(--outline-hover);
-  outline-offset: 1px;
-}
+@use 'root' as *;
 
-@mixin focus-outline {
-  outline: var(--outline-focus);
-  outline-offset: 1px;
-}
-@mixin input-hover {
-  background-color: var(--input-bg-color-hover);
-  border: var(--input-border-hover);
-}
-@mixin shadow-box {
-  box-shadow: 2px 3px 5px rgba(0, 0, 0, 0.4);
-}
 
 .textarea-wrapper {
   width: 100%;
@@ -27,8 +13,7 @@ select,
 textarea {
   &:hover,
   &.hovered {
-    outline: var(--outline-hover);
-    outline-offset: 2px;
+    @include outline("hover");
     background-color: var(--input-bg-color-hover);
     border: var(--input-border-hover);
   }
@@ -95,9 +80,7 @@ button.koala-number-arrow {
 
 button.koala-number-arrow:hover,
 button.koala-number-arrow:focus-visible {
-  outline: 1px solid var(--focus-outline-color);
-  outline-offset: 0;
-  // filter: brightness(0.8);
+  @include outline("hover");
   background-color: var(--button-bg-hover-primary);
 }
 
@@ -222,11 +205,11 @@ label:focus-visible,
 textarea:focus-visible,
 input:focus-visible:not([type="radio"]),
 select:focus-visible {
-  @include focus-outline;
+  @include outline("focus");
   @include input-hover;
 }
 button:focus-visible {
-  @include focus-outline;
+  @include outline("focus");
 }
 
 input[type="radio"] {
