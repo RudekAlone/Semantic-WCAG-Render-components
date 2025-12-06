@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+
+body{
+    background-color:#0e0e0e;
+    color:#cfcfcf;
+}
+
+        .module-menu {
+            width: 300px;
+            border: 1px solid #ccc;
+            padding: 10px;
+            font-family: Arial, sans-serif;
+        }
+        .module-menu .module {
+            margin-top: 15px;
+            border-bottom: 1px solid #0079bf;
+        }
+        .module-menu ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        .module-menu li {
+            margin: 5px 0;
+        }
+        .lesson {
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .group {
+            cursor: pointer;
+            font-style: italic;
+        }
+    </style>
+  </head>
+  <body>
+    <nav class="module-menu">
+      <ul>
+        <li class="lesson">Kurs Drukarki i skanery - Wprowadzenie</li>
+        <li class="lesson">Zestawienie definicji</li>
+        <li class="lesson">0.1 Drukarka atramentowa</li>
+        <li class="lesson">0.2 Drukarka laserowa</li>
+        <li class="lesson">0.3 Drukarka igłowa</li>
+        <li class="lesson">0.4 Drukarka termiczna i termosublimacyjna</li>
+        <li class="lesson">0.5 Drukarka 3D</li>
+        <li class="lesson">1.1 Skaner płaski</li>
+        <li class="lesson">1.2 Skaner 3D</li>
+        <li class="lesson">Quiz Wiedzy</li>
+        <li class="lesson">Lekcja</li>
+        <li class="module">
+          Moduł
+          <ul>
+            <li>
+              <details open="">
+                <summary class="group">Grupa details summary</summary>
+                <ul>
+                  <li class="lesson-item">
+                    lekcja do powyższej grupy details sumary
+                  </li>
+                  <li class="lesson-item">
+                    lekcja do powyższej grupy details sumary
+                  </li>
+                  <li class="lesson-item">
+                    lekcja do powyższej grupy details sumary
+                  </li>
+                </ul>
+              </details>
+            </li>
+          </ul>
+        </li>
+        <li>
+          <details open="">
+            <summary class="group">Nowa grupa details summary</summary>
+            <ul>
+              <li class="lesson-item">
+                lekcja do powyższej grupy details sumary
+              </li>
+            </ul>
+          </details>
+        </li>
+        <li class="module">
+          Kolejny moduł
+          <ul>
+            <li class="lesson">kolejna lekcja</li>
+            <li class="lesson">kolejna lekcja</li>
+          </ul>
+        </li>
+      </ul>
+    </nav>
+  </body>
+</html>

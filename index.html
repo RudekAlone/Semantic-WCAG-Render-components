@@ -1,40 +1,223 @@
 <!DOCTYPE html>
 <html lang="pl">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Dokument</title>
-    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
-    <link rel="stylesheet" href="/css/style.css" />
-  </head>
 
-  <body>
-    <header>
-      <h1>
-        <a href="../">
-          <img src="logo.png" alt="logo" />
-          Koala-V
-        </a>
-      </h1>
-    </header>
-    <main>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dokument</title>
+  <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+  <link rel="stylesheet" href="../css/style.css" />
+</head>
 
-      <div id="test-color-palette">
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-<div></div>
-      </div>
+<body>
+  <header>
+    <h1>
+      <a href="../">
+        <img src="logo.png" alt="logo" />
+        Koala-V
+      </a>
+    </h1>
+  </header>
+  <main id="welcome-page">
+    <section id="welcome-section">
+      <section id="welcome-message">
+        <div>
+          <h2>Witamy na stronie <span class="wrap-span-text">Koala-V!</span></h2>
+      <p>Twoje centrum materiałów edukacyjnych z dziedziny informatyki.</p>
+        </div>
+      <img src="/Resources/course/koalaWarrior.png" alt="Obrazek z koalą wojownikiem" />
+      </section>
+      <section id="login-section">
+        <h2>Sekcja logowania</h2>
+        <p>Jesteś moim uczniem? Zaloguj się.</p>
+        <form method="post" class="layout-column-full" aria-label="Formularz logowania użytkownika" id="form-login">
+          <label for="login">
+            Nazwa użytkownika:
+          </label>
+          <input type="text" id="login" name="login"
+          placeholder="Nazwa użytkownika" aria-label="Pole do wpisania nazwy użytkownika" required />
+        
+          <label for="password">
+            Hasło:
+          </label>
+          <input type="password" id="password" name="password"
+          placeholder="Hasło" aria-label="Pole do wpisania hasła" required />
+        
+          <button type="submit"
+          aria-label="Przycisk do zalogowania się na konto użytkownika">
+            Zaloguj się
+          </button>
+        
+          </form>
+      </section>
+    </section>
+   
+    <section id="courses-content-container">
+      <h2>Kursy</h2>
+      <nav>
+        <ul>
+          <li>
+            <a href="#"><img src="/Resources/course/windows11.webp" alt="Windows 11" />
+              <p>Windows 11</p>
+              <div id="footer-course">
+                <hr>
+                <span>Koala-V</span>
+              </div>
+            </a>
+          </li>
+          <li><a href="#">
+              <img src="/Resources/course/UbuntuDesktop.webp" alt="Ubuntu 24 Desktop" />
+
+              Ubuntu 24 Desktop
+              <div id="footer-course">
+                <hr>
+                <span>Koala-V</span>
+              </div>
+            </a></li>
+          <li><a href="#">
+              <img src="/Resources/course/windowsServer2025.webp" alt="Windows Server 2025" />
+              Windows Server 2025
+              <div id="footer-course">
+                <hr>
+                <span>Koala-V</span>
+              </div>
+            </a></li>
+          <li><a href="#">
+              <img src="/Resources/course/VirtualBox.webp" alt="VirtualBox" />
+              VirtualBox
+              <div id="footer-course">
+                <hr>
+                <span>Koala-V</span>
+              </div>
+            </a></li>
+
+          <li><a href="#">
+              <img src="/Resources/course/javascript.webp" alt="JavaScript" />
+              JavaScript
+              <div id="footer-course">
+                <hr>
+                <span>Koala-V</span>
+              </div>
+            </a></li>
+        </ul>
+      </nav>
+    </section>
+
+  </main>
+  <footer>
+    <p>&copy; 2026 Koala-V</p>
+  </footer>
+  <script src="./js/script-home.js" type="module"></script>
 
 
 
-     <input type="datetime-local" name="appointment" id="appointment" aria-label="test">
-    </main>
-    <footer>
-      <p>&copy; 2026 Koala-V</p>
-      <p>e-mail: <strong>contact@koala-v.com</strong></p>
-    </footer>
-    <script src="script.js" type="module"></script>
-  </body>
+
+<style>
+
+
+body {
+
+  overflow-x: hidden;
+}
+
+.notification {
+  position: absolute;
+  top: 25px;
+  right: 30px;
+  border-radius: 12px;
+  background: var(--background-color);
+  padding: 20px 35px 20px 25px;
+  box-shadow: 0 6px 20px -5px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transform: translateX(calc(100% + 30px));
+  transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.35);
+}
+
+.notification.active {
+  transform: translateX(0%);
+}
+
+.notification .notification-content {
+  display: flex;
+  align-items: center;
+}
+
+.notification-content .check {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 35px;
+  min-width: 35px;
+  color: var(--text-color);
+  font-size: 20px;
+  border-radius: 50%;
+}
+
+.notification-content .message {
+  display: flex;
+  flex-direction: column;
+  margin: 0 20px;
+}
+
+.message .text {
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--text-color);
+}
+
+.message .text.text-1 {
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.notification .close {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  padding: 5px;
+  cursor: pointer;
+  opacity: 0.7;
+}
+
+.notification .close:hover {
+  opacity: 1;
+}
+
+.notification .progress {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 3px;
+  width: 100%;
+
+}
+
+.notification .progress:before {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  height: 100%;
+  width: 100%;
+  background-color: #4070f4;
+}
+
+.progress.active:before {
+  animation: progress 5s linear forwards;
+}
+
+@keyframes progress {
+  100% {
+    right: 100%;
+  }
+}
+
+
+</style>
+
+
+
+
+</body>
+
 </html>

@@ -1,0 +1,13 @@
+{
+    "name": "rudek/core",
+    "description": "Koala-V Semantic and WCAG",
+    "type": "project",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Core\\": "core/"
+        }
+    },
+    "minimum-stability": "dev",
+    "require": {}
+}

@@ -1,0 +1,9 @@
+RewriteEngine On
+RewriteBase /
+
+# Ignoruj istniejące pliki i foldery
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# Przekieruj wszystko do backend/core/api.php
+RewriteRule ^ backend/core/api.php [L]
