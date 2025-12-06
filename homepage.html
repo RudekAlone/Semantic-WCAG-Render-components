@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Dokument</title>
   <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="../css/style.css" />
 </head>
 
 <body>
@@ -18,7 +18,7 @@
       </a>
     </h1>
   </header>
-  <main>
+  <main id="welcome-page">
     <section id="welcome-section">
       <section id="welcome-message">
         <div>
@@ -30,7 +30,7 @@
       <section id="login-section">
         <h2>Sekcja logowania</h2>
         <p>Jesteś moim uczniem? Zaloguj się.</p>
-        <form action="./login" data-ui="form" data-layout="column">
+        <form action="./login" class="layout-column-full" aria-label="Formularz logowania użytkownika">
           <label for="login">
             Nazwa użytkownika:
           </label>
@@ -43,7 +43,7 @@
           <input type="password" id="password"
           placeholder="Hasło" aria-label="Pole do wpisania hasła" required />
         
-          <button type="submit" class="bg-primary" data-ui="button"
+          <button type="submit"
           aria-label="Przycisk do zalogowania się na konto użytkownika">
             Zaloguj się
           </button>

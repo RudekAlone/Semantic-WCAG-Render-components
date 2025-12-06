@@ -36,13 +36,17 @@ export class RenderInput {
   ) {
     const wrapper = document.createElement("div");
     wrapper.classList.add("input-wrapper", `layout-${direction}`);
-
+    let titleText = "";
 
     if( name === "") {
       name = this._generateId();
     }
     if( id === "") {
       id = this._generateId();
+    }
+    if(Array.isArray(value)){
+      titleText = value[1] || "";
+      value = value[0];
     }
 
     // === LABEL ===
@@ -81,7 +85,19 @@ export class RenderInput {
     } else if (type === "file" && acceptFiles.length > 0) {
       input.accept = acceptFiles.join(",");
     } else if (["checkbox", "radio"].includes(type)) {
-      input.checked = value === "true" || value === true;
+      if ((value === -1 || value === "-1") && titleText !== "") {
+        input.disabled = true;
+        const span = document.createElement("span");
+        span.textContent = "⛔";
+        span.setAttribute("aria-label", titleText);
+        span.setAttribute("role", "img");
+        span.title = titleText;
+
+        label.appendChild(span);
+        input.style.display = "none";
+      } else {
+        input.checked = value === "true" || value === true || value === 1;
+      }
     } else if (value) {
       input.defaultValue = value;
     }
@@ -332,7 +348,8 @@ export class RenderInput {
     const wrapper = document.createElement("div");
     // wrapper.setAttribute("data-ui", "input-wrapper");
     wrapper.classList.add("input-wrapper");
-    wrapper.setAttribute("data-layout", direction);
+    // wrapper.setAttribute("data-layout", direction);
+        wrapper.classList.add("input-wrapper", `layout-${direction}`);
     wrapper.appendChild(labelElement);
     wrapper.appendChild(select);
 

@@ -1,0 +1,16 @@
+@use "../root" as *;
+
+#classes-page{
+    &{
+           background-color: var(--bg-layer-2);
+    margin: -15px;
+    padding: 10px;
+    }
+& h2 {
+  text-align: center;
+    margin-bottom: 20px;
+}
+& form{
+        justify-content: center;
+    }
+}

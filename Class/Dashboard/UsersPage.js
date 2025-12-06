@@ -54,12 +54,15 @@ export class UsersPage {
         id: "user-name",
         required: true,
         placeholder: "Wpisz imię",
+        direction: "row-full",
       },
       {
         label: "Drugie imię",
         type: "text",
         id: "user-middle-name",
         placeholder: "Wpisz drugie imię",
+        direction: "row-full",
+
       },
       {
         label: "Nazwisko",
@@ -67,6 +70,8 @@ export class UsersPage {
         id: "user-last-name",
         required: true,
         placeholder: "Wpisz nazwisko",
+        direction: "row-full",
+
       },
       {
         label: "Email",
@@ -74,6 +79,8 @@ export class UsersPage {
         id: "user-email",
         required: true,
         placeholder: "Wpisz email",
+        direction: "row-full",
+
       },
       {
         selectInputOptions: true,
@@ -82,6 +89,8 @@ export class UsersPage {
         id: "user-role",
         options: roleOptions,
         required: true,
+        direction: "row-full",
+
       },
       {
         selectInputOptions: true,
@@ -89,6 +98,8 @@ export class UsersPage {
         type: "select",
         id: "user-class",
         options: classOptions,
+        direction: "row-full",
+
       },
     ];
 

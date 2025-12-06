@@ -6,6 +6,8 @@ import {
   TASKS_STUDENT_DATA_BD,
   TASKS_STUDENT_DATA_ASO_0,
   TASKS_STUDENT_DATA_BD_0,
+  TASKS_STUDENT_DATA_SO_0,
+  TASKS_STUDENT_DATA_PAI_0,
   EXAM_STUDENT_DATA_0,
   QUIZ_DATA_JS,
   QUIZ_DATA_HTML,
@@ -68,6 +70,16 @@ export class DataService {
     await this._delay();
     return USERS_DATA;
   }
+
+  /**
+   * Pobiera wszystkie zadania studenta (Katarzyna Kowalczyk).
+   * @returns {Promise<Array>}
+   */
+  static async getAllStudentTasks() {
+    await this._delay();
+    return [...TASKS_STUDENT_DATA_SO_0,...TASKS_STUDENT_DATA_ASO_0, ...TASKS_STUDENT_DATA_BD_0, ...TASKS_STUDENT_DATA_PAI_0];
+  }
+
 
   /**
    * Pobiera zadania studenta dla przedmiotu ASO (Katarzyna Kowalczyk).

@@ -70,7 +70,7 @@ export const TASKS_DATA = [
     name: "Konfiguracja Domeny Active Directory",
     partName: "AD",
     subject: "aso",
-    status: "1",
+    status: "0",
     link: "https://raw.githubusercontent.com/Edu-Koala-V/task-markdown/refs/heads/main/task10.md",
     deadline: "2024-05-20",
   },
@@ -117,13 +117,13 @@ export const TASK_STATUS = [
     userNumber: 1,
     userName: "Jan",
     userLastName: "Kowalski",
-    status: true
+    status: 1
   },
   {
     userNumber: 2,
     userName: "Katarzyna",
     userLastName: "Kowalczyk",
-    status: false
+    status: -1
   },
   {
     userNumber: 3,
@@ -507,8 +507,171 @@ export const TASKS_STUDENT_DATA_BD = [
   },
 ]
 
+export const TASKS_STUDENT_DATA_SO = [
+  {
+    name: "Konfiguracja Domeny Active Directory",
+    subject: "so",
+    status: "1",
+    deadline: "2024-05-20",
+    studentName: "Jan",
+    studentMiddleName: "Marek",
+    studentLastName: "Kowalski"
+  },
+    {
+    name: "Konfiguracja Domeny Active Directory",
+    subject: "so",
+    status: "0",
+    deadline: "2024-05-20",
+    studentName: "Anna",
+    studentMiddleName: "Maria",
+    studentLastName: "Wiśniewska"
+  },
+      {
+    name: "Konfiguracja Domeny Active Directory",
+    subject: "so",
+    status: "0",
+    deadline: "2024-05-20",
+    studentName: "Piotr",
+    studentMiddleName: "-",
+    studentLastName: "Zieliński"
+  },
+        {
+    name: "Konfiguracja Domeny Active Directory",
+    subject: "so",
+    status: "1",
+    deadline: "2024-05-20",
+    studentName: "Katarzyna",
+    studentMiddleName: "Ewa",
+    studentLastName: "Kowalczyk"
+  },
+
+  
+  {
+    name: "Aliasy nazw domenowych DNS",
+    partName: "DNS",
+    subject: "so",
+    status: "-1",
+    deadline: "2026-05-10",
+    studentName: "Jan",
+    studentMiddleName: "Marek",
+    studentLastName: "Kowalski"
+  },
+  {
+    name: "Aliasy nazw domenowych DNS",
+    partName: "DNS",
+    subject: "so",
+    status: "0",
+    deadline: "2026-05-10",
+    studentName: "Anna",
+    studentMiddleName: "Maria",
+    studentLastName: "Wiśniewska"
+  },
+  {
+    name: "Aliasy nazw domenowych DNS",
+    partName: "DNS",
+    subject: "so",
+    status: "0",
+    deadline: "2026-05-10",
+    studentName: "Piotr",
+    studentMiddleName: "-",
+    studentLastName: "Zieliński"
+  },
+  {    name: "Aliasy nazw domenowych DNS",
+    partName: "DNS",
+    subject: "so",
+    status: "1",
+    deadline: "2026-05-10",
+    studentName: "Katarzyna",
+    studentMiddleName: "Ewa",
+    studentLastName: "Kowalczyk"
+  },
+  {    name: "Zarządzanie Użytkownikami w Domenie",
+    partName: "AD",
+    subject: "so",
+    status: "0",
+    deadline: "2026-05-25",
+    studentName: "Jan",
+    studentMiddleName: "Marek",
+    studentLastName: "Kowalski"
+  },
+  {
+    name: "Zarządzanie Użytkownikami w Domenie",
+    partName: "AD",
+    subject: "so",
+    status: "0",
+    deadline: "2026-05-25",
+    studentName: "Anna",
+    studentMiddleName: "Maria",
+    studentLastName: "Wiśniewska"
+  },
+  {    name: "Zarządzanie Użytkownikami w Domenie",
+    partName: "AD",
+    subject: "so",
+    status: "0",
+    deadline: "2026-05-25",
+    studentName: "Piotr",
+    studentMiddleName: "-",
+    studentLastName: "Zieliński"
+  },
+  {
+    name: "Zarządzanie Użytkownikami w Domenie",
+    partName: "AD",
+    subject: "so",
+    status: "1",
+    deadline: "2026-05-25",
+    studentName: "Katarzyna",
+    studentMiddleName: "Ewa",
+    studentLastName: "Kowalczyk"
+  },
+  
+];
+
+export const TASKS_STUDENT_DATA_PAI =[
+  {
+    name: "Tworzenie stron internetowych",
+    subject: "pai",
+    status: "1",
+    deadline: "2024-07-10",
+    studentName: "Jan",
+    studentMiddleName: "Marek",
+    studentLastName: "Kowalski"
+  },
+    {
+    name: "Tworzenie stron internetowych",
+    subject: "pai",
+    status: "0",
+    deadline: "2024-07-10",
+    studentName: "Anna",
+    studentMiddleName: "Maria",
+    studentLastName: "Wiśniewska"
+  },
+      {
+    name: "Tworzenie stron internetowych",
+    subject: "pai",
+    status: "0",
+    deadline: "2024-07-10",
+    studentName: "Piotr",
+    studentMiddleName: "-",
+    studentLastName: "Zieliński"
+  },
+        {
+    name: "Tworzenie stron internetowych",
+    subject: "pai",
+    status: "1",
+    deadline: "2024-07-10",
+    studentName: "Katarzyna",
+    studentMiddleName: "Ewa",
+    studentLastName: "Kowalczyk"
+  },
+
+
+]
+
+
 export const TASKS_STUDENT_DATA_ASO_0 = TASKS_STUDENT_DATA_ASO.filter(student => student.studentName === "Katarzyna" && student.studentLastName === "Kowalczyk");
 export const TASKS_STUDENT_DATA_BD_0 = TASKS_STUDENT_DATA_BD.filter(student => student.studentName === "Katarzyna" && student.studentLastName === "Kowalczyk");
+export const TASKS_STUDENT_DATA_SO_0 = TASKS_STUDENT_DATA_SO.filter(student => student.studentName === "Katarzyna" && student.studentLastName === "Kowalczyk");
+export const TASKS_STUDENT_DATA_PAI_0 = TASKS_STUDENT_DATA_PAI.filter(student => student.studentName === "Katarzyna" && student.studentLastName === "Kowalczyk");
 
 export const MONTH_NAMES_PL = [
   "Styczeń",

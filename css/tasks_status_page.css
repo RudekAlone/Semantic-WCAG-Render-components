@@ -78,16 +78,18 @@
   list-style-type: none;
   padding-left: 0;
 }
-
 #tasks-status-content-area ul li {
   margin-bottom: 8px;
   color: var(--text-color);
-  border-bottom: 1px solid var(--bg-layer-4);
+  border-bottom: 2px solid var(--bg-layer-4);
 }
-
 #tasks-status-content-area ul li:hover {
   color: var(--link-hover-color);
   cursor: pointer;
+}
+
+#tasks-status-nav-filter-section form {
+  width: 100%;
 }
 
 #tasks-status-content-area .status-section {
@@ -98,35 +100,11 @@
   max-height: 80vh;
   overflow-y: auto;
 }
-
-#tasks-list-section tbody {
-  overflow-y: auto;
-  height: 250px;
-  width: 100%;
-  display: table-caption;
-}
-
-#tasks-list-section tbody tr {
-  cursor: pointer;
-  width: 100%;
-  display: inline-table;
-}
-
-#tasks-list-section tbody tr > td {
-  background-color: var(--bg-layer-2);
+#tasks-status-content-area .status-section h3 {
+  color: var(--hint-success-border-color);
+  font-family: var(--font-family-verdana);
+  border-bottom: 2px solid var(--background-color);
   padding: 10px;
-  border: 1px solid var(--bg-layer-4);
-}
-
-#tasks-list-section tbody tr:hover > td {
-  background-color: var(--bg-layer-3);
-}
-
-#tasks-list-section tbody tr > td:first-child {
-  width: 60%;
-}
-
-#tasks-list-section tbody tr > td:last-child {
-  width: 40%;
-  text-align: center;
+  margin: -15px -15px 10px;
+  background-color: var(--bg-layer-4);
 }

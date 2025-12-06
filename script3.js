@@ -42,7 +42,7 @@ const pages = [
     },
     {
         name: 'Zalicz zadanie',
-        id: 'tasks-status',
+        id: 'status-tasks',
         icon: '✅',
         funkcja: "Strona typowa tylko dla mnie. Wybieram klasę i przedmiot. Ładuję wszystkie zadania. Mogę dne zadanie aktywoać dla wszystkich uczniów w klasie lub gdy jest aktywne to mam tabelę z uczniami i ich statusami do danego zadania. Wtedy przy pomocy checkboxów mogę masowo zmieniać statusy zadań uczniów na ukończone lub nieukończone."
     },

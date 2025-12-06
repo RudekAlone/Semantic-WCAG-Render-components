@@ -49,16 +49,14 @@ export class StatisticsPage {
         try {
             const [
                 loginStats,
-                tasksASO,
-                tasksBD,
+                tasks,
                 quizStats,
                 courseStats,
                 coursesData,
                 branches
             ] = await Promise.all([
                 DataService.getLoginStatistics(false),
-                DataService.getStudentTasksASO(),
-                DataService.getStudentTasksBD(),
+                DataService.getAllStudentTasks(),
                 DataService.getQuizCompletedStatistics(),
                 DataService.getCoursesCompletedStatistics(),
                 DataService.getCourses(),
@@ -86,7 +84,7 @@ export class StatisticsPage {
             tasksStatusSection.appendChild(tasksCanvas);
             container.appendChild(tasksStatusSection);
             setTimeout(() => {
-                this.tasksChartCompletionStatusByStudent("tasksStatusChart", tasksASO, tasksBD);
+                this.tasksChartCompletionStatusByStudent("tasksStatusChart", tasks);
             }, 0);
     
             const roadmapSection = document.createElement("section");
@@ -625,31 +623,21 @@ export class StatisticsPage {
     }
 
 
-static tasksChartCompletionStatusByStudent(canvasId = "tasksStatusChart", tasksASO = [], tasksBD = []) {
-
-
+static tasksChartCompletionStatusByStudent(canvasId = "tasksStatusChart", tasks = []) {
     try {
         const canvas = document.getElementById(canvasId);
         if (!canvas || typeof Chart === 'undefined') return;
         const ctx = canvas.getContext('2d');
 
-        // Collect task sources (safe if constants are undefined)
-        const sources = [
-            { name: 'ASO', data: tasksASO || [] },
-            { name: 'BD', data: tasksBD || [] }
-        ];
-
         const normalize = s => String(s || '').trim();
         const isCompleted = item => {
             if (!item) return false;
-            // explicit completed flag
             if (typeof item.completed === 'number') return item.completed > 0;
             if (typeof item.completed === 'string') {
                 const n = Number(item.completed);
                 if (!Number.isNaN(n)) return n > 0;
                 if (/^(1|true|yes|done|completed|finished|passed)$/i.test(item.completed)) return true;
             }
-            // status may be "1"/"0" or textual
             if (typeof item.status === 'number') return item.status > 0;
             if (typeof item.status === 'string') {
                 const ns = item.status.trim();
@@ -658,7 +646,7 @@ static tasksChartCompletionStatusByStudent(canvasId = "tasksStatusChart", tasksA
                 return /^(1|true|yes|done|completed|finished|passed|ok)$/i.test(ns);
             }
             if (typeof item.done === 'boolean') return item.done;
-            if (typeof item.progress === 'number') return item.progress >= 1 || item.progress > 0;
+            if (typeof item.progress === 'number') return item.progress > 0;
             return false;
         };
 
@@ -669,24 +657,22 @@ static tasksChartCompletionStatusByStudent(canvasId = "tasksStatusChart", tasksA
                    normalize(item.group) ||
                    normalize(item.courseName) ||
                    normalize(item.name) ||
-                   '';
+                   'Nieznane';
         };
 
-        // Aggregate counts per group/subject
+        // Agregacja bezpośrednio po tasks
         const map = new Map();
-        sources.forEach(src => {
-            (src.data || []).forEach(it => {
-                const group = getGroup(it) || src.name || 'Inne';
-                // each task counts as one unit unless explicitly stated
-                const total = ('total' in it) ? (Number(it.total) || 1) : 1;
-                const treatedTotal = Math.max(1, total); // avoid division by zero
-                const done = isCompleted(it) ? 1 : 0;
-                const entry = map.get(group) || { group, totalCount: 0, completedCount: 0, items: [] };
-                entry.totalCount += treatedTotal;
-                entry.completedCount += done;
-                entry.items.push(it);
-                map.set(group, entry);
-            });
+        tasks.forEach(it => {
+            const group = getGroup(it);
+            const total = ('total' in it) ? (Number(it.total) || 1) : 1;
+            const treatedTotal = Math.max(1, total);
+            const done = isCompleted(it) ? 1 : 0;
+
+            const entry = map.get(group) || { group, totalCount: 0, completedCount: 0, items: [] };
+            entry.totalCount += treatedTotal;
+            entry.completedCount += done;
+            entry.items.push(it);
+            map.set(group, entry);
         });
 
         const aggregated = Array.from(map.values());
@@ -700,20 +686,13 @@ static tasksChartCompletionStatusByStudent(canvasId = "tasksStatusChart", tasksA
             return;
         }
 
-        // Prepare labels and datasets
-        aggregated.sort((a, b) => {
-            const pa = a.completedCount / a.totalCount;
-            const pb = b.completedCount / b.totalCount;
-            return pb - pa; // descending by percent complete
-        });
+        aggregated.sort((a, b) => (b.completedCount / b.totalCount) - (a.completedCount / a.totalCount));
 
-        const labels = aggregated.map(a => a.group || 'Inne');
-        const completedCounts = aggregated.map(a => a.completedCount);
-        const totalCounts = aggregated.map(a => a.totalCount);
+        const labels = aggregated.map(a => a.group);
         const completedData = aggregated.map(a => +( (a.totalCount > 0) ? ((a.completedCount / a.totalCount) * 100).toFixed(1) : 0 ));
-        const remainingData = completedData.map((v) => +( (100 - v).toFixed(1) ));
+        const remainingData = completedData.map(v => +( (100 - v).toFixed(1) ));
 
-        // Dynamic height
+        // Dynamiczna wysokość
         const perItem = 38;
         const minH = 160;
         const maxH = 900;
@@ -721,7 +700,6 @@ static tasksChartCompletionStatusByStudent(canvasId = "tasksStatusChart", tasksA
         canvas.style.width = '100%';
         canvas.style.height = `${computedH}px`;
 
-        // Make parent scrollable if needed
         const parent = canvas.parentElement;
         if (parent) {
             parent.style.maxHeight = `${maxH}px`;
@@ -729,7 +707,6 @@ static tasksChartCompletionStatusByStudent(canvasId = "tasksStatusChart", tasksA
             parent.style.paddingRight = '8px';
         }
 
-        // Destroy existing chart
         const existing = Chart.getChart(canvasId);
         if (existing) existing.destroy();
 
@@ -799,8 +776,8 @@ static tasksChartCompletionStatusByStudent(canvasId = "tasksStatusChart", tasksA
             }
         });
     } catch (e) {
-        // fail silently to avoid breaking UI
-        // console.warn && console.warn('tasksChart error', e);
+        // fail silently
     }
 }
+
 }

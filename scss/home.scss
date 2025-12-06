@@ -1,0 +1,208 @@
+@use "root" as *;
+
+#welcome-section {
+  min-height: 600px;
+  width: 100%;
+  background-color: var(--bg-layer-2);
+  display: flex;
+
+  #welcome-message {
+    width: 50%;
+    color: var(--text-color);
+    background: var(--bg-gradient-1);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: space-between;
+
+    h2 {
+      font-size: 2.5rem;
+      text-align: right;
+      padding-right: 40px;
+    }
+
+    p {
+      font-size: 1.1rem;
+      text-align: right;
+      padding-right: 45px;
+    }
+
+    img {
+      width: 100%;
+      display: block;
+      position: relative;
+      bottom: 0;
+      left: 0;
+    }
+  }
+
+  #login-section {
+    width: 50%;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    padding: 40px;
+
+    h2 {
+      width: 100%;
+      padding: 5px;
+      text-align: center;
+      border: 2px solid var(--bg-layer-4);
+      border-bottom: 2px solid var(--hr-color);
+      border-right-width: 2px;
+      border-radius: 5px 5px 0 0;
+      margin-bottom: 10px;
+    }
+
+    p {
+      font-style: italic;
+      font-family: var(--font-family-gill-sans);
+      filter: brightness(0.8);
+    }
+
+    form {
+      margin-top: 50px;
+      max-width: 400px;
+      width: 100%;
+      @include shadow-box;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      margin: auto;
+      border: 1px solid var(--bg-layer-4);
+      border-radius: 5px;
+      font-size: 1rem;
+      @include shadow-box;
+    }
+    
+  }
+
+  @include respond-to(md) {
+    flex-direction: column;
+
+    #welcome-message,
+    #login-section {
+      width: 100%;
+    }
+
+    #welcome-message {
+      h2,
+      p {
+        text-align: center;
+        padding: 0 20px;
+      }
+
+      img {
+        display: none;
+      }
+    }
+
+    #login-section {
+      form {
+        width: 100%;
+        max-width: 400px;
+      }
+    }
+  }
+}
+.wrap-span-text {
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.wrapper-300 {
+  max-width: 300px;
+}
+
+#welcome-page #courses-content-container {
+      & {
+        background-color: var(--bg-layer-1);
+        padding: 20px;
+        border-radius: 5px;
+        width: 100%;
+      }
+      h2 {
+        text-align: center;
+        font-size: 1.8rem;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        margin-bottom: 20px;
+        border-bottom: 2px solid var(--button-bg-primary);
+      }
+
+      ul {
+        list-style-type: none;
+        padding-left: 0;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        justify-content: center;
+      }
+
+      li {
+        margin-bottom: 10px;
+        padding: 10px;
+        border: 1px solid var(--bg-layer-4);
+        border-radius: 5px;
+        background-color: var(--bg-layer-2);
+        cursor: pointer;
+        display: block;
+        width: 160px;
+        height: 270px;
+        text-align: center;
+      }
+
+      li:hover {
+        background-color: var(--bg-layer-3);
+      }
+
+      li img {
+        width: 135px;
+        max-height: 143px;
+        height: auto;
+        border-radius: 5px;
+        object-fit: cover;
+      }
+
+      li:hover img {
+        transform: scale(1.05);
+        transition: transform 0.2s;
+      }
+
+      li a {
+        text-decoration: none;
+        color: var(--text-color);
+        font-weight: bold;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+        height: 100%;
+      }
+
+      #footer-course {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+      }
+
+      #footer-course hr {
+        width: 100%;
+        border: 1px solid var(--bg-layer-4);
+        margin: 0;
+      }
+
+      #footer-course span {
+        margin: 0;
+        padding: 0;
+        text-align: right;
+        font-size: 0.6rem;
+        color: var(--button-bg-secondary);
+      }
+    }

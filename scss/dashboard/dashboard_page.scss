@@ -63,6 +63,7 @@
   }
   &-footer,
   &-header {
+    justify-content: center;
     background-color: var(--bg-layer-4);
     @include shadow-box;
   }

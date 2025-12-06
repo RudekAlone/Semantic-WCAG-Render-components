@@ -275,6 +275,7 @@ button:hover.bg-fifth {
 }
 button:disabled {
   cursor: not-allowed;
+  filter: opacity(0.6);
 }
 
 .textarea-wrapper {
@@ -769,6 +770,188 @@ table .input-wrapper,
   background-color: var(--hover-secondary-color);
 }
 
+#welcome-section {
+  min-height: 600px;
+  width: 100%;
+  background-color: var(--bg-layer-2);
+  display: flex;
+}
+#welcome-section #welcome-message {
+  width: 50%;
+  color: var(--text-color);
+  background: var(--bg-gradient-1);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+#welcome-section #welcome-message h2 {
+  font-size: 2.5rem;
+  text-align: right;
+  padding-right: 40px;
+}
+#welcome-section #welcome-message p {
+  font-size: 1.1rem;
+  text-align: right;
+  padding-right: 45px;
+}
+#welcome-section #welcome-message img {
+  width: 100%;
+  display: block;
+  position: relative;
+  bottom: 0;
+  left: 0;
+}
+#welcome-section #login-section {
+  width: 50%;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  padding: 40px;
+}
+#welcome-section #login-section h2 {
+  width: 100%;
+  padding: 5px;
+  text-align: center;
+  border: 2px solid var(--bg-layer-4);
+  border-bottom: 2px solid var(--hr-color);
+  border-right-width: 2px;
+  border-radius: 5px 5px 0 0;
+  margin-bottom: 10px;
+}
+#welcome-section #login-section p {
+  font-style: italic;
+  font-family: var(--font-family-gill-sans);
+  filter: brightness(0.8);
+}
+#welcome-section #login-section form {
+  margin-top: 50px;
+  max-width: 400px;
+  width: 100%;
+  box-shadow: 2px 3px 5px rgba(0, 0, 0, 0.4);
+}
+#welcome-section #login-section label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+#welcome-section #login-section input {
+  width: 100%;
+  padding: 10px;
+  margin: auto;
+  border: 1px solid var(--bg-layer-4);
+  border-radius: 5px;
+  font-size: 1rem;
+  box-shadow: 2px 3px 5px rgba(0, 0, 0, 0.4);
+}
+@media (max-width: 768px) {
+  #welcome-section {
+    flex-direction: column;
+  }
+  #welcome-section #welcome-message,
+  #welcome-section #login-section {
+    width: 100%;
+  }
+  #welcome-section #welcome-message h2,
+  #welcome-section #welcome-message p {
+    text-align: center;
+    padding: 0 20px;
+  }
+  #welcome-section #welcome-message img {
+    display: none;
+  }
+  #welcome-section #login-section form {
+    width: 100%;
+    max-width: 400px;
+  }
+}
+
+.wrap-span-text {
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.wrapper-300 {
+  max-width: 300px;
+}
+
+#welcome-page #courses-content-container {
+  background-color: var(--bg-layer-1);
+  padding: 20px;
+  border-radius: 5px;
+  width: 100%;
+}
+#welcome-page #courses-content-container h2 {
+  text-align: center;
+  font-size: 1.8rem;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  margin-bottom: 20px;
+  border-bottom: 2px solid var(--button-bg-primary);
+}
+#welcome-page #courses-content-container ul {
+  list-style-type: none;
+  padding-left: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  justify-content: center;
+}
+#welcome-page #courses-content-container li {
+  margin-bottom: 10px;
+  padding: 10px;
+  border: 1px solid var(--bg-layer-4);
+  border-radius: 5px;
+  background-color: var(--bg-layer-2);
+  cursor: pointer;
+  display: block;
+  width: 160px;
+  height: 270px;
+  text-align: center;
+}
+#welcome-page #courses-content-container li:hover {
+  background-color: var(--bg-layer-3);
+}
+#welcome-page #courses-content-container li img {
+  width: 135px;
+  max-height: 143px;
+  height: auto;
+  border-radius: 5px;
+  -o-object-fit: cover;
+     object-fit: cover;
+}
+#welcome-page #courses-content-container li:hover img {
+  transform: scale(1.05);
+  transition: transform 0.2s;
+}
+#welcome-page #courses-content-container li a {
+  text-decoration: none;
+  color: var(--text-color);
+  font-weight: bold;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+}
+#welcome-page #courses-content-container #footer-course {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+#welcome-page #courses-content-container #footer-course hr {
+  width: 100%;
+  border: 1px solid var(--bg-layer-4);
+  margin: 0;
+}
+#welcome-page #courses-content-container #footer-course span {
+  margin: 0;
+  padding: 0;
+  text-align: right;
+  font-size: 0.6rem;
+  color: var(--button-bg-secondary);
+}
+
 .quiz-container {
   padding: 15px;
   display: flex;
@@ -1117,6 +1300,7 @@ table .input-wrapper,
   text-transform: uppercase;
 }
 .subject-card-footer, .subject-card-header {
+  justify-content: center;
   background-color: var(--bg-layer-4);
   box-shadow: 2px 3px 5px rgba(0, 0, 0, 0.4);
 }
@@ -1304,16 +1488,18 @@ table .input-wrapper,
   list-style-type: none;
   padding-left: 0;
 }
-
 #tasks-status-content-area ul li {
   margin-bottom: 8px;
   color: var(--text-color);
-  border-bottom: 1px solid var(--bg-layer-4);
+  border-bottom: 2px solid var(--bg-layer-4);
 }
-
 #tasks-status-content-area ul li:hover {
   color: var(--link-hover-color);
   cursor: pointer;
+}
+
+#tasks-status-nav-filter-section form {
+  width: 100%;
 }
 
 #tasks-status-content-area .status-section {
@@ -1324,35 +1510,141 @@ table .input-wrapper,
   max-height: 80vh;
   overflow-y: auto;
 }
-
-#tasks-list-section tbody {
-  overflow-y: auto;
-  height: 250px;
-  width: 100%;
-  display: table-caption;
-}
-
-#tasks-list-section tbody tr {
-  cursor: pointer;
-  width: 100%;
-  display: inline-table;
-}
-
-#tasks-list-section tbody tr > td {
-  background-color: var(--bg-layer-2);
+#tasks-status-content-area .status-section h3 {
+  color: var(--hint-success-border-color);
+  font-family: var(--font-family-verdana);
+  border-bottom: 2px solid var(--background-color);
   padding: 10px;
-  border: 1px solid var(--bg-layer-4);
+  margin: -15px -15px 10px;
+  background-color: var(--bg-layer-4);
 }
 
-#tasks-list-section tbody tr:hover > td {
+#statistics-section {
+  display: grid;
+  grid-template-columns: 360px 1fr 360px;
+  grid-template-rows: 300px 300px auto;
+  gap: 8px;
+}
+#statistics-section > section {
   background-color: var(--bg-layer-3);
+  padding: 15px;
+  border-radius: 5px;
+  overflow: auto;
+}
+#statistics-section #login-statistics-section {
+  grid-column: 1;
+  grid-row: 1;
+}
+#statistics-section #tasks-statistics-section {
+  grid-column: 1;
+  grid-row: 2;
+}
+#statistics-section #roadmap-statistics-section {
+  grid-column: 2;
+  grid-row: 1/span 2;
+}
+#statistics-section #quiz-statistics-section {
+  grid-column: 3;
+  grid-row: 1/span 2;
+}
+#statistics-section #courses-statistics-section {
+  grid-column: 1/span 3;
+  grid-row: 3;
+}
+@media (max-width: 1200px) {
+  #statistics-section {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto;
+  }
+  #statistics-section #login-statistics-section {
+    grid-column: 1;
+    grid-row: 1;
+  }
+  #statistics-section #tasks-statistics-section {
+    grid-column: 2;
+    grid-row: 1;
+  }
+  #statistics-section #roadmap-statistics-section {
+    grid-column: 1;
+    grid-row: 2;
+  }
+  #statistics-section #quiz-statistics-section {
+    grid-column: 2;
+    grid-row: 2;
+  }
+  #statistics-section #courses-statistics-section {
+    grid-column: 1/span 2;
+    grid-row: 3;
+  }
+}
+@media (max-width: 768px) {
+  #statistics-section {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+  }
+  #statistics-section #login-statistics-section {
+    grid-column: 1;
+    grid-row: 1;
+  }
+  #statistics-section #tasks-statistics-section {
+    grid-column: 1;
+    grid-row: 2;
+  }
+  #statistics-section #roadmap-statistics-section {
+    grid-column: 1;
+    grid-row: 3;
+    height: 400px;
+  }
+  #statistics-section #quiz-statistics-section {
+    grid-column: 1;
+    grid-row: 4;
+  }
+  #statistics-section #courses-statistics-section {
+    grid-column: 1;
+    grid-row: 5;
+  }
 }
 
-#tasks-list-section tbody tr > td:first-child {
-  width: 60%;
+#users-page {
+  background-color: var(--bg-layer-2);
+  margin: -15px;
+  padding: 10px;
 }
-
-#tasks-list-section tbody tr > td:last-child {
-  width: 40%;
+#users-page h2 {
   text-align: center;
+  margin-bottom: 20px;
+}
+
+#users-content-container {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+#users-content-container .add-user-form-container {
+  display: flex;
+  justify-content: space-around;
+  gap: 10px;
+  padding: 10px;
+  align-items: flex-start;
+}
+
+@media (max-width: 768px) {
+  #users-content-container > section {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+#classes-page {
+  background-color: var(--bg-layer-2);
+  margin: -15px;
+  padding: 10px;
+}
+#classes-page h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+#classes-page form {
+  justify-content: center;
 }

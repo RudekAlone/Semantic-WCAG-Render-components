@@ -16,16 +16,16 @@
   --input-border-hover: 1px solid #9b9b9b;
   --outline-focus: 2px solid var(--focus-outline-color);
   --outline-hover: 1px solid var(--focus-outline-color);
-  --button-bg-primary: #0056ab;
-  --button-bg-secondary: #495a67;
-  --button-bg-tertiary: #176429;
-  --button-bg-quaternary: #ab202e;
-  --button-bg-fifth: #6f5300;
-  --button-bg-hover-primary: #024083;
-  --button-bg-hover-secondary: #2f3941;
-  --button-bg-hover-tertiary: #0c4b1a;
+  --button-bg-primary: #004C98;
+  --button-bg-secondary: #464E55;
+  --button-bg-tertiary: #005614;
+  --button-bg-quaternary: #991825;
+  --button-bg-fifth: #68471E;
+  --button-bg-hover-primary: #113F70;
+  --button-bg-hover-secondary: #30363B;
+  --button-bg-hover-tertiary: #0E491B;
   --button-bg-hover-quaternary: #7e121d;
-  --button-bg-hover-fifth: #493608;
+  --button-bg-hover-fifth: #4B3418;
   --form-bg-color: #353535;
   --form-border: 1px solid #606060;
   --form-input-wrapper-bg-color: #444444;
@@ -113,4 +113,5 @@ button:hover.bg-fifth {
 }
 button:disabled {
   cursor: not-allowed;
+  filter: opacity(0.6);
 }

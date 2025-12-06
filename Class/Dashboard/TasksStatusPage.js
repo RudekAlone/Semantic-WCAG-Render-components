@@ -53,6 +53,8 @@ export class TasksStatusPage {
         type: "select",
         role: "combobox",
         required: true,
+        direction: "row-full",
+
       },
       {
         selectInputOptions: true,
@@ -63,6 +65,8 @@ export class TasksStatusPage {
         type: "select",
         role: "combobox",
         required: true,
+        direction: "row-full",
+
       },
     ];
 
@@ -148,7 +152,7 @@ export class TasksStatusPage {
             status.userNumber,
             status.userName,
             status.userLastName,
-            { type: "checkbox", value: status.status},
+            { type: "checkbox", value: [status.status,"Brak dostępu - zadanie po terminie"] },
     
           ]),
         ]

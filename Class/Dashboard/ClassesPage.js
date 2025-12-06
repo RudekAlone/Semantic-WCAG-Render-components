@@ -23,6 +23,7 @@ export class ClassesPage {
         type: "text",
         role: "textbox",
         required: true,
+        direction: "row-full",
       },
       {
         label: "Rok szkolny",
@@ -31,6 +32,7 @@ export class ClassesPage {
         type: "number",
         role: "textbox",
         required: true,
+        direction: "row-full",
       },
     ];
 

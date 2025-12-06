@@ -1,0 +1,102 @@
+@use "../root" as *;
+
+#statistics-section {
+  & {
+    display: grid;
+    grid-template-columns: 360px 1fr 360px;
+    grid-template-rows: 300px 300px auto;
+    gap: 8px;
+  }
+  & > section {
+    background-color: var(--bg-layer-3);
+    padding: 15px;
+    border-radius: 5px;
+    overflow: auto;
+  }
+
+  & #login-statistics-section {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  & #tasks-statistics-section {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  & #roadmap-statistics-section {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+  }
+
+  & #quiz-statistics-section {
+    grid-column: 3;
+    grid-row: 1 / span 2;
+  }
+
+  & #courses-statistics-section {
+    grid-column: 1 / span 3;
+    grid-row: 3;
+  }
+  @include respond-to(xl) {
+    & {
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: auto;
+    }
+    & #login-statistics-section {
+      grid-column: 1;
+      grid-row: 1;
+    }
+
+    & #tasks-statistics-section {
+      grid-column: 2;
+      grid-row: 1;
+    }
+
+    & #roadmap-statistics-section {
+      grid-column: 1;
+      grid-row: 2;
+    }
+
+    & #quiz-statistics-section {
+      grid-column: 2;
+      grid-row: 2;
+    }
+
+    & #courses-statistics-section {
+      grid-column: 1 / span 2;
+      grid-row: 3;
+    }
+  }
+  @include respond-to(md) {
+    & {
+      grid-template-columns: 1fr;
+      grid-template-rows: auto;
+    }
+    & #login-statistics-section {
+      grid-column: 1;
+      grid-row: 1;
+    }
+
+    & #tasks-statistics-section {
+      grid-column: 1;
+      grid-row: 2;
+    }
+
+    & #roadmap-statistics-section {
+      grid-column: 1;
+      grid-row: 3;
+      height: 400px;
+    }
+
+    & #quiz-statistics-section {
+      grid-column: 1;
+      grid-row: 4;
+    }
+
+    & #courses-statistics-section {
+      grid-column: 1;
+      grid-row: 5;
+    }
+  }
+}

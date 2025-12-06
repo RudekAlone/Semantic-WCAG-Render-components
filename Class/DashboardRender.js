@@ -73,7 +73,7 @@ export class DashboardRender {
       classes: () => ClassesPage.renderClassesPage(),
       users: () => UsersPage.renderUsersPage(),
       "manage-tasks": () => TasksEditorPage.renderTasksEditorPage(),
-      "tasks-status": () => TasksStatusPage.render(),
+      "status-tasks": () => TasksStatusPage.render(),
       quizzes: () => QuizzesPage.renderQuizzesPage(),
       "manage-courses": () => CoursesManagerPage.renderCoursesManagerPage(),
       courses: () => CoursesPage.renderCoursesPage(),

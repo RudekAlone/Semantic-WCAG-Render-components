@@ -91,7 +91,7 @@ export class RenderForm {
           element.name,
           element.id,
           element.required,
-          element.layout
+          element.direction
         );
       }
       form.appendChild(inputWrapper);
