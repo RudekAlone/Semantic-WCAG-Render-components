@@ -38,16 +38,17 @@ class CourseService
         return "Access denied";
     }
 
-private function renderCourse(array $course)
-{
-    return <<<HTML
+    private function renderCourse(array $course)
+    {
+        return <<<HTML
 <!DOCTYPE html>
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+      <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
     <title>Ładowanie kursu {$course['title']}</title>
+    <link rel="stylesheet" href="/css/style.css">
         <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/atom-one-dark.min.css"
@@ -58,7 +59,21 @@ private function renderCourse(array $course)
     />
 </head>
 <body>
+      <header>
+    <h1>
+      <a href="/">
+        <img src="/logo.png" alt="logo" />
+        Koala-V
+      </a>
+    </h1>
+  </header>
+  <main class="course-page">
     <span id="course-slug" style="display:none;">{$course['slug']}</span>
+  </main>
+    <footer>
+    <p>&copy; 2026 Koala-V</p>
+  </footer>
+    
 
         <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
@@ -68,10 +83,9 @@ private function renderCourse(array $course)
     <script src="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/contrib/auto-render.min.js"></script>
 
-    <script type="module" src="../js/course.js"></script>
+    <script type="module" src="/js/course.js"></script>
 </body>
 </html>
 HTML;
-}
-
+    }
 }

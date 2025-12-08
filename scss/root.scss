@@ -94,6 +94,51 @@ hint-danger-background-color: #b71c1c38,
 hint-danger-border-color: #f44336,
 );
 
+/* Regular */
+@font-face {
+  font-family: 'OpenDyslexic';
+  src: url('/fonts/OpenDyslexic-Regular.woff2') format('woff2'),
+       url('/fonts/OpenDyslexic-Regular.woff') format('woff'),
+       url('/fonts/OpenDyslexic-Regular.otf') format('opentype'),
+       url('/fonts/OpenDyslexic-Regular.eot'); /* IE */
+  font-weight: normal;
+  font-style: normal;
+}
+
+/* Bold */
+@font-face {
+  font-family: 'OpenDyslexic';
+  src: url('/fonts/OpenDyslexic-Bold.woff2') format('woff2'),
+       url('/fonts/OpenDyslexic-Bold.woff') format('woff'),
+       url('/fonts/OpenDyslexic-Bold.otf') format('opentype'),
+       url('/fonts/OpenDyslexic-Bold.eot');
+  font-weight: bold;
+  font-style: normal;
+}
+
+/* Italic */
+@font-face {
+  font-family: 'OpenDyslexic';
+  src: url('/fonts/OpenDyslexic-Italic.woff2') format('woff2'),
+       url('/fonts/OpenDyslexic-Italic.woff') format('woff'),
+       url('/fonts/OpenDyslexic-Italic.otf') format('opentype'),
+       url('/fonts/OpenDyslexic-Italic.eot');
+  font-weight: normal;
+  font-style: italic;
+}
+
+/* Bold Italic */
+@font-face {
+  font-family: 'OpenDyslexic';
+  src: url('/fonts/OpenDyslexic-Bold-Italic.woff2') format('woff2'),
+       url('/fonts/OpenDyslexic-Bold-Italic.woff') format('woff'),
+       url('/fonts/OpenDyslexic-Bold-Italic.otf') format('opentype'),
+       url('/fonts/OpenDyslexic-Bold-Italic.eot');
+  font-weight: bold;
+  font-style: italic;
+}
+
+
 // ======================= FONTS =======================
 $fonts: (
   sans: "Segoe UI, Tahoma, Geneva, Verdana, sans-serif",
@@ -102,7 +147,8 @@ $fonts: (
   georgia: "Georgia, Times New Roman, Times, serif",
   arial: "Arial, Helvetica, sans-serif",
   verdana: "Verdana, Geneva, Tahoma, sans-serif",
-  comic-sans: "Comic Sans MS, cursive, sans-serif"
+  comic-sans: "Comic Sans MS, cursive, sans-serif",
+  dyslexia: "'OpenDyslexic', Verdana, Geneva, Tahoma, Arial, sans-serif",
 );
 
 

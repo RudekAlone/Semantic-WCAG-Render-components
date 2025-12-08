@@ -5,91 +5,204 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
     <style>
+      :root {
+        --text-color: #ebebeb;
+        --background-color: #030303;
+        --bg-layer-1: #161616;
+        --bg-layer-2: #1d1d1d;
+        --bg-layer-3: #232323;
+        --bg-layer-4: #292929;
+        --bg-gradient-1: linear-gradient(
+          142deg,
+          rgb(0, 140, 195) 0%,
+          rgb(47, 187, 105) 50%,
+          rgb(243, 227, 85) 100%
+        );
+        --bg-gradient-2: linear-gradient(
+          90deg,
+          rgb(155, 42, 123) 0%,
+          rgb(199, 87, 133) 50%,
+          rgb(237, 83, 221) 100%
+        );
+        --bg-gradient-3: linear-gradient(
+          90deg,
+          rgb(123, 155, 42) 0%,
+          rgb(199, 133, 87) 50%,
+          rgb(221, 237, 83) 100%
+        );
+        --focus-outline-color: #00ffbf;
+        --accent-color: #009fff;
+        --input-bg-color: #101010;
+        --input-bg-color-hover: #1a1a1a;
+        --input-border: 1px solid #3a3a3a;
+        --input-border-hover: 1px solid #9b9b9b;
+        --outline-focus: 2px solid var(--focus-outline-color);
+        --outline-hover: 1px solid var(--focus-outline-color);
+        --button-bg-primary: #004c98;
+        --button-bg-secondary: #464e55;
+        --button-bg-tertiary: #005614;
+        --button-bg-quaternary: #991825;
+        --button-bg-fifth: #68471e;
+        --button-bg-hover-primary: #113f70;
+        --button-bg-hover-secondary: #30363b;
+        --button-bg-hover-tertiary: #0e491b;
+        --button-bg-hover-quaternary: #7e121d;
+        --button-bg-hover-fifth: #4b3418;
+        --form-bg-color: #353535;
+        --form-border: 1px solid #606060;
+        --form-input-wrapper-bg-color: #444444;
+        --hr-color: #0056ab;
+        --link-color: #64b5f6;
+        --link-hover-color: #90caf9;
+        --link-visited-color: #9575cd;
+        --link-visited-hover-color: #b39ddb;
+        --quiz-text-color: #cdcdcd;
+        --quiz-correct-color: #00c853;
+        --quiz-incorrect-color: #d50000;
+        --task-text-color: #f3f3f3;
+        --task-bold-color: #3bff65;
+        --task-italic-color: #81d4fa;
+        --task-italic-bold-color: #ffab40;
+        --task-bold-italic-color: #ff6e40;
+        --hint-info-background-color: #263238;
+        --hint-info-border-color: #2196f3;
+        --hint-text-color: #ffffff;
+        --hint-success-background-color: rgba(27, 94, 32, 0.2196078431);
+        --hint-success-border-color: #4caf50;
+        --hint-warning-background-color: rgba(245, 193, 23, 0.2196078431);
+        --hint-warning-border-color: #ffc400;
+        --hint-danger-background-color: rgba(183, 28, 28, 0.2196078431);
+        --hint-danger-border-color: #f44336;
+        --font-family-sans: Segoe UI, Tahoma, Geneva, Verdana, sans-serif;
+        --font-family-mono: Courier New, Courier, monospace;
+        --font-family-gill-sans: Gill Sans, Gill Sans MT, Calibri, Trebuchet MS,
+          sans-serif;
+        --font-family-georgia: Georgia, Times New Roman, Times, serif;
+        --font-family-arial: Arial, Helvetica, sans-serif;
+        --font-family-verdana: Verdana, Geneva, Tahoma, sans-serif;
+        --font-family-comic-sans: Comic Sans MS, cursive, sans-serif;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        text-shadow: 0 0 5px rgba(0, 0, 0, 0.8);
+      }
 
-body{
-    background-color:#0e0e0e;
-    color:#cfcfcf;
-}
+      body {
+        background-color: var(--background-color);
+        color: var(--text-color);
+      }
 
-        .module-menu {
-            width: 300px;
-            border: 1px solid #ccc;
-            padding: 10px;
-            font-family: Arial, sans-serif;
-        }
-        .module-menu .module {
-            margin-top: 15px;
-            border-bottom: 1px solid #0079bf;
-        }
-        .module-menu ul {
-            list-style-type: none;
-            padding-left: 0;
-        }
-        .module-menu li {
-            margin: 5px 0;
-        }
-        .lesson {
-            font-weight: bold;
-            cursor: pointer;
-        }
-        .group {
-            cursor: pointer;
-            font-style: italic;
-        }
+      .module-menu {
+        width: 360px;
+  background-color: var(--bg-layer-1);
+  overflow-y: auto;
+  height: 100vh;
+  padding-right: 8px;
+      }
+      .module-menu ul {
+        list-style-type: none;
+        padding: 0;
+      }
+      .module-menu li.active,
+      .module-menu li:not(.module):hover {
+        cursor: pointer;
+        background-color: var(--button-bg-hover-primary);
+        outline: 1px solid var(--accent-color);
+      }
+      .module-menu > ul > li:first-child {
+        margin: 0;
+        background-color: var(--bg-layer-2);
+        padding: 10px;
+        margin: 1px;
+      }
+      .module-menu .module {
+        margin: 15px 0 10px;
+        border-top: 1px solid var(--hr-color);
+        border-bottom: 1px solid var(--hr-color);
+
+        background-color: var(--bg-layer-1);
+        padding: 10px;
+      }
+      .module-menu details {
+        margin: 5px 0;
+        padding: 10px;
+        background-color: var(--bg-layer-4);
+      }
+      .module-menu details ul {
+        margin-top: 10px;
+        padding-left: 20px;
+      }
+      .module-menu details li{
+        background-color: var(--bg-layer-3);
+        margin: 5px 0;
+        padding: 8px;
+      }
+      
+      .module-menu >ul > li:not(:has(details)) {
+        margin: 5px 0;
+        background-color: var(--bg-layer-4);
+        padding: 10px;
+      }
+
+      .lesson {
+        padding: 10px;
+        box-shadow: 2px 3px 5px rgba(0, 0, 0, 0.4);
+      }
     </style>
   </head>
   <body>
     <nav class="module-menu">
       <ul>
-        <li class="lesson">Kurs Drukarki i skanery - Wprowadzenie</li>
-        <li class="lesson">Zestawienie definicji</li>
-        <li class="lesson">0.1 Drukarka atramentowa</li>
-        <li class="lesson">0.2 Drukarka laserowa</li>
-        <li class="lesson">0.3 Drukarka igłowa</li>
-        <li class="lesson">0.4 Drukarka termiczna i termosublimacyjna</li>
-        <li class="lesson">0.5 Drukarka 3D</li>
-        <li class="lesson">1.1 Skaner płaski</li>
-        <li class="lesson">1.2 Skaner 3D</li>
-        <li class="lesson">Quiz Wiedzy</li>
-        <li class="lesson">Lekcja</li>
-        <li class="module">
-          Moduł
-          <ul>
-            <li>
-              <details open="">
-                <summary class="group">Grupa details summary</summary>
-                <ul>
-                  <li class="lesson-item">
-                    lekcja do powyższej grupy details sumary
-                  </li>
-                  <li class="lesson-item">
-                    lekcja do powyższej grupy details sumary
-                  </li>
-                  <li class="lesson-item">
-                    lekcja do powyższej grupy details sumary
-                  </li>
-                </ul>
-              </details>
-            </li>
-          </ul>
+        <li class="lesson" tabindex="0">
+          Kurs Drukarki i skanery - Wprowadzenie
         </li>
+        <li class="lesson" tabindex="0">Zestawienie definicji</li>
+        <li class="lesson" tabindex="0">0.1 Drukarka atramentowa</li>
+        <li class="lesson" tabindex="0">0.2 Drukarka laserowa</li>
+        <li class="lesson" tabindex="0">0.3 Drukarka igłowa</li>
+        <li class="lesson" tabindex="0">
+          0.4 Drukarka termiczna i termosublimacyjna
+        </li>
+        <li class="lesson active" tabindex="0">0.5 Drukarka 3D</li>
+        <li class="lesson" tabindex="0">1.1 Skaner płaski</li>
+        <li class="lesson" tabindex="0">1.2 Skaner 3D</li>
+        <li class="lesson" tabindex="0">Quiz Wiedzy</li>
+        <li class="lesson" tabindex="0">Lekcja</li>
+
+        <li class="module">Moduł</li>
+
         <li>
           <details open="">
-            <summary class="group">Nowa grupa details summary</summary>
+            <summary class="group">Grupa details summary</summary>
             <ul>
-              <li class="lesson-item">
+              <li class="lesson active" tabindex="0">
+                lekcja do powyższej grupy details sumary
+              </li>
+              <li class="lesson" tabindex="0">
+                lekcja do powyższej grupy details sumary
+              </li>
+              <li class="lesson-item" tabindex="0">
                 lekcja do powyższej grupy details sumary
               </li>
             </ul>
           </details>
         </li>
-        <li class="module">
-          Kolejny moduł
-          <ul>
-            <li class="lesson">kolejna lekcja</li>
-            <li class="lesson">kolejna lekcja</li>
-          </ul>
+        <li>
+          <details open="">
+            <summary class="group">Nowa grupa details summary</summary>
+            <ul>
+              <li class="lesson-item" tabindex="0">
+                lekcja do powyższej grupy details sumary
+              </li>
+            </ul>
+          </details>
         </li>
+        <li class="module">Kolejny moduł</li>
+
+        <li class="lesson" tabindex="0">kolejna lekcja</li>
+        <li class="lesson" tabindex="0">kolejna lekcja</li>
       </ul>
     </nav>
   </body>

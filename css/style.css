@@ -1,4 +1,32 @@
 @charset "UTF-8";
+/* Regular */
+@font-face {
+  font-family: "OpenDyslexic";
+  src: url("/fonts/OpenDyslexic-Regular.woff2") format("woff2"), url("/fonts/OpenDyslexic-Regular.woff") format("woff"), url("/fonts/OpenDyslexic-Regular.otf") format("opentype"), url("/fonts/OpenDyslexic-Regular.eot"); /* IE */
+  font-weight: normal;
+  font-style: normal;
+}
+/* Bold */
+@font-face {
+  font-family: "OpenDyslexic";
+  src: url("/fonts/OpenDyslexic-Bold.woff2") format("woff2"), url("/fonts/OpenDyslexic-Bold.woff") format("woff"), url("/fonts/OpenDyslexic-Bold.otf") format("opentype"), url("/fonts/OpenDyslexic-Bold.eot");
+  font-weight: bold;
+  font-style: normal;
+}
+/* Italic */
+@font-face {
+  font-family: "OpenDyslexic";
+  src: url("/fonts/OpenDyslexic-Italic.woff2") format("woff2"), url("/fonts/OpenDyslexic-Italic.woff") format("woff"), url("/fonts/OpenDyslexic-Italic.otf") format("opentype"), url("/fonts/OpenDyslexic-Italic.eot");
+  font-weight: normal;
+  font-style: italic;
+}
+/* Bold Italic */
+@font-face {
+  font-family: "OpenDyslexic";
+  src: url("/fonts/OpenDyslexic-Bold-Italic.woff2") format("woff2"), url("/fonts/OpenDyslexic-Bold-Italic.woff") format("woff"), url("/fonts/OpenDyslexic-Bold-Italic.otf") format("opentype"), url("/fonts/OpenDyslexic-Bold-Italic.eot");
+  font-weight: bold;
+  font-style: italic;
+}
 :root {
   --text-color: #ebebeb;
   --background-color: #030303;
@@ -59,6 +87,7 @@
   --font-family-arial: Arial, Helvetica, sans-serif;
   --font-family-verdana: Verdana, Geneva, Tahoma, sans-serif;
   --font-family-comic-sans: Comic Sans MS, cursive, sans-serif;
+  --font-family-dyslexia: 'OpenDyslexic', Verdana, Geneva, Tahoma, Arial, sans-serif;
 }
 
 * {
@@ -114,6 +143,7 @@ header a {
   font-size: 2rem;
   font-weight: bold;
   padding: 10px;
+  transition: all 0.3s ease;
 }
 header a:hover {
   color: var(--link-hover-color);
@@ -129,7 +159,7 @@ header a:focus {
   outline-offset: 1px;
 }
 
-main {
+main:not(.course-page) {
   min-height: calc(100vh - 60px);
   margin: 0 20px;
   padding: 20px;
@@ -140,17 +170,17 @@ main {
   background-color: var(--bg-layer-4);
 }
 @media (max-width: 992px) {
-  main {
+  main:not(.course-page) {
     padding: 15px;
   }
 }
 @media (max-width: 768px) {
-  main {
+  main:not(.course-page) {
     padding: 10px;
   }
 }
 @media (max-width: 576px) {
-  main {
+  main:not(.course-page) {
     padding: 5px;
   }
 }
@@ -802,6 +832,7 @@ table .input-wrapper,
   position: relative;
   bottom: 0;
   left: 0;
+  max-width: 700px;
 }
 #welcome-section #login-section {
   width: 50%;
@@ -1647,4 +1678,86 @@ table .input-wrapper,
 }
 #classes-page form {
   justify-content: center;
+}
+
+.module-menu {
+  width: 360px;
+  background-color: var(--bg-layer-1);
+  overflow-y: auto;
+  height: 100vh;
+  padding-right: 8px;
+}
+
+.module-menu:focus,
+.module-menu:focus-visible {
+  outline: var(--outline-hover);
+  outline-offset: 1px;
+}
+
+.module-menu ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.module-menu li.active,
+.module-menu li:not(.module):not(:has(details)):hover {
+  cursor: pointer;
+  background-color: var(--button-bg-hover-primary);
+  outline: 1px solid var(--accent-color);
+}
+
+.module-menu li:focus,
+.module-menu li:focus-visible {
+  outline: var(--outline-focus);
+  outline-offset: 1px;
+}
+
+.module-menu > ul > li:first-child {
+  margin: 0;
+  background-color: var(--bg-layer-2);
+  padding: 10px;
+  margin: 1px;
+}
+
+.module-menu .module {
+  margin: 15px 0 10px;
+  border-top: 1px solid var(--hr-color);
+  border-bottom: 1px solid var(--hr-color);
+  background-color: var(--bg-layer-1);
+  padding: 10px;
+}
+
+.module-menu details {
+  margin: 5px 0;
+  padding: 10px;
+  background-color: var(--bg-layer-1);
+}
+
+.module-menu li:hover details {
+  outline: none;
+}
+
+.module-menu details ul {
+  margin-top: 10px;
+  padding-left: 20px;
+}
+
+.module-menu details li {
+  background-color: var(--bg-layer-3);
+  margin: 5px 0;
+  padding: 8px;
+  border-radius: 5px;
+}
+
+.module-menu > ul > li:not(:has(details)) {
+  margin: 5px 0;
+  background-color: var(--bg-layer-4);
+  padding: 5px;
+  border: var(--input-border);
+}
+
+.lesson-item,
+.lesson {
+  padding: 10px;
+  box-shadow: 2px 3px 5px rgba(0, 0, 0, 0.4);
 }

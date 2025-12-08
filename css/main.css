@@ -113,6 +113,7 @@ header a {
   font-size: 2rem;
   font-weight: bold;
   padding: 10px;
+  transition: all 0.3s ease;
 }
 header a:hover {
   color: var(--link-hover-color);
@@ -128,7 +129,7 @@ header a:focus {
   outline-offset: 1px;
 }
 
-main {
+main:not(.course-page) {
   min-height: calc(100vh - 60px);
   margin: 0 20px;
   padding: 20px;
@@ -139,17 +140,17 @@ main {
   background-color: var(--bg-layer-4);
 }
 @media (max-width: 992px) {
-  main {
+  main:not(.course-page) {
     padding: 15px;
   }
 }
 @media (max-width: 768px) {
-  main {
+  main:not(.course-page) {
     padding: 10px;
   }
 }
 @media (max-width: 576px) {
-  main {
+  main:not(.course-page) {
     padding: 5px;
   }
 }

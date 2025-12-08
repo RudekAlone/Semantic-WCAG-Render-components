@@ -1,6 +1,7 @@
+import { UIFacade } from "./UIFacade.js";
 export class CourseRender {
   static render(courseName) {
-    const main = document.querySelector("body");
+    const main = document.querySelector("main");
     main.innerHTML = "";
     
 
@@ -26,17 +27,7 @@ export class CourseRender {
       });
   }
 
-  static renderModuleMenu(data) {
-    const menu = document.createElement("nav");
-    menu.classList.add("module-menu");
-    
-    const ul = document.createElement("ul");
-    menu.appendChild(ul);
-
-    let menuData = [];
-    
-    data.split("\n").forEach((line) => {
-        line = line.trim(); // Add this line
+// Przykładowy format pliku _index.md:
 
 
 // # Lekcja
@@ -59,75 +50,63 @@ export class CourseRender {
 
 // # kolejna lekcja
 
+static renderModuleMenu(data) {
+  const menu = document.createElement("nav");
+  menu.classList.add("module-menu");
 
-        const moduleMatch = line.match(/^##\s+(.+)$/);
-        const lessonMatch = line.match(/^#\s+(.+)$/);
-        const detailsMatch = line.match(/^###\s+(.+)$/);
-        const lessonItemMatch = line.match(/^-+\s+(.+)$/);
+  const ul = document.createElement("ul");
+  menu.appendChild(ul);
 
-        if (moduleMatch) {
-            const moduleName = moduleMatch[1].trim();
-            const moduleLi = document.createElement("li");
-            moduleLi.textContent = moduleName;
-            moduleLi.classList.add("module");
-            ul.appendChild(moduleLi);
-            const moduleUl = document.createElement("ul");
-            moduleLi.appendChild(moduleUl);
-            menuData.push({ type: "module", element: moduleUl });
-        } else if (lessonMatch) {
-            const lessonName = lessonMatch[1].trim();
-            const lessonLi = document.createElement("li");
-            lessonLi.textContent = lessonName;
-            lessonLi.classList.add("lesson");
-            if (menuData.length > 0) {
-                const currentModule = menuData[menuData.length - 1];
-                if (currentModule.type === "module") {
-                    currentModule.element.appendChild(lessonLi);
-                } else {
-                    ul.appendChild(lessonLi);
-                }
-            } else {
-                ul.appendChild(lessonLi);
-            }
-        } else if (detailsMatch) {
-            const detailsName = detailsMatch[1].trim();
-            const detailsLi = document.createElement("li");
-            const detailsElement = document.createElement("details");
-            const summaryElement = document.createElement("summary");
-            summaryElement.textContent = detailsName;
-            summaryElement.classList.add("group");
-            detailsElement.appendChild(summaryElement);
-            const detailsUl = document.createElement("ul");
-            detailsElement.appendChild(detailsUl);
-            detailsLi.appendChild(detailsElement);
-            if (menuData.length > 0) {
-                const currentModule = menuData[menuData.length - 1];
-                if (currentModule.type === "module") {
-                    currentModule.element.appendChild(detailsLi);
-                } else {
-                    ul.appendChild(detailsLi);
-                }
-            } else {
-                ul.appendChild(detailsLi);
-            }
-            menuData.push({ type: "details", element: detailsUl });
-        } else if (lessonItemMatch) {
-            const itemName = lessonItemMatch[1].trim();
-            const itemLi = document.createElement("li");
-            itemLi.textContent = itemName;
-            itemLi.classList.add("lesson-item");
-            if (menuData.length > 0) {
-                const currentDetails = menuData[menuData.length - 1];
-                if (currentDetails.type === "details") {
-                    currentDetails.element.appendChild(itemLi);
-                }
-            }
-        }
+  let currentDetails = null;
 
-    });
-    
+  data.split("\n").forEach((line) => {
+    line = line.trim();
 
+    const moduleMatch = line.match(/^##\s+(.+)$/);
+    const lessonMatch = line.match(/^#\s+(.+)$/);
+    const detailsMatch = line.match(/^###\s+(.+)$/);
+    const lessonItemMatch = line.match(/^-+\s+(.+)$/);
 
-    return menu;
-  }
+    if (moduleMatch) {
+      const moduleName = moduleMatch[1].trim();
+      const moduleLi = document.createElement("li");
+      moduleLi.textContent = moduleName;
+      moduleLi.classList.add("module");
+      ul.appendChild(moduleLi);
+      currentDetails = null; // reset
+    } else if (lessonMatch) {
+      const lessonName = lessonMatch[1].trim();
+      const lessonLi = document.createElement("li");
+      lessonLi.textContent = lessonName;
+      lessonLi.classList.add("lesson");
+      lessonLi.setAttribute("tabindex", "0");
+      ul.appendChild(lessonLi);
+    } else if (detailsMatch) {
+      const detailsName = detailsMatch[1].trim();
+      const detailsLi = document.createElement("li");
+
+      const detailsElement = UIFacade.createDetails(detailsName, document.createElement("div"));
+
+      const detailsUl = document.createElement("ul");
+      detailsElement.appendChild(detailsUl);
+      detailsLi.appendChild(detailsElement);
+      ul.appendChild(detailsLi);
+      currentDetails = detailsUl;
+    } else if (lessonItemMatch) {
+      const itemName = lessonItemMatch[1].trim();
+      const itemLi = document.createElement("li");
+      itemLi.textContent = itemName;
+      itemLi.classList.add("lesson-item");
+      itemLi.setAttribute("tabindex", "0");
+      if (currentDetails) {
+        currentDetails.appendChild(itemLi);
+      } else {
+        ul.appendChild(itemLi);
+      }
+    }
+  });
+
+  return menu;
+}
+
 }

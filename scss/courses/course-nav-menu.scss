@@ -1,0 +1,73 @@
+@use "../root" as *;
+
+.module-menu {
+  width: 360px;
+  background-color: var(--bg-layer-1);
+  overflow-y: auto;
+  height: 100vh;
+  padding-right: 8px;
+}
+.module-menu:focus,
+.module-menu:focus-visible {
+  @include outline("hover");
+}
+.module-menu ul {
+  list-style-type: none;
+  padding: 0;
+}
+.module-menu li.active,
+.module-menu li:not(.module):not(:has(details)):hover {
+  cursor: pointer;
+  background-color: var(--button-bg-hover-primary);
+  outline: 1px solid var(--accent-color);
+}
+.module-menu li:focus,
+.module-menu li:focus-visible {
+  @include outline("focus");
+}
+
+.module-menu > ul > li:first-child {
+  margin: 0;
+  background-color: var(--bg-layer-2);
+  padding: 10px;
+  margin: 1px;
+}
+.module-menu .module {
+  margin: 15px 0 10px;
+  border-top: 1px solid var(--hr-color);
+  border-bottom: 1px solid var(--hr-color);
+  background-color: var(--bg-layer-1);
+  padding: 10px;
+}
+.module-menu details {
+  margin: 5px 0;
+  padding: 10px;
+  background-color: var(--bg-layer-1);
+}
+.module-menu li:hover details {
+  outline: none;
+}
+
+.module-menu details ul {
+  margin-top: 10px;
+  padding-left: 20px;
+}
+.module-menu details li {
+  background-color: var(--bg-layer-3);
+  margin: 5px 0;
+  padding: 8px;
+  border-radius: 5px;
+}
+
+.module-menu > ul > li:not(:has(details)) {
+  margin: 5px 0;
+  background-color: var(--bg-layer-4);
+  padding: 5px;
+  border: var(--input-border);
+}
+
+.lesson-item,
+.lesson {
+  padding: 10px;
+  @include shadow-box;
+}

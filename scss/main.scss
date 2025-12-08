@@ -53,6 +53,7 @@ header {
     font-size: 2rem;
     font-weight: bold;
     padding: 10px;
+    transition: all 0.3s ease;
     &:hover {
       color: var(--link-hover-color);
     }
@@ -69,7 +70,7 @@ header {
   }
 }
 
-main {
+main:not(.course-page) {
   & {
     min-height: calc(100vh - 60px);
     margin: 0 20px;

@@ -13,18 +13,18 @@ export class Login {
     if (response.ok) {
       return response.json();
     } else {
-      Notification.show("error", "Login failed. Please check your credentials.");
+      Notification.show("error", "Logowanie nie powiodło się. Sprawdź swoje dane logowania.");
       return null;
     }
   }).then((data) => {
     if (data) {
-      Notification.show("success", "Login successful!");
+      Notification.show("success", "Logowanie powiodło się!");
       return true;
     } else {
       return false;
     }
   }).catch((error) => {
-    Notification.show("error", "An error occurred. Please try again later.");
+    Notification.show("error", "Wystąpił błąd. Spróbuj ponownie później.");
     return false;
   });
   }
