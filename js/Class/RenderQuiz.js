@@ -1,9 +1,9 @@
 import { RenderButton } from "./Render/RenderButton.js";
 import { RenderInput } from "./Render/RenderInput.js";
 import { RenderDetails } from "./Render/RenderDetails.js";
+import { Notification } from "./Notification.js";
 
 export class RenderQuiz {
-
   /**
    * Renderuje główny widok quizu.
    * Tworzy strukturę HTML dla quizu, w tym sekcje pytań i wyjaśnień.
@@ -35,31 +35,15 @@ export class RenderQuiz {
 
     // Lewa sekcja z pytaniami
     const quizSectionsLeft = document.createElement("section");
-    quizSectionsLeft.classList.add(
-      "quiz-sections");
-    // quizSectionsLeft.classList.add(
-    //   "quiz-sections",
-    //   "flex",
-    //   "w-60",
-    //   "bg-2",
-    //   "pd-10",
-    //   "h-100"
-    // );
+    quizSectionsLeft.classList.add("quiz-sections");
+
     quizSectionsLeft.setAttribute("data-layout", "column");
 
     // Prawa sekcja z wyjaśnieniami – jako aside
     const quizSectionsRight = document.createElement("aside");
     quizSectionsRight.setAttribute("role", "complementary");
-    quizSectionsRight.classList.add(
-      "quiz-sections");
-    // quizSectionsRight.classList.add(
-        //   "quiz-sections",
-            //   "flex",
-                //   "w-40",
-                    //   "bg-2",
-                        //   "pd-10",
-                            //   "h-100"
-                                // );
+    quizSectionsRight.classList.add("quiz-sections");
+
     quizSectionsRight.setAttribute("data-layout", "column");
 
     // Sekcja z nagłówkiem i wrapperem na komunikaty
@@ -88,13 +72,6 @@ export class RenderQuiz {
     // Wrapper na obie sekcje
     const quizContentApplication = document.createElement("div");
     quizContentApplication.classList.add("quiz-content-application");
-    // quizContentApplication.classList.add(
-    //   "quiz-content-application",
-    //   "flex",
-    //   "gap-10",
-    //   "w-full",
-    //   "mt-20"
-    // );
 
     quizContentApplication.appendChild(quizSectionsLeft);
     quizContentApplication.appendChild(quizSectionsRight);
@@ -102,7 +79,6 @@ export class RenderQuiz {
 
     // Logika quizu
     this.quizManager(questionData, quizSectionsLeft, quizSectionsRight);
-
 
     return quizContainer;
   }
@@ -137,7 +113,7 @@ export class RenderQuiz {
       feedback.classList.add("incorrect-msg");
       if (feedbackTitle) feedbackTitle.textContent = "Wyjaśnienie";
     }
-      feedback.setAttribute("role", "alert");
+    feedback.setAttribute("role", "alert");
 
     wrapper.appendChild(feedback);
 
@@ -147,8 +123,6 @@ export class RenderQuiz {
         input.disabled = true;
       });
 
-    // fokus na komunikat (dla klawiatury/AT)
-    feedback.focus();
 
     return isCorrect;
   }
@@ -221,11 +195,12 @@ export class RenderQuiz {
           e.target.textContent = "Sprawdź odpowiedź";
           exampleWrapper.innerHTML = "";
           setTimeout(() => {
-            const legend = document.querySelector(".quiz-question-legend");
+            const legend = document.querySelector(".quiz-label-answer");
             if (legend) {
               legend.focus();
             }
-          }, 10);
+            console.log("Focused on legend", legend);
+          }, 100);
         } else if (e.target.textContent === "Zakończ quiz") {
           this.endQuizPage(incorrectAnswersIds, questions);
         }
@@ -247,7 +222,10 @@ export class RenderQuiz {
       '.quiz-sections input[type="radio"]:checked'
     );
     if (!selectedOption) {
-      alert("Proszę wybrać odpowiedź przed przejściem dalej.");
+      Notification.show(
+        "error",
+        "Proszę wybrać odpowiedź przed przejściem dalej."
+      );
       return false;
     }
     return true;
@@ -343,12 +321,7 @@ export class RenderQuiz {
     quizContainer.appendChild(h2);
 
     const exampleEndPageWrapper = document.createElement("div");
-    // exampleEndPageWrapper.classList.add(
-    //   "quiz-end-example-wrapper",
-    //   "bg-2",
-    //   "pd-10",
-    //   "h-100"
-    // );
+
     quizContainer.appendChild(exampleEndPageWrapper);
 
     if (incorrectAnswersIds.length === 0) {
@@ -368,11 +341,8 @@ export class RenderQuiz {
       incorrectAnswersIds.forEach((id) => {
         const question = questions.find((q) => q.id === id);
         const listItem = document.createElement("div");
-        // listItem.classList.add("mr-10");
         const questionText = document.createElement("p");
-        // questionText.classList.add("pd-10");
         const b = document.createElement("b");
-        // b.classList.add("filtr-opa-60");
         b.textContent = "Pytanie: ";
         questionText.appendChild(b);
         questionText.appendChild(
@@ -384,9 +354,7 @@ export class RenderQuiz {
         listItem.appendChild(hr);
 
         const correctAnswerText = document.createElement("p");
-        // correctAnswerText.classList.add("pd-10");
         const b2 = document.createElement("b");
-        // b2.classList.add("filtr-opa-60");
         b2.textContent = "Poprawna odpowiedź: ";
         correctAnswerText.appendChild(b2);
         correctAnswerText.appendChild(
@@ -420,12 +388,7 @@ export class RenderQuiz {
         listItem.appendChild(details);
 
         const listItemWrapper = document.createElement("div");
-        // listItemWrapper.classList.add(
-        //   "quiz-incorrect-list-item",
-        //   "mb-20",
-        //   "bg-1",
-        //   "pd-10"
-        // );
+
         listItemWrapper.appendChild(listItem);
 
         incorrectList.appendChild(listItemWrapper);

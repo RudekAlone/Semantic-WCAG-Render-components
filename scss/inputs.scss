@@ -27,10 +27,11 @@ textarea {
     max-width: 95%;
   }
 }
-input[type="date"]::-webkit-calendar-picker-indicator,
-input[type="time"]::-webkit-calendar-picker-indicator,
-input[type="datetime-local"]::-webkit-calendar-picker-indicator,
-input[type="password"]::-webkit-password-toggle-button {
+
+html[data-theme="dark"] input[type="date"]::-webkit-calendar-picker-indicator,
+html[data-theme="dark"] input[type="time"]::-webkit-calendar-picker-indicator,
+html[data-theme="dark"] input[type="datetime-local"]::-webkit-calendar-picker-indicator,
+html[data-theme="dark"] input[type="password"]::-webkit-password-toggle-button {
   filter: invert(1);
 }
 
@@ -68,7 +69,7 @@ input[type="number"]::-webkit-outer-spin-button {
 
 button.koala-number-arrow {
   color: var(--text-color);
-  font-size: 0.5rem;
+  font-size: 0.4rem;
   padding: 0 5px;
   cursor: pointer;
   border-radius: 0;
@@ -223,7 +224,7 @@ input[type="radio"] {
     border-radius: 50%;
     width: 1em;
     height: 1em;
-    background-color: var(--text-color);
+    background-color: #fff;
   }
   &:focus-visible::after,
   &:hover::after {

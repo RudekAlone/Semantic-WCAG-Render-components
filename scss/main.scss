@@ -1,11 +1,19 @@
 @use "root" as *;
 
+.important-font {
+  font-family: initial;
+}
 
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  text-shadow: 0 0 5px rgba(0, 0, 0, 0.8);
+  // text-shadow: 0 0 5px rgba(0, 0, 0, 0.8);
+  font-family: var(--font-family-atkinson-hyperlegible);
+
+  line-height: 1.8;
+  letter-spacing: 0.05rem;
+  word-spacing: 0.1rem;
 }
 
 ::-webkit-scrollbar {
@@ -23,14 +31,16 @@
   border-radius: 6px;
   border: 1px solid #0000004d;
 }
+html[data-theme="dark"] * {
+  text-shadow: -1px -1px 2px #00000050, 1px -1px 2px #00000050,
+    -1px 1px 2px #00000050, 1px 1px 2px #00000050;
+}
+
 html,
 body {
   background-color: var(--background-color);
   color: var(--text-color);
-  font-family: var(--font-family-gill-sans);
-
-  font-size: 1rem;
-  line-height: 1.8;
+  overflow-x: hidden;
 }
 
 header {
@@ -130,5 +140,68 @@ a {
   &:focus {
     outline: var(--outline-focus);
     outline-offset: 2px;
+  }
+}
+
+// ======================= switch theme =======================
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 44px;
+  height: 24px;
+  margin-right: 20px;
+
+  input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+
+    &:checked + .slider {
+      background-color: #476173;
+
+      &:before {
+        transform: translateX(20px);
+        background-color: transparent;
+        border-radius: 50%;
+        border-top-color: transparent;
+        border-left-color: transparent;
+        border-right-color: transparent;
+        box-shadow: inset -5px -3px 0 #d8e9ef;
+      }
+    }
+  }
+
+  &:focus,
+  input:focus + .slider {
+    transition: none;
+    @include outline("hover");
+  }
+
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #7bb9f5;
+    transition: 0.4s;
+    border-radius: 20px;
+    box-shadow: 0 0 0.25em rgba(67, 71, 85, 0.27), 0.2px 0.2em 24px 0 rgba(1, 29, 77, 0.15);
+
+    &:before {
+      position: absolute;
+      content: "";
+      height: 16px;
+      width: 16px;
+      left: 4px;
+      bottom: 4px;
+      background-color: yellow;
+      transition: 0.4s;
+      border-radius: 50%;
+      text-align: center;
+      line-height: 16px;
+    }
   }
 }

@@ -1,4 +1,4 @@
-import { UIFacade } from "./Class/UIFacade.js";
+import { UIFacade } from "./js/Class/UIFacade.js";
 
 const main = document.querySelector("main");
 

@@ -109,13 +109,24 @@
   background-color: var(--bg-layer-3);
   transition: background-color 0.2s;
   @include shadow-box;
+  
+   input {
+    margin-right: 10px;
+  }
 
   &:hover {
     background-color: var(--bg-layer-1);
   }
 
-  input {
-    margin-right: 10px;
+  input:checked + span,
+  input:checked {
+    font-weight: bold;
+    color: var(--accent-color);
+  }
+
+  &:not(.correct):not(.incorrect):has(input:checked) {
+    border: 2px solid var(--accent-color);
+    background-color: #009fff20;
   }
 
   &.correct {

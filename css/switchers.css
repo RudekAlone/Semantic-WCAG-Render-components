@@ -1,3 +1,4 @@
+@charset "UTF-8";
 /* Regular */
 @font-face {
   font-family: "OpenDyslexic";
@@ -26,7 +27,7 @@
   font-weight: bold;
   font-style: italic;
 }
-:root {
+:root[data-theme=dark] {
   --text-color: #ebebeb;
   --background-color: #030303;
   --bg-layer-1: #161616;
@@ -79,94 +80,115 @@
   --hint-warning-border-color: #ffc400;
   --hint-danger-background-color: rgba(183, 28, 28, 0.2196078431);
   --hint-danger-border-color: #f44336;
-  --font-family-sans: Segoe UI, Tahoma, Geneva, Verdana, sans-serif;
-  --font-family-mono: Courier New, Courier, monospace;
-  --font-family-gill-sans: Gill Sans, Gill Sans MT, Calibri, Trebuchet MS, sans-serif;
-  --font-family-georgia: Georgia, Times New Roman, Times, serif;
-  --font-family-arial: Arial, Helvetica, sans-serif;
-  --font-family-verdana: Verdana, Geneva, Tahoma, sans-serif;
-  --font-family-comic-sans: Comic Sans MS, cursive, sans-serif;
-  --font-family-dyslexia: 'OpenDyslexic', Verdana, Geneva, Tahoma, Arial, sans-serif;
 }
 
-.module-menu {
-  width: 360px;
-  background-color: var(--bg-layer-1);
-  overflow-y: auto;
-  height: 100vh;
-  padding-right: 8px;
+:root[data-theme=light] {
+  --text-color: #121212;
+  --background-color: #ffffff;
+  --bg-layer-1: #f3f3f3;
+  --bg-layer-2: #eeeeee;
+  --bg-layer-3: #e0e0e0;
+  --bg-layer-4: #cccccc;
+  --bg-gradient-1: linear-gradient(142deg, rgb(0, 180, 255) 0%, rgb(60, 220, 120) 50%, rgb(255, 240, 100) 100%);
+  --bg-gradient-2: linear-gradient(90deg, rgb(190, 80, 150) 0%, rgb(220, 130, 160) 50%, rgb(255, 120, 240) 100%);
+  --bg-gradient-3: linear-gradient(90deg, rgb(160, 190, 80) 0%, rgb(220, 170, 120) 50%, rgb(255, 240, 120) 100%);
+  --focus-outline-color: #008060;
+  --accent-color: #0077c9;
+  --input-bg-color: #ffffff;
+  --input-bg-color-hover: #f0f0f0;
+  --input-border: 1px solid #c0c0c0;
+  --input-border-hover: 1px solid #777777;
+  --outline-focus: 2px solid var(--focus-outline-color);
+  --outline-hover: 1px solid var(--focus-outline-color);
+  --button-bg-primary: #7DBEFF;
+  --button-bg-secondary: #D5E2ED;
+  --button-bg-tertiary: #78F198;
+  --button-bg-quaternary: #FFADAD;
+  --button-bg-fifth: #FFDE71;
+  --button-bg-hover-primary: #369AFF;
+  --button-bg-hover-secondary: #8B9BA8;
+  --button-bg-hover-tertiary: #2DC355;
+  --button-bg-hover-quaternary: #F96767;
+  --button-bg-hover-fifth: #D6AD26;
+  --form-bg-color: #ffffff;
+  --form-border: 1px solid #b0b0b0;
+  --form-input-wrapper-bg-color: #f5f5f5;
+  --hr-color: #a0a0a0;
+  --link-color: #1976d2;
+  --link-hover-color: #42a5f5;
+  --link-visited-color: #7b1fa2;
+  --link-visited-hover-color: #9c27b0;
+  --quiz-text-color: #333333;
+  --quiz-correct-color: #4caf50;
+  --quiz-incorrect-color: #f44336;
+  --task-text-color: #333333;
+  --task-bold-color: #00a000;
+  --task-italic-color: #00796b;
+  --task-italic-bold-color: #d84315;
+  --task-bold-italic-color: #bf360c;
+  --hint-text-color: #121212;
+  --hint-info-background-color: #e3f2fd;
+  --hint-info-border-color: #2196f3;
+  --hint-success-background-color: #e8f5e9;
+  --hint-success-border-color: #4caf50;
+  --hint-warning-background-color: #fff8e1;
+  --hint-warning-border-color: #ffc107;
+  --hint-danger-background-color: #ffebee;
+  --hint-danger-border-color: #f44336;
 }
 
-.module-menu:focus,
-.module-menu:focus-visible {
-  outline: var(--outline-hover);
-  outline-offset: 1px;
+:root[data-font=default] {
+  --font-primary: Verdana, Geneva, Tahoma, sans-serif;
+  --font-secondary: Courier New, Courier, monospace;
+  --font-size-base: 1rem;
+  --font-size-h1: 2rem;
+  --font-size-h2: 1.6rem;
+  --font-size-h3: 1.3rem;
+  --font-size-code: 0.95rem;
+  --font-size-small: 0.8rem;
 }
 
-.module-menu ul {
-  list-style-type: none;
-  padding: 0;
+:root[data-font=dyslexia] {
+  --font-primary: 'OpenDyslexic', Verdana, Geneva, Tahoma, Arial, sans-serif;
+  --font-secondary: Courier New, Courier, monospace;
+  --font-size-base: 0.6rem;
+  --font-size-h1: 1.6rem;
+  --font-size-h2: 1.1rem;
+  --font-size-h3: 0.95rem;
+  --font-size-code: 0.9rem;
+  --font-size-small: 0.4rem;
 }
 
-.module-menu li.active,
-.module-menu li:not(.module):not(:has(details)):hover {
+#header-wrapper {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  padding: 0.5rem 1rem;
+}
+
+.switcher {
   cursor: pointer;
-  background-color: var(--button-bg-hover-primary);
-  outline: 1px solid var(--accent-color);
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-family: var(--font-family-sans);
+  font-size: var(--font-size-base);
+  color: var(--text-color);
+  background: var(--button-bg-secondary);
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+.switcher:hover {
+  background: var(--button-bg-hover-secondary);
+  transform: scale(1.05);
+}
+.switcher.active {
+  background: var(--accent-color);
+  color: #fff;
 }
 
-.module-menu li:focus,
-.module-menu li:focus-visible {
-  outline: var(--outline-focus);
-  outline-offset: 1px;
+#theme-switcher::before {
+  content: "🌙 Motyw";
 }
 
-.module-menu > ul > li:first-child {
-  margin: 0;
-  background-color: var(--bg-layer-2);
-  padding: 10px;
-  margin: 1px;
-}
-
-.module-menu .module {
-  margin: 15px 0 10px;
-  border-top: 1px solid var(--hr-color);
-  border-bottom: 1px solid var(--hr-color);
-  background-color: var(--bg-layer-1);
-  padding: 10px;
-}
-
-.module-menu details {
-  margin: 5px 0;
-  padding: 10px;
-  background-color: var(--bg-layer-1);
-}
-
-.module-menu li:hover details {
-  outline: none;
-}
-
-.module-menu details ul {
-  margin-top: 10px;
-  padding-left: 20px;
-}
-
-.module-menu details li {
-  background-color: var(--bg-layer-3);
-  margin: 5px 0;
-  padding: 8px;
-  border-radius: 5px;
-}
-
-.module-menu > ul > li:not(:has(details)) {
-  margin: 5px 0;
-  background-color: var(--bg-layer-4);
-  padding: 5px;
-  border: var(--input-border);
-}
-
-.lesson-item,
-.lesson {
-  padding: 10px;
-  box-shadow: 2px 3px 5px rgba(0, 0, 0, 0.4);
+#dyslexic-switcher::before {
+  content: "🔤 Dyslektyczna czcionka";
 }

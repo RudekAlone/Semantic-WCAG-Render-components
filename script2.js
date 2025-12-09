@@ -1,4 +1,4 @@
-import { RenderQuiz } from "./Class/RenderQuiz.js";
+import { RenderQuiz } from "./js/Class/RenderQuiz.js";
 
 const questions = [
       {
