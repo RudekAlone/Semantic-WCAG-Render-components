@@ -1,9 +1,11 @@
-import {DashboardRender} from '../Class/DashboardRender.js';
-import { RenderButton } from '../Class/Render/RenderButton.js';
+import {DashboardRender} from '/js/Class/DashboardRender.js';
+import { RenderButton } from '/js/Class/Render/RenderButton.js';
 
 document.querySelector("header").appendChild(
     RenderButton.renderButton("Wyloguj się", "secondary", "button", () => {
-        window.location.href = "/logout";
+        localStorage.removeItem('user_role');
+        localStorage.removeItem('user_name');
+        window.location.href = "/";
     })
 );
 const main = document.querySelector('main');
@@ -84,5 +86,17 @@ const pages = [
     }
 ];
 
-main.appendChild(DashboardRender.render(pages));
+const role = localStorage.getItem('user_role') || 'student';
+let filteredPages = [];
+
+if (role === 'admin') {
+    filteredPages = pages;
+} else if (role === 'teacher') {
+    filteredPages = pages.filter(p => p.id !== 'users');
+} else {
+    // Default to student
+    filteredPages = pages.slice(0, 5);
+}
+
+main.appendChild(DashboardRender.render(filteredPages));
 

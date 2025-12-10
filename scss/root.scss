@@ -10,164 +10,185 @@ $dark-theme-colors: (
   bg-layer-3: #232323,
   bg-layer-4: #292929,
 
-// Gradients
-bg-gradient-1: linear-gradient(
-  142deg,
-  rgb(0 140 195) 0%,
-  rgb(47 187 105) 50%,
-  rgb(243 227 85) 100%
-),
-bg-gradient-2: linear-gradient(
-  90deg,
-  rgba(155, 42, 123, 1) 0%,
-  rgba(199, 87, 133, 1) 50%,
-  rgba(237, 83, 221, 1) 100%
-),
-bg-gradient-3: linear-gradient(
-  90deg,
-  rgba(123, 155, 42, 1) 0%,
-  rgba(199, 133, 87, 1) 50%,
-  rgba(221, 237, 83, 1) 100%
-),
+  // Gradients
+  bg-gradient-1:
+    linear-gradient(
+      142deg,
+      rgb(0 140 195) 0%,
+      rgb(47 187 105) 50%,
+      rgb(243 227 85) 100%
+    ),
+  bg-gradient-2:
+    linear-gradient(
+      90deg,
+      rgba(155, 42, 123, 1) 0%,
+      rgba(199, 87, 133, 1) 50%,
+      rgba(237, 83, 221, 1) 100%
+    ),
+  bg-gradient-3:
+    linear-gradient(
+      90deg,
+      rgba(123, 155, 42, 1) 0%,
+      rgba(199, 133, 87, 1) 50%,
+      rgba(221, 237, 83, 1) 100%
+    ),
+  //Inputs
+  focus-outline-color: #00ffbf,
+  accent-color: #009fff,
+  input-bg-color: #101010,
+  input-bg-color-hover: #1a1a1a,
+  input-border: 1px solid #3a3a3a,
+  input-border-hover: 1px solid #9b9b9b,
+  outline-focus: 2px solid var(--focus-outline-color),
+  outline-hover: 1px solid var(--focus-outline-color),
+  // Buttons
+  button-bg-primary: #004c98,
+  button-bg-secondary: #464e55,
+  button-bg-tertiary: #005614,
+  button-bg-quaternary: #991825,
+  button-bg-fifth: #68471e,
 
-//Inputs
-focus-outline-color: #00FFBF,
-accent-color: #009FFF,
-input-bg-color: #101010,
-input-bg-color-hover: #1a1a1a,
-input-border: 1px solid #3a3a3a,
-input-border-hover: 1px solid #9b9b9b,
-outline-focus: 2px solid var(--focus-outline-color),
-outline-hover: 1px solid var(--focus-outline-color),
+  button-bg-hover-primary: #113f70,
+  button-bg-hover-secondary: #30363b,
+  button-bg-hover-tertiary: #0e491b,
+  button-bg-hover-quaternary: #7e121d,
+  button-bg-hover-fifth: #4b3418,
 
-// Buttons
-button-bg-primary: #004C98,
-button-bg-secondary: #464E55,
-button-bg-tertiary: #005614,
-button-bg-quaternary: #991825,
-button-bg-fifth: #68471E,
+  // Form elements
+  form-bg-color: #353535,
+  form-border: 1px solid #606060,
+  form-input-wrapper-bg-color: #444444,
 
-button-bg-hover-primary: #113F70,
-button-bg-hover-secondary: #30363B,
-button-bg-hover-tertiary: #0E491B,
-button-bg-hover-quaternary: #7e121d,
-button-bg-hover-fifth: #4B3418,
+  hr-color: #0056ab,
 
-// Form elements
+  // Links
+  link-color: #64b5f6,
+  link-hover-color: #90caf9,
+  link-visited-color: #9575cd,
+  link-visited-hover-color: #b39ddb,
+  // Quiz colors
+  quiz-text-color: #cdcdcd,
+  quiz-correct-color: #00c853,
+  quiz-incorrect-color: #d50000,
 
-form-bg-color: #353535,
-form-border: 1px solid #606060,
-form-input-wrapper-bg-color: #444444,
+  // ============MARKDOWN_PREVIEW=================
+  // Task Preview
+  task-text-color: #f3f3f3,
+  task-bold-color: #3bff65,
+  task-italic-color: #81d4fa,
+  task-italic-bold-color: #ffab40,
+  task-bold-italic-color: #ff6e40,
 
+  // Hint box
+  hint-info-background-color: #263238,
+  hint-info-border-color: #2196f3,
+  hint-text-color: #ffffff,
+  hint-success-background-color: #1b5e2038,
+  hint-success-border-color: #4caf50,
+  hint-warning-background-color: #f5c11738,
+  hint-warning-border-color: #ffc400,
+  hint-danger-background-color: #b71c1c38,
+  hint-danger-border-color: #f44336,
 
-hr-color: #0056ab,
-
-// Links
-link-color: #64b5f6,
-link-hover-color: #90caf9,
-link-visited-color: #9575cd,
-link-visited-hover-color: #b39ddb,
-// Quiz colors
-
-quiz-text-color: #cdcdcd,
-quiz-correct-color: #00c853,
-quiz-incorrect-color: #d50000,
-
-// ============MARKDOWN_PREVIEW=================
-
-// Task Preview
-task-text-color: #f3f3f3,
-task-bold-color: #3bff65,
-task-italic-color: #81d4fa,
-task-italic-bold-color: #ffab40,
-task-bold-italic-color: #ff6e40,
-
-// Hint box
-hint-info-background-color: #263238,
-hint-info-border-color: #2196f3,
-hint-text-color: #ffffff,
-hint-success-background-color: #1b5e2038,
-hint-success-border-color: #4caf50,
-hint-warning-background-color: #f5c11738,
-hint-warning-border-color: #ffc400,
-hint-danger-background-color: #b71c1c38,
-hint-danger-border-color: #f44336,
+  exam-item-header-bg-color: #141414,
+  exam-passed-text-color: #8FF993,
+  exam-failed-text-color: #FF7474,
+  exam-empty-text-color: #C484FD,
 );
 
 $light-theme-colors: (
   // Tekst
-  text-color: #121212, // Ciemniejszy tekst na jasnym tle
-  
+  text-color: #121212,
+
+  // Ciemniejszy tekst na jasnym tle
   // Warstwy tła (odwrócone i jaśniejsze)
-  background-color: #ffffff, // Białe tło główne
+  background-color: #ffffff,
+  // Białe tło główne
   bg-layer-1: #f3f3f3,
   bg-layer-2: #eeeeee,
   bg-layer-3: #e0e0e0,
   bg-layer-4: #cccccc,
 
   // Gradients (z zachowaniem barw, ale dostosowane, aby nie były zbyt ciemne)
-  bg-gradient-1: linear-gradient(
-    142deg,
-    rgb(103, 209, 255) 0%,
-    rgb(119, 255, 171) 50%,
-    rgb(255, 244, 145) 100%
-  ),
-  bg-gradient-2: linear-gradient(
-    90deg,
-    rgba(190, 80, 150, 1) 0%,
-    rgba(220, 130, 160, 1) 50%,
-    rgba(255, 120, 240, 1) 100%
-  ),
-  bg-gradient-3: linear-gradient(
-    90deg,
-    rgba(160, 190, 80, 1) 0%,
-    rgba(220, 170, 120, 1) 50%,
-    rgba(255, 240, 120, 1) 100%
-  ),
-
+  bg-gradient-1:
+    linear-gradient(
+      142deg,
+      rgb(103, 209, 255) 0%,
+      rgb(119, 255, 171) 50%,
+      rgb(255, 244, 145) 100%
+    ),
+  bg-gradient-2:
+    linear-gradient(
+      90deg,
+      rgba(190, 80, 150, 1) 0%,
+      rgba(220, 130, 160, 1) 50%,
+      rgba(255, 120, 240, 1) 100%
+    ),
+  bg-gradient-3:
+    linear-gradient(
+      90deg,
+      rgba(160, 190, 80, 1) 0%,
+      rgba(220, 170, 120, 1) 50%,
+      rgba(255, 240, 120, 1) 100%
+    ),
   //Inputs
-  focus-outline-color: #008060, // Ciemniejszy, ale wciąż widoczny akcent
-  accent-color: #0077c9, // Ciemniejszy niebieski
-  input-bg-color: #ffffff, // Białe tło dla inputów
-  input-bg-color-hover: #f0f0f0, // Bardzo jasny hover
-  input-border: 1px solid #777777, // Jasna, widoczna ramka
-  input-border-hover: 1px solid #464646, // Ciemniejszy hover ramki
+  focus-outline-color: #008060,
+  // Ciemniejszy, ale wciąż widoczny akcent
+  accent-color: #0077c9,
+  // Ciemniejszy niebieski
+  input-bg-color: #ffffff,
+  // Białe tło dla inputów
+  input-bg-color-hover: #f0f0f0,
+  // Bardzo jasny hover
+  input-border: 1px solid #777777,
+  // Jasna, widoczna ramka
+  input-border-hover: 1px solid #464646,
+  // Ciemniejszy hover ramki
   outline-focus: 3px solid var(--focus-outline-color),
   outline-hover: 2px solid var(--focus-outline-color),
-
   // Buttons (mniej nasycone kolory tła i kontrastowy tekst)
-  button-bg-primary: #7DBEFF, // Ciemniejszy niebieski
-  button-bg-secondary: #bcc7d1, // Średnia szarość
-  button-bg-tertiary: #78F198, // Ciemniejsza zieleń
-  button-bg-quaternary: #FFADAD, // Ciemniejsza czerwień
-  button-bg-fifth: #FFDE71, // Ciemniejszy brąz
+  button-bg-primary: #7dbeff,
+  // Ciemniejszy niebieski
+  button-bg-secondary: #bcc7d1,
+  // Średnia szarość
+  button-bg-tertiary: #78f198,
+  // Ciemniejsza zieleń
+  button-bg-quaternary: #ffadad,
+  // Ciemniejsza czerwień
+  button-bg-fifth: #ffde71,
 
-  button-bg-hover-primary: #369AFF,
+  // Ciemniejszy brąz
+  button-bg-hover-primary: #369aff,
   button-bg-hover-secondary: #85939e,
-  button-bg-hover-tertiary: #2DC355,
-  button-bg-hover-quaternary: #F96767,
-  button-bg-hover-fifth: #D6AD26,
+  button-bg-hover-tertiary: #2dc355,
+  button-bg-hover-quaternary: #f96767,
+  button-bg-hover-fifth: #d6ad26,
 
   // Form elements
-  form-bg-color: #ffffff, // Białe lub bardzo jasne tło
+  form-bg-color: #ffffff,
+  // Białe lub bardzo jasne tło
   form-border: 1px solid #b0b0b0,
   form-input-wrapper-bg-color: #f5f5f5,
 
-  hr-color: #a0a0a0, // Szary separator
+  hr-color: #a0a0a0,
 
+  // Szary separator
   // Links
-  link-color: #1976d2, // Standardowy, czytelny niebieski
-  link-hover-color: #42a5f5,
-  link-visited-color: #7b1fa2, // Standardowy fiolet dla odwiedzonych
-  link-visited-hover-color: #9c27b0,
-  
+  link-color: #004A6D,
+  // Standardowy, czytelny niebieski
+  link-hover-color: #092ACF,
+  link-visited-color: #71139A,
+  // Standardowy fiolet dla odwiedzonych
+  link-visited-hover-color: #572f68,
+
   // Quiz colors
   quiz-text-color: #333333,
-  quiz-correct-color: #4caf50, // Ciemniejsza zieleń
-  quiz-incorrect-color: #f44336, // Ciemniejsza czerwień
+  quiz-correct-color: #4caf50,
+  // Ciemniejsza zieleń
+  quiz-incorrect-color: #f44336,
 
+  // Ciemniejsza czerwień
   // ============MARKDOWN_PREVIEW=================
-
   // Task Preview
   task-text-color: #333333,
   task-bold-color: #00a000,
@@ -176,8 +197,10 @@ $light-theme-colors: (
   task-bold-italic-color: #bf360c,
 
   // Hint box
-  hint-text-color: #121212, // Ciemny tekst na jasnym tle
-  hint-info-background-color: #e3f2fd, // Bardzo jasne tło
+  hint-text-color: #121212,
+  // Ciemny tekst na jasnym tle
+  hint-info-background-color: #e3f2fd,
+  // Bardzo jasne tło
   hint-info-border-color: #2196f3,
   hint-success-background-color: #e8f5e9,
   hint-success-border-color: #4caf50,
@@ -185,15 +208,20 @@ $light-theme-colors: (
   hint-warning-border-color: #ffc107,
   hint-danger-background-color: #ffebee,
   hint-danger-border-color: #f44336,
-);
 
+    exam-item-header-bg-color: #fff,
+  exam-passed-text-color: #035B06,
+  exam-failed-text-color: #A10000,
+  exam-empty-text-color: #6E00CE,
+
+);
 
 // ======================= FONTS =======================
 
 /* Regular */
 @font-face {
-  font-family: 'Atkinson Hyperlegible';
-  src: url('/fonts/AtkinsonHyperlegible-Regular.ttf') format('truetype');
+  font-family: "Atkinson Hyperlegible";
+  src: url("/fonts/AtkinsonHyperlegible-Regular.ttf") format("truetype");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -201,8 +229,8 @@ $light-theme-colors: (
 
 /* Italic */
 @font-face {
-  font-family: 'Atkinson Hyperlegible';
-  src: url('/fonts/AtkinsonHyperlegible-Italic.ttf') format('truetype');
+  font-family: "Atkinson Hyperlegible";
+  src: url("/fonts/AtkinsonHyperlegible-Italic.ttf") format("truetype");
   font-weight: 400;
   font-style: italic;
   font-display: swap;
@@ -210,8 +238,8 @@ $light-theme-colors: (
 
 /* Bold */
 @font-face {
-  font-family: 'Atkinson Hyperlegible';
-  src: url('/fonts/AtkinsonHyperlegible-Bold.ttf') format('truetype');
+  font-family: "Atkinson Hyperlegible";
+  src: url("/fonts/AtkinsonHyperlegible-Bold.ttf") format("truetype");
   font-weight: 700;
   font-style: normal;
   font-display: swap;
@@ -219,13 +247,12 @@ $light-theme-colors: (
 
 /* Bold Italic */
 @font-face {
-  font-family: 'Atkinson Hyperlegible';
-  src: url('/fonts/AtkinsonHyperlegible-BoldItalic.ttf') format('truetype');
+  font-family: "Atkinson Hyperlegible";
+  src: url("/fonts/AtkinsonHyperlegible-BoldItalic.ttf") format("truetype");
   font-weight: 700;
   font-style: italic;
   font-display: swap;
 }
-
 
 $fonts: (
   sans: "Segoe UI, Tahoma, Geneva, Verdana, sans-serif",
@@ -235,9 +262,8 @@ $fonts: (
   arial: "Arial, Helvetica, sans-serif",
   verdana: "Verdana, Geneva, Tahoma, sans-serif",
   comic-sans: "Comic Sans MS, cursive, sans-serif",
-  atkinson-hyperlegible: "'Atkinson Hyperlegible', sans-serif"
+  atkinson-hyperlegible: "'Atkinson Hyperlegible', sans-serif",
 );
-
 
 // ======================= BREAKPOINTS =======================
 $breakpoints: (
@@ -245,7 +271,7 @@ $breakpoints: (
   md: 768px,
   lg: 992px,
   xl: 1200px,
-  xxl: 1400px
+  xxl: 1400px,
 );
 
 // ======================= MIXINS =======================
@@ -256,13 +282,12 @@ $breakpoints: (
   }
 }
 
-
 @mixin outline($type) {
   outline: var(--outline-#{$type});
   outline-offset: 1px;
 }
 
-@mixin shadow-box($x:2px, $y:3px, $blur:5px, $color:rgba(0,0,0,0.4)) {
+@mixin shadow-box($x: 2px, $y: 3px, $blur: 5px, $color: rgba(0, 0, 0, 0.4)) {
   box-shadow: $x $y $blur $color;
 }
 
@@ -285,9 +310,8 @@ $breakpoints: (
   @each $name, $value in $light-theme-colors {
     --#{$name}: #{$value};
   }
-    /* Fonts */
+  /* Fonts */
   @each $name, $value in $fonts {
     --font-family-#{$name}: #{$value};
   }
 }
-

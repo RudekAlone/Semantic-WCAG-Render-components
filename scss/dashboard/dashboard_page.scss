@@ -17,11 +17,9 @@
   margin: 15px;
   border-radius: 5px;
   width: 50%;
+
 }
 
-.exam-section {
-  padding: 10px;
-}
 
 .exam-section h2,
 .subject-summary-widget h2 {
@@ -29,6 +27,8 @@
   margin-bottom: 15px;
   font-size: 1.5rem;
   background-color: var(--bg-layer-4);
+        border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
 }
 
 .subject-summary-list {
@@ -36,8 +36,6 @@
   gap: 20px;
   justify-content: center;
   padding: 20px;
-  width: 100%;
-  min-width: 460px;
 
   @include respond-to(md) {
     flex-direction: column;
@@ -69,10 +67,18 @@
   }
 }
 
-.subject-emoji { font-size: 3rem; }
-.subject-status-text { font-size: small; margin-bottom: 5px; }
+.subject-emoji {
+  font-size: 3rem;
+}
+.subject-status-text {
+  font-size: small;
+  margin-bottom: 5px;
+}
 
-.exam-list { list-style: none; padding-left: 0; }
+.exam-list {
+  list-style: none;
+  padding: 15px;
+}
 
 .exam-item {
   margin-bottom: 10px;
@@ -84,10 +90,17 @@
   transition: 300ms background-color ease;
   @include shadow-box;
 
-  &:hover { background-color: var(--bg-layer-2); }
+  &:hover {
+    background-color: var(--bg-layer-2);
+  }
 
   h4 {
-    margin: 0 0 5px;
+    margin: -10px -11px 5px;
+    background-color: var(--exam-item-header-bg-color);
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+
+    padding: 0 10px;
 
     span {
       width: 50%;
@@ -95,11 +108,23 @@
       font-size: 1rem;
       font-weight: bold;
       text-align: left;
-      color: var(--link-hover-color);
+      color: var(--link-color);
 
-      &.exam-passed { text-align: right; font-size: 0.9rem; color: var(--quiz-correct-color); }
-      &.exam-failed { text-align: right; font-size: 0.9rem; color: var(--quiz-incorrect-color); }
-      &.exam-empty { text-align: right; font-size: 0.9rem; color: var(--hint-warning-border-color); }
+      &.exam-passed {
+        text-align: right;
+        font-size: 0.9rem;
+        color: var(--exam-passed-text-color);
+      }
+      &.exam-failed {
+        text-align: right;
+        font-size: 0.9rem;
+        color: var(--exam-failed-text-color);
+      }
+      &.exam-empty {
+        text-align: right;
+        font-size: 0.9rem;
+        color: var(--exam-empty-text-color);
+      }
     }
   }
 

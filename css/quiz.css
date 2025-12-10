@@ -1,29 +1,32 @@
 @charset "UTF-8";
-@import url("https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&display=swap");
+/* Regular */
 @font-face {
   font-family: "Atkinson Hyperlegible";
-  src: url("https://fonts.gstatic.com/s/atkinsonhyperlegible/v3/LYjBdG6kD-6o8w5Yk8f0nU6Y5P7mWzI.woff2") format("woff2");
+  src: url("/fonts/AtkinsonHyperlegible-Regular.ttf") format("truetype");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
 }
+/* Italic */
 @font-face {
   font-family: "Atkinson Hyperlegible";
-  src: url("https://fonts.gstatic.com/s/atkinsonhyperlegible/v3/LYjBdG6kD-6o8w5Yk8f0nU6Y5P7mWzI.woff2") format("woff2");
-  font-weight: 700;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: "Atkinson Hyperlegible";
-  src: url("https://fonts.gstatic.com/s/atkinsonhyperlegible/v3/LYjBdG6kD-6o8w5Yk8f0nU6Y5P7mWzI.woff2") format("woff2");
+  src: url("/fonts/AtkinsonHyperlegible-Italic.ttf") format("truetype");
   font-weight: 400;
   font-style: italic;
   font-display: swap;
 }
+/* Bold */
 @font-face {
   font-family: "Atkinson Hyperlegible";
-  src: url("https://fonts.gstatic.com/s/atkinsonhyperlegible/v3/LYjBdG6kD-6o8w5Yk8f0nU6Y5P7mWzI.woff2") format("woff2");
+  src: url("/fonts/AtkinsonHyperlegible-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+/* Bold Italic */
+@font-face {
+  font-family: "Atkinson Hyperlegible";
+  src: url("/fonts/AtkinsonHyperlegible-BoldItalic.ttf") format("truetype");
   font-weight: 700;
   font-style: italic;
   font-display: swap;
@@ -99,7 +102,7 @@
   --bg-layer-2: #eeeeee;
   --bg-layer-3: #e0e0e0;
   --bg-layer-4: #cccccc;
-  --bg-gradient-1: linear-gradient(142deg, rgb(0, 180, 255) 0%, rgb(60, 220, 120) 50%, rgb(255, 240, 100) 100%);
+  --bg-gradient-1: linear-gradient(142deg, rgb(103, 209, 255) 0%, rgb(119, 255, 171) 50%, rgb(255, 244, 145) 100%);
   --bg-gradient-2: linear-gradient(90deg, rgb(190, 80, 150) 0%, rgb(220, 130, 160) 50%, rgb(255, 120, 240) 100%);
   --bg-gradient-3: linear-gradient(90deg, rgb(160, 190, 80) 0%, rgb(220, 170, 120) 50%, rgb(255, 240, 120) 100%);
   --focus-outline-color: #008060;
@@ -108,15 +111,15 @@
   --input-bg-color-hover: #f0f0f0;
   --input-border: 1px solid #777777;
   --input-border-hover: 1px solid #464646;
-  --outline-focus: 2px solid var(--focus-outline-color);
-  --outline-hover: 1px solid var(--focus-outline-color);
+  --outline-focus: 3px solid var(--focus-outline-color);
+  --outline-hover: 2px solid var(--focus-outline-color);
   --button-bg-primary: #7DBEFF;
-  --button-bg-secondary: #D5E2ED;
+  --button-bg-secondary: #bcc7d1;
   --button-bg-tertiary: #78F198;
   --button-bg-quaternary: #FFADAD;
   --button-bg-fifth: #FFDE71;
   --button-bg-hover-primary: #369AFF;
-  --button-bg-hover-secondary: #8B9BA8;
+  --button-bg-hover-secondary: #85939e;
   --button-bg-hover-tertiary: #2DC355;
   --button-bg-hover-quaternary: #F96767;
   --button-bg-hover-fifth: #D6AD26;

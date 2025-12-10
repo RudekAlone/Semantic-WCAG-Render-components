@@ -171,7 +171,7 @@ summary {
   &:hover,
   &:focus {
     outline: none;
-    border: var(--outline-hover);
+    outline: var(--outline-hover);
     border-bottom: none;
     background-color: var(--bg-layer-4);
     margin-bottom: 1rem;
@@ -180,7 +180,7 @@ summary {
 
 details[open] {
   &:hover {
-    border: var(--outline-hover);
+    outline: var(--outline-hover);
   }
 }
 

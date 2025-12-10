@@ -41,24 +41,24 @@
   --bg-gradient-1: linear-gradient(142deg, rgb(0, 140, 195) 0%, rgb(47, 187, 105) 50%, rgb(243, 227, 85) 100%);
   --bg-gradient-2: linear-gradient(90deg, rgb(155, 42, 123) 0%, rgb(199, 87, 133) 50%, rgb(237, 83, 221) 100%);
   --bg-gradient-3: linear-gradient(90deg, rgb(123, 155, 42) 0%, rgb(199, 133, 87) 50%, rgb(221, 237, 83) 100%);
-  --focus-outline-color: #00FFBF;
-  --accent-color: #009FFF;
+  --focus-outline-color: #00ffbf;
+  --accent-color: #009fff;
   --input-bg-color: #101010;
   --input-bg-color-hover: #1a1a1a;
   --input-border: 1px solid #3a3a3a;
   --input-border-hover: 1px solid #9b9b9b;
   --outline-focus: 2px solid var(--focus-outline-color);
   --outline-hover: 1px solid var(--focus-outline-color);
-  --button-bg-primary: #004C98;
-  --button-bg-secondary: #464E55;
+  --button-bg-primary: #004c98;
+  --button-bg-secondary: #464e55;
   --button-bg-tertiary: #005614;
   --button-bg-quaternary: #991825;
-  --button-bg-fifth: #68471E;
-  --button-bg-hover-primary: #113F70;
-  --button-bg-hover-secondary: #30363B;
-  --button-bg-hover-tertiary: #0E491B;
+  --button-bg-fifth: #68471e;
+  --button-bg-hover-primary: #113f70;
+  --button-bg-hover-secondary: #30363b;
+  --button-bg-hover-tertiary: #0e491b;
   --button-bg-hover-quaternary: #7e121d;
-  --button-bg-hover-fifth: #4B3418;
+  --button-bg-hover-fifth: #4b3418;
   --form-bg-color: #353535;
   --form-border: 1px solid #606060;
   --form-input-wrapper-bg-color: #444444;
@@ -84,6 +84,10 @@
   --hint-warning-border-color: #ffc400;
   --hint-danger-background-color: rgba(183, 28, 28, 0.2196078431);
   --hint-danger-border-color: #f44336;
+  --exam-item-header-bg-color: #141414;
+  --exam-passed-text-color: #8FF993;
+  --exam-failed-text-color: #FF7474;
+  --exam-empty-text-color: #C484FD;
   /* Fonts */
   --font-family-sans: Segoe UI, Tahoma, Geneva, Verdana, sans-serif;
   --font-family-mono: Courier New, Courier, monospace;
@@ -113,24 +117,24 @@
   --input-border-hover: 1px solid #464646;
   --outline-focus: 3px solid var(--focus-outline-color);
   --outline-hover: 2px solid var(--focus-outline-color);
-  --button-bg-primary: #7DBEFF;
+  --button-bg-primary: #7dbeff;
   --button-bg-secondary: #bcc7d1;
-  --button-bg-tertiary: #78F198;
-  --button-bg-quaternary: #FFADAD;
-  --button-bg-fifth: #FFDE71;
-  --button-bg-hover-primary: #369AFF;
+  --button-bg-tertiary: #78f198;
+  --button-bg-quaternary: #ffadad;
+  --button-bg-fifth: #ffde71;
+  --button-bg-hover-primary: #369aff;
   --button-bg-hover-secondary: #85939e;
-  --button-bg-hover-tertiary: #2DC355;
-  --button-bg-hover-quaternary: #F96767;
-  --button-bg-hover-fifth: #D6AD26;
+  --button-bg-hover-tertiary: #2dc355;
+  --button-bg-hover-quaternary: #f96767;
+  --button-bg-hover-fifth: #d6ad26;
   --form-bg-color: #ffffff;
   --form-border: 1px solid #b0b0b0;
   --form-input-wrapper-bg-color: #f5f5f5;
   --hr-color: #a0a0a0;
-  --link-color: #1976d2;
-  --link-hover-color: #42a5f5;
-  --link-visited-color: #7b1fa2;
-  --link-visited-hover-color: #9c27b0;
+  --link-color: #004A6D;
+  --link-hover-color: #092ACF;
+  --link-visited-color: #71139A;
+  --link-visited-hover-color: #572f68;
   --quiz-text-color: #333333;
   --quiz-correct-color: #4caf50;
   --quiz-incorrect-color: #f44336;
@@ -148,6 +152,10 @@
   --hint-warning-border-color: #ffc107;
   --hint-danger-background-color: #ffebee;
   --hint-danger-border-color: #f44336;
+  --exam-item-header-bg-color: #fff;
+  --exam-passed-text-color: #035B06;
+  --exam-failed-text-color: #A10000;
+  --exam-empty-text-color: #6E00CE;
   /* Fonts */
   --font-family-sans: Segoe UI, Tahoma, Geneva, Verdana, sans-serif;
   --font-family-mono: Courier New, Courier, monospace;
@@ -532,6 +540,10 @@ button:disabled {
   filter: opacity(0.6);
 }
 
+button .emoji {
+  text-shadow: 0px 0px 1px rgba(0, 0, 0, 0.8), 0px 0px 1px rgba(0, 0, 0, 0.8), 0px 0px 1px rgba(0, 0, 0, 0.8), 0px 0px 1px rgba(0, 0, 0, 0.8);
+}
+
 .textarea-wrapper {
   width: 100%;
   display: flex;
@@ -698,14 +710,14 @@ summary {
 }
 summary:hover, summary:focus {
   outline: none;
-  border: var(--outline-hover);
+  outline: var(--outline-hover);
   border-bottom: none;
   background-color: var(--bg-layer-4);
   margin-bottom: 1rem;
 }
 
 details[open]:hover {
-  border: var(--outline-hover);
+  outline: var(--outline-hover);
 }
 
 label {
@@ -1044,7 +1056,8 @@ html[data-theme=light] #welcome-section #welcome-message img {
   flex-wrap: wrap;
   justify-content: space-between;
 }
-#welcome-section #welcome-message h2, #welcome-section #welcome-message h2 * {
+#welcome-section #welcome-message h2,
+#welcome-section #welcome-message h2 * {
   font-size: 2.5rem;
   text-align: right;
   padding-right: 40px;
@@ -1061,6 +1074,7 @@ html[data-theme=light] #welcome-section #welcome-message img {
   bottom: 0;
   left: 0;
   max-width: 700px;
+  transition: 400ms all;
 }
 #welcome-section #login-section {
   width: 50%;
@@ -1135,20 +1149,20 @@ html[data-theme=light] #welcome-section #welcome-message img {
   max-width: 300px;
 }
 
-#welcome-page #courses-content-container {
+#courses-content-container {
   background-color: var(--bg-layer-1);
   padding: 20px;
   border-radius: 5px;
   width: 100%;
 }
-#welcome-page #courses-content-container h2 {
+#courses-content-container h2 {
   text-align: center;
   font-size: 1.8rem;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   margin-bottom: 20px;
   border-bottom: 2px solid var(--button-bg-primary);
 }
-#welcome-page #courses-content-container ul {
+#courses-content-container ul {
   list-style-type: none;
   padding-left: 0;
   display: flex;
@@ -1156,7 +1170,7 @@ html[data-theme=light] #welcome-section #welcome-message img {
   gap: 15px;
   justify-content: center;
 }
-#welcome-page #courses-content-container li {
+#courses-content-container li {
   margin-bottom: 10px;
   padding: 10px;
   border: 1px solid var(--bg-layer-4);
@@ -1168,10 +1182,10 @@ html[data-theme=light] #welcome-section #welcome-message img {
   height: 270px;
   text-align: center;
 }
-#welcome-page #courses-content-container li:hover {
+#courses-content-container li:hover {
   background-color: var(--bg-layer-3);
 }
-#welcome-page #courses-content-container li img {
+#courses-content-container li img {
   width: 135px;
   max-height: 143px;
   height: auto;
@@ -1179,11 +1193,11 @@ html[data-theme=light] #welcome-section #welcome-message img {
   -o-object-fit: cover;
      object-fit: cover;
 }
-#welcome-page #courses-content-container li:hover img {
+#courses-content-container li:hover img {
   transform: scale(1.05);
   transition: transform 0.2s;
 }
-#welcome-page #courses-content-container li a {
+#courses-content-container li a {
   text-decoration: none;
   color: var(--text-color);
   font-weight: bold;
@@ -1193,17 +1207,17 @@ html[data-theme=light] #welcome-section #welcome-message img {
   justify-content: space-between;
   height: 100%;
 }
-#welcome-page #courses-content-container #footer-course {
+#courses-content-container #footer-course {
   width: 100%;
   display: flex;
   flex-direction: column;
 }
-#welcome-page #courses-content-container #footer-course hr {
+#courses-content-container #footer-course hr {
   width: 100%;
   border: 1px solid var(--bg-layer-4);
   margin: 0;
 }
-#welcome-page #courses-content-container #footer-course span {
+#courses-content-container #footer-course span {
   margin: 0;
   padding: 0;
   text-align: right;
@@ -1476,7 +1490,6 @@ html[data-theme=light] #welcome-section #welcome-message img {
   flex-grow: 1;
   flex-basis: calc(20% - 10px);
   text-align: center;
-  text-shadow: 0 0 2px #000;
   transition: 400ms background-color, 200ms transform ease-in-out, 0 outline;
 }
 #dashboard nav button:focus, #dashboard nav button:hover {
@@ -1484,9 +1497,12 @@ html[data-theme=light] #welcome-section #welcome-message img {
   transform: scale(1.04);
   border-radius: 0;
   transition: transform 0.2s;
-  text-shadow: 1px 2px 0px #000;
   z-index: 1;
   transition: 400ms background-color, 200ms transform ease-in-out, 0 outline;
+}
+#dashboard nav button:hover * {
+  text-transform: none;
+  transform: scale(2);
 }
 @media (max-width: 1200px) {
   #dashboard nav button {
@@ -1524,16 +1540,14 @@ html[data-theme=light] #welcome-section #welcome-message img {
   width: 50%;
 }
 
-.exam-section {
-  padding: 10px;
-}
-
 .exam-section h2,
 .subject-summary-widget h2 {
   text-align: center;
   margin-bottom: 15px;
   font-size: 1.5rem;
   background-color: var(--bg-layer-4);
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
 }
 
 .subject-summary-list {
@@ -1541,8 +1555,6 @@ html[data-theme=light] #welcome-section #welcome-message img {
   gap: 20px;
   justify-content: center;
   padding: 20px;
-  width: 100%;
-  min-width: 460px;
 }
 @media (max-width: 768px) {
   .subject-summary-list {
@@ -1584,7 +1596,7 @@ html[data-theme=light] #welcome-section #welcome-message img {
 
 .exam-list {
   list-style: none;
-  padding-left: 0;
+  padding: 15px;
 }
 
 .exam-item {
@@ -1601,7 +1613,11 @@ html[data-theme=light] #welcome-section #welcome-message img {
   background-color: var(--bg-layer-2);
 }
 .exam-item h4 {
-  margin: 0 0 5px;
+  margin: -10px -11px 5px;
+  background-color: var(--exam-item-header-bg-color);
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  padding: 0 10px;
 }
 .exam-item h4 span {
   width: 50%;
@@ -1609,22 +1625,22 @@ html[data-theme=light] #welcome-section #welcome-message img {
   font-size: 1rem;
   font-weight: bold;
   text-align: left;
-  color: var(--link-hover-color);
+  color: var(--link-color);
 }
 .exam-item h4 span.exam-passed {
   text-align: right;
   font-size: 0.9rem;
-  color: var(--quiz-correct-color);
+  color: var(--exam-passed-text-color);
 }
 .exam-item h4 span.exam-failed {
   text-align: right;
   font-size: 0.9rem;
-  color: var(--quiz-incorrect-color);
+  color: var(--exam-failed-text-color);
 }
 .exam-item h4 span.exam-empty {
   text-align: right;
   font-size: 0.9rem;
-  color: var(--hint-warning-border-color);
+  color: var(--exam-empty-text-color);
 }
 .exam-item p {
   margin: 0;
