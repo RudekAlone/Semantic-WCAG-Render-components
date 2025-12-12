@@ -106,6 +106,7 @@
   --bg-layer-3: #e0e0e0;
   --bg-layer-4: #cccccc;
   --bg-gradient-1: linear-gradient(142deg, rgb(103, 209, 255) 0%, rgb(119, 255, 171) 50%, rgb(255, 244, 145) 100%);
+  --bg-gradient-1: linear-gradient(142deg, rgb(103, 209, 255) 0%, rgb(119, 255, 171) 50%, rgb(255, 244, 145) 100%);
   --bg-gradient-2: linear-gradient(90deg, rgb(190, 80, 150) 0%, rgb(220, 130, 160) 50%, rgb(255, 120, 240) 100%);
   --bg-gradient-3: linear-gradient(90deg, rgb(160, 190, 80) 0%, rgb(220, 170, 120) 50%, rgb(255, 240, 120) 100%);
   --focus-outline-color: #008060;

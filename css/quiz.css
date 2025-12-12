@@ -1,31 +1,43 @@
 @charset "UTF-8";
 /* Regular */
+/* Regular */
 @font-face {
   font-family: "Atkinson Hyperlegible";
+  src: url("/fonts/AtkinsonHyperlegible-Regular.ttf") format("truetype");
   src: url("/fonts/AtkinsonHyperlegible-Regular.ttf") format("truetype");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
 }
 /* Italic */
+/* Italic */
 @font-face {
   font-family: "Atkinson Hyperlegible";
+  src: url("/fonts/AtkinsonHyperlegible-Italic.ttf") format("truetype");
+  font-weight: 400;
+  font-style: italic;
   src: url("/fonts/AtkinsonHyperlegible-Italic.ttf") format("truetype");
   font-weight: 400;
   font-style: italic;
   font-display: swap;
 }
 /* Bold */
+/* Bold */
 @font-face {
   font-family: "Atkinson Hyperlegible";
+  src: url("/fonts/AtkinsonHyperlegible-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
   src: url("/fonts/AtkinsonHyperlegible-Bold.ttf") format("truetype");
   font-weight: 700;
   font-style: normal;
   font-display: swap;
 }
 /* Bold Italic */
+/* Bold Italic */
 @font-face {
   font-family: "Atkinson Hyperlegible";
+  src: url("/fonts/AtkinsonHyperlegible-BoldItalic.ttf") format("truetype");
   src: url("/fonts/AtkinsonHyperlegible-BoldItalic.ttf") format("truetype");
   font-weight: 700;
   font-style: italic;
@@ -106,6 +118,7 @@
   --bg-layer-2: #eeeeee;
   --bg-layer-3: #e0e0e0;
   --bg-layer-4: #cccccc;
+  --bg-gradient-1: linear-gradient(142deg, rgb(103, 209, 255) 0%, rgb(119, 255, 171) 50%, rgb(255, 244, 145) 100%);
   --bg-gradient-1: linear-gradient(142deg, rgb(103, 209, 255) 0%, rgb(119, 255, 171) 50%, rgb(255, 244, 145) 100%);
   --bg-gradient-2: linear-gradient(90deg, rgb(190, 80, 150) 0%, rgb(220, 130, 160) 50%, rgb(255, 120, 240) 100%);
   --bg-gradient-3: linear-gradient(90deg, rgb(160, 190, 80) 0%, rgb(220, 170, 120) 50%, rgb(255, 240, 120) 100%);

@@ -17,9 +17,11 @@ use Core\Classes\ClassController;
 use Core\Subjects\SubjectController;
 
 // Inicjalizacja Routera
+// Inicjalizacja Routera
 $router = new Router();
 $route = $router->dispatch($_SERVER['REQUEST_URI']);
 
+// Inicjalizacja Sesji
 // Inicjalizacja Sesji
 $auth = new SessionManager();
 
@@ -39,7 +41,23 @@ switch ($route['controller']) {
     case 'Tasks':
         $controller = new TaskController($db);
         break;
+    case 'Tasks':
+        $controller = new TaskController($db);
+        break;
     case 'Courses':
+        $controller = new CourseController($db, $auth);
+        break;
+    case 'Quizzes':
+        $controller = new QuizController($db);
+        break;
+    case 'Stats':
+        $controller = new StatsController($db);
+        break;
+    case 'Dictionaries':
+        $controller = new DictionaryController($db);
+        break;
+    case 'Users':
+        $controller = new UserController($db);
         $controller = new CourseController($db, $auth);
         break;
     case 'Quizzes':
@@ -64,7 +82,25 @@ switch ($route['controller']) {
         $controller = new SubjectController($db);
         break;
     case 'Error':
+    case 'Error':
     default:
+        http_response_code(404);
+        echo json_encode(['error' => 'Endpoint not found']);
+        exit;
+}
+
+// Wywołanie akcji
+$action = $route['action'];
+if (method_exists($controller, $action)) {
+    // Przekazanie parametrów (np. slug dla kursu, type dla quizu)
+    if (isset($route['params'])) {
+        echo $controller->$action($route['params']);
+    } else {
+        echo $controller->$action();
+    }
+} else {
+    http_response_code(500);
+    echo json_encode(['error' => "Action $action not found in controller"]);
         http_response_code(404);
         echo json_encode(['error' => 'Endpoint not found']);
         exit;
