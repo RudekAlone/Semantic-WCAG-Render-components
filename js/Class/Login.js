@@ -1,31 +1,24 @@
 import { Notification } from "./Notification.js";
+import { AuthService } from "./AuthService.js";
+
+const authService = new AuthService();
+
 export class Login {
 
-  static authenticate(username, password) {
-    
-    fetch("/api/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ username, password }),
-  }).then((response) => {
-    if (response.ok) {
-      return response.json();
-    } else {
-      Notification.show("error", "Logowanie nie powiodło się. Sprawdź swoje dane logowania.");
-      return null;
+  static async authenticate(username, password) {
+    try {
+        await authService.login(username, password);
+        Notification.show("success", "Logowanie powiodło się!");
+        
+        // Po poprawnym zalogowaniu (sesja cookie ustawiona przez backend), przekierowujemy
+        setTimeout(() => {
+            window.location.href = "dashboard.html";
+        }, 1000);
+        
+        return true;
+    } catch (error) {
+        Notification.show("error", error.message || "Wystąpił błąd logowania.");
+        return false;
     }
-  }).then((data) => {
-    if (data) {
-      Notification.show("success", "Logowanie powiodło się!");
-      return true;
-    } else {
-      return false;
-    }
-  }).catch((error) => {
-    Notification.show("error", "Wystąpił błąd. Spróbuj ponownie później.");
-    return false;
-  });
   }
 }

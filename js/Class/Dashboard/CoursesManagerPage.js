@@ -313,9 +313,10 @@ export class CoursesManagerPage{
         courseStatusForm.classList.add("wrapper-300");
 
         const courseStatusInput = courseStatusForm.querySelector("input[name='course-status']");
-        const wrapCourseStatus = courseStatusForm.querySelector('[data-ui="input-wrapper"]');
+        const wrapCourseStatus = courseStatusInput.closest('div') || courseStatusInput.parentElement;
 
          courseStatusInput.addEventListener("change", (e) => {
+            if(!wrapCourseStatus) return;
             const spanStatus = wrapCourseStatus.querySelector("span");
             if(courseStatusInput.checked){
                 if(spanStatus){

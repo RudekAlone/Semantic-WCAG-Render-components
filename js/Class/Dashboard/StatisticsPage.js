@@ -3,7 +3,53 @@ import { DataService } from "../Service/DataService.js";
 import { MONTH_NAMES_PL } from "./constants.js";
 
 export class StatisticsPage {
+
+    /**
+     * Globalna pula kolorów do wykresów
+     */
+    static get COLOR_PALETTE() {
+    const theme = document.documentElement.getAttribute("data-theme");
+    return theme === "dark" ? this.COLOR_PALETTE_DARK : this.COLOR_PALETTE_LIGHT;
+  }
+    static COLOR_PALETTE_LIGHT = [
+    "rgba(33, 33, 33, 1)", // 0
+    "rgba(75,192,192,0.35)", // 1
+    "rgba(75,192,192,0.04)", // 2
+    "rgba(75, 192, 192, 1)", // 3
+    "rgba(200, 200, 200, 0.15)", // 4
+    "rgba(148, 54, 235, 0.7)", // 5
+    "rgba(255, 206, 86, 0.7)", // 6
+    "rgba(54,162,235,0.22)", // 7
+    "rgba(54,162,235,0.9)", // 8
+    "rgba(160, 160, 160, 0.15)", // 9
+    "rgba(68, 190, 72, 0.85)", // 10
+    "rgba(51, 126, 54, 1)", // 11
+    "rgba(220,53,69,0.28)", // 12
+    "rgba(220,53,69,0.9)", // 13
+    "rgba(240, 240, 240, 1)" // 14
+    ];
+
+      static COLOR_PALETTE_DARK = [
+    "rgba(235, 235, 235, 1)", // 0
+    "rgba(75,192,192,0.35)", // 1
+    "rgba(75,192,192,0.04)", // 2
+    "rgba(75, 192, 192, 1)", // 3
+    "rgba(235,235,235,0.06)", // 4
+    "rgba(148, 54, 235, 0.7)", // 5
+    "rgba(255, 206, 86, 0.7)", // 6
+    "rgba(54,162,235,0.22)", // 7
+    "rgba(54,162,235,0.9)", // 8
+    "rgba(160, 160, 160, 0.15)", // 9
+    "rgba(68, 190, 72, 0.85)", // 10
+    "rgba(51, 126, 54, 1)", // 11
+    "rgba(220,53,69,0.28)", // 12
+    "rgba(220,53,69,0.9)", // 13
+    "rgba(33, 33, 33, 1)" // 14
+  ];
+
+
     static renderStatisticsPage() {
+
         const container = document.createElement("section");
         container.id = "statistics-page";
         const title = document.createElement("h2");
@@ -16,6 +62,24 @@ export class StatisticsPage {
         container.appendChild(contentContainer);
 
         this._loadDataAndRender(contentContainer);
+
+        // Dodaj listener tylko raz
+        if (!this._themeListenerAdded) {
+            setTimeout(() => {
+                const switcherTheme = document.querySelector("label.switch");
+                if (switcherTheme) {
+                    switcherTheme.addEventListener("change", () => {
+                        const statsContent = document.getElementById("statistics-content");
+                        if (statsContent) {
+                            statsContent.innerHTML = '<div class="loader">Ładowanie statystyk...</div>';
+                            this._loadDataAndRender(statsContent);
+                            console.log("Przełączono motyw, odświeżanie statystyk...");
+                        }
+                    });
+                    this._themeListenerAdded = true;
+                }
+            }, 100);
+        }
 
         return container;
     }
@@ -44,6 +108,13 @@ export class StatisticsPage {
     }
 
     static async loadUserStatistics(container, userData) {
+        // Zapobiegaj wielokrotnemu ładowaniu
+        if (this._isLoadingStats) {
+            console.warn('Statystyki są już ładowane, pomijam...');
+            return;
+        }
+        
+        this._isLoadingStats = true;
         container.innerHTML = '<div class="loader">Pobieranie szczegółowych danych...</div>';
         
         try {
@@ -68,14 +139,46 @@ export class StatisticsPage {
             const loginStatsSection = document.createElement("section");
             loginStatsSection.id = "login-statistics-section";
             
+            // Year Selector
+            const headerRow = document.createElement("div");
+            headerRow.className = "chart-header-row";
+            headerRow.style.display = "flex";
+            headerRow.style.justifyContent = "space-between";
+            headerRow.style.alignItems = "center";
+            headerRow.style.marginBottom = "10px";
+
+            const title = document.createElement("h3");
+            title.textContent = "Logowania";
+            headerRow.appendChild(title);
+
+            // Dynamiczne generowanie lat szkolnych od 2022 do aktualnego roku
+            const currentYear = new Date().getFullYear();
+            const yearSelect = document.createElement("select");
+            let yearOptions = '';
+            for (let year = currentYear; year >= 2022; year--) {
+                const nextYear = year + 1;
+                yearOptions += `<option value="${year}">${year}/${nextYear}</option>`;
+            }
+            yearSelect.innerHTML = yearOptions;
+            
+            // Ustaw domyślnie aktualny rok
+            yearSelect.value = currentYear.toString();
+            
+            yearSelect.addEventListener("change", async (e) => {
+                const year = e.target.value;
+                const newStats = await DataService.getLoginStatistics(false, year);
+                this.createLoginChart(newStats, "loginStatisticsChart");
+            });
+            headerRow.appendChild(yearSelect);
+            loginStatsSection.appendChild(headerRow);
+
             const loginCanvas = document.createElement("canvas");
             loginCanvas.id = "loginStatisticsChart";
             loginStatsSection.appendChild(loginCanvas);
             container.appendChild(loginStatsSection);
     
-            setTimeout(() => {
-                this.createLoginChart(loginStats, "loginStatisticsChart");
-            }, 0);
+            // Usuń setTimeout - renderuj od razu
+            this.createLoginChart(loginStats, "loginStatisticsChart");
     
             const tasksStatusSection = document.createElement("section");
             tasksStatusSection.id = "tasks-statistics-section";
@@ -83,9 +186,7 @@ export class StatisticsPage {
             tasksCanvas.id = "tasksStatusChart";
             tasksStatusSection.appendChild(tasksCanvas);
             container.appendChild(tasksStatusSection);
-            setTimeout(() => {
-                this.tasksChartCompletionStatusByStudent("tasksStatusChart", tasks);
-            }, 0);
+            this.tasksChartCompletionStatusByStudent("tasksStatusChart", tasks);
     
             const roadmapSection = document.createElement("section");
             roadmapSection.id = "roadmap-statistics-section";
@@ -93,15 +194,13 @@ export class StatisticsPage {
             roadmapCanvas.id = "roadmapChart";
             roadmapSection.appendChild(roadmapCanvas);
             container.appendChild(roadmapSection);
-            setTimeout(() => {
-                this.createChartRoadmap(
-                    { quizzes: quizStats, courses: courseStats, canvasId: "roadmapChart" },
-                    null,
-                    null,
-                    branches,
-                    coursesData
-                );
-            }, 0);
+            this.createChartRoadmap(
+                { quizzes: quizStats, courses: courseStats, canvasId: "roadmapChart" },
+                null,
+                null,
+                branches,
+                coursesData
+            );
     
             const quizStatsSection = document.createElement("section");
             quizStatsSection.id = "quiz-statistics-section";
@@ -109,9 +208,7 @@ export class StatisticsPage {
             quizCanvas.id = "quizCompletionChart";
             quizStatsSection.appendChild(quizCanvas);
             container.appendChild(quizStatsSection);
-            setTimeout(() => {
-                this.createQuizCompletionChart(quizStats, "quizCompletionChart");
-            }, 0);
+            this.createQuizCompletionChart(quizStats, "quizCompletionChart");
     
             const coursesStatsSection = document.createElement("section");
             coursesStatsSection.id = "courses-statistics-section";
@@ -119,13 +216,13 @@ export class StatisticsPage {
             coursesCanvas.id = "coursesCompletionChart";
             coursesStatsSection.appendChild(coursesCanvas);
             container.appendChild(coursesStatsSection);
-            setTimeout(() => {
-                this.createCoursesCompletionChart(courseStats, "coursesCompletionChart");
-            }, 0);
+            this.createCoursesCompletionChart(courseStats, "coursesCompletionChart");
 
         } catch (error) {
             console.error("Błąd pobierania szczegółów statystyk:", error);
             container.innerHTML = '<p class="error">Błąd pobierania szczegółowych danych.</p>';
+        } finally {
+            this._isLoadingStats = false;
         }
     }
 
@@ -158,6 +255,34 @@ export class StatisticsPage {
     static createLoginChart(data, canvasId) {
         const canvas = document.getElementById(canvasId);
         if (!canvas) return;
+        
+        // Remove existing chart first
+        const existing = Chart.getChart(canvasId);
+        if (existing) existing.destroy();
+
+        if (!data || data.length === 0) {
+            const parent = canvas.parentElement;
+            // Clear any previous placeholder
+            const oldPlaceholder = parent.querySelector('.no-data-placeholder');
+            if(oldPlaceholder) oldPlaceholder.remove();
+
+            // Hide canvas
+            canvas.style.display = 'none';
+
+            // Show placeholder
+            const placeholder = document.createElement('div');
+            placeholder.className = 'no-data-placeholder';
+            placeholder.innerHTML = `<p style="text-align:center; padding: 20px;">Brak danych logowania dla wybranego okresu.</p>`;
+            parent.appendChild(placeholder);
+            return;
+        }
+
+        // Ensure canvas is visible (if previously hidden)
+        canvas.style.display = 'block';
+        const parent = canvas.parentElement;
+        const oldPlaceholder = parent.querySelector('.no-data-placeholder');
+        if(oldPlaceholder) oldPlaceholder.remove();
+
         const ctx = canvas.getContext('2d');
 
         // Prepare readable month-year labels (safe parsing)
@@ -167,23 +292,22 @@ export class StatisticsPage {
             return `${MONTH_NAMES_PL[monthIndex] ?? ''} ${year}`.trim();
         });
 
+
         // Dynamic canvas height so chart remains readable on different datasets/sizes
         const perItemHeight = 36;
         const padding = 40;
         const minHeight = 160;
         const maxHeight = 600;
         const computedHeight = Math.max(minHeight, Math.min(maxHeight, labels.length * perItemHeight + padding));
+        
+        // Ustaw rozmiar tylko przez CSS, NIE przez atrybuty canvas
         canvas.style.width = '100%';
         canvas.style.height = `${computedHeight}px`;
 
-        // Destroy any existing chart instance on this canvas (Chart.js v3+)
-        const existing = Chart.getChart(canvasId);
-        if (existing) existing.destroy();
-
         // Create subtle gradient for fill to improve readability
         const gradient = ctx.createLinearGradient(0, 0, 0, computedHeight);
-        gradient.addColorStop(0, 'rgba(75,192,192,0.35)');
-        gradient.addColorStop(1, 'rgba(75,192,192,0.04)');
+        gradient.addColorStop(0, this.COLOR_PALETTE[1]);
+        gradient.addColorStop(1, this.COLOR_PALETTE[2]);
 
         const loginCounts = data.map(entry => entry.logins);
 
@@ -194,7 +318,7 @@ export class StatisticsPage {
                 datasets: [{
                     label: 'Liczba logowań',
                     data: loginCounts,
-                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderColor: this.COLOR_PALETTE[3],
                     backgroundColor: gradient,
                     fill: true,
                     tension: 0.25,
@@ -203,9 +327,8 @@ export class StatisticsPage {
                 }]
             },
             options: {
-                // default text color for Chart.js v3+; ensures most text is #ebebeb
-                color: '#ebebeb',
-                responsive: true,
+                color: this.COLOR_PALETTE[0],
+                responsive: false, // WYŁĄCZ responsive aby zapobiec pętli resize
                 maintainAspectRatio: false,
                 interaction: {
                     mode: 'index',
@@ -215,14 +338,15 @@ export class StatisticsPage {
                     legend: {
                         position: 'top',
                         labels: {
-                            color: '#ebebeb'
+                            color: this.COLOR_PALETTE[0]
                         }
                     },
                     tooltip: {
                         mode: 'index',
                         intersect: false,
-                        titleColor: '#ebebeb',
-                        bodyColor: '#ebebeb'
+                        titleColor: this.COLOR_PALETTE[0],
+                        bodyColor: this.COLOR_PALETTE[0],
+                        backgroundColor: this.COLOR_PALETTE[14] 
                     }
                 },
                 scales: {
@@ -231,14 +355,14 @@ export class StatisticsPage {
                             autoSkip: true,
                             maxRotation: 45,
                             minRotation: 0,
-                            color: '#ebebeb'
+                            color: this.COLOR_PALETTE[0]
                         },
-                        grid: { display: false, color: 'rgba(235,235,235,0.06)' }
+                        grid: { display: false, color: this.COLOR_PALETTE[4] }
                     },
                     y: {
                         beginAtZero: true,
-                        ticks: { precision: 0, color: '#ebebeb' },
-                        grid: { color: 'rgba(235,235,235,0.06)' }
+                        ticks: { precision: 0, color: this.COLOR_PALETTE[0] },
+                        grid: { color: this.COLOR_PALETTE[4] }
                     }
                 }
             }
@@ -249,6 +373,40 @@ export class StatisticsPage {
     static createQuizCompletionChart(data, canvasId) {
         const canvas = document.getElementById(canvasId);
         if (!canvas) return;
+
+        // Filter out quizzes with no completions
+        const filteredData = (data || []).filter(entry => Number(entry.completed) > 0);
+
+        // Remove existing
+        const existing = Chart.getChart(canvasId);
+        if (existing) existing.destroy();
+
+        if (filteredData.length === 0) {
+            const parent = canvas.parentElement;
+            const oldPlaceholder = parent.querySelector('.no-data-placeholder');
+            if(oldPlaceholder) oldPlaceholder.remove();
+
+            canvas.style.display = 'none';
+
+            const placeholder = document.createElement('div');
+            placeholder.className = 'no-data-placeholder';
+            placeholder.style.textAlign = 'center';
+            placeholder.style.padding = '20px';
+            placeholder.innerHTML = `
+                <p>Brak rozwiązanych quizów.</p>
+                <button class="btn-primary" onclick="window.history.pushState(null,'','/dashboard/quizzes'); window.dispatchEvent(new Event('popstate'));">Rozwiąż quiz</button>
+            `;
+            parent.appendChild(placeholder);
+            return;
+        }
+        
+        // Use filteredData
+        data = filteredData;
+
+        canvas.style.display = 'block';
+        const parent = canvas.parentElement;
+        parent.querySelectorAll('.no-data-placeholder').forEach(el => el.remove());
+
         const ctx = canvas.getContext('2d');
 
         const labels = data.map(entry => entry.quizName);
@@ -265,10 +423,6 @@ export class StatisticsPage {
         canvas.style.height = `${computedHeight}px`;
         canvas.style.width = '100%';
 
-        // destroy existing chart on this canvas (Chart.js v3+)
-        const existing = Chart.getChart(canvasId);
-        if (existing) existing.destroy();
-
         new Chart(ctx, {
             type: 'bar',
             data: {
@@ -277,18 +431,18 @@ export class StatisticsPage {
                     {
                         label: 'Ilość trzykrotnie pod rząd udzielonych poprawnie odpowiedzi',
                         data: completedCounts,
-                        backgroundColor: 'rgba(148, 54, 235, 0.7)'
+                        backgroundColor: this.COLOR_PALETTE[5]
                     },
                     {
                         label: 'Ilość wszystkich pytań',
                         data: totalCounts,
-                        backgroundColor: 'rgba(255, 206, 86, 0.7)'
+                        backgroundColor: this.COLOR_PALETTE[6]
                     }
                 ]
             },
             options: {
                 // default text color for all chart text
-                color: '#ebebeb',
+                color: this.COLOR_PALETTE[0],
                 indexAxis: 'y',
                 responsive: true,
                 maintainAspectRatio: false,
@@ -304,16 +458,16 @@ export class StatisticsPage {
                         beginAtZero: true,
                         ticks: {
                             precision: 0,
-                            color: '#ebebeb'
+                            color: this.COLOR_PALETTE[0]
                         },
                         grid: {
-                            color: 'rgba(235,235,235,0.06)'
+                            color: this.COLOR_PALETTE[4]
                         }
                     },
                     y: {
                         ticks: {
                             autoSkip: false,
-                            color: '#ebebeb'
+                            color: this.COLOR_PALETTE[0]
                         },
                         grid: {
                             display: false
@@ -324,12 +478,13 @@ export class StatisticsPage {
                     legend: {
                         position: 'top',
                         labels: {
-                            color: '#ebebeb'
+                            color: this.COLOR_PALETTE[0]
                         }
                     },
                     tooltip: {
-                        titleColor: '#ebebeb',
-                        bodyColor: '#ebebeb'
+                        titleColor: this.COLOR_PALETTE[0],
+                        bodyColor: this.COLOR_PALETTE[0],
+                        backgroundColor: this.COLOR_PALETTE[14] 
                     }
                 }
             }
@@ -423,7 +578,7 @@ export class StatisticsPage {
             if (existing) existing.destroy();
             const parent = canvas.parentElement;
             if (parent) {
-                parent.innerHTML = '<p class="no-data" style="color:#ebebeb;margin:8px 0;">Brak dopasowań do branż — brak sensownych danych do wykresu.</p>';
+                parent.innerHTML = `<p class="no-data" style="color:${this.COLOR_PALETTE[0]};margin:8px 0;">Brak dopasowań do branż — brak sensownych danych do wykresu.</p>`;
             }
             return;
         }
@@ -433,8 +588,8 @@ export class StatisticsPage {
         const labels = filtered.map(b => b.key);
         const dataScores = scores;
 
-        const bgColor = 'rgba(54,162,235,0.22)';
-        const borderColor = 'rgba(54,162,235,0.9)';
+        const bgColor = this.COLOR_PALETTE[7];
+        const borderColor = this.COLOR_PALETTE[8];
         const pointColors = dataScores.map((v, i) => `hsla(${(i * 37) % 360},70%,45%,1)`);
 
         const baseH = Math.max(340, Math.min(700, labels.length * 40));
@@ -460,7 +615,7 @@ export class StatisticsPage {
                 }]
             },
             options: {
-                color: '#ebebeb',
+                color: this.COLOR_PALETTE[0],
                 responsive: true,
                 maintainAspectRatio: false,
                 elements: { line: { tension: 0.28 } },
@@ -469,19 +624,20 @@ export class StatisticsPage {
                         beginAtZero: true,
                         min: 0,
                         max: 100,
-                        ticks: { display: false, color: '#ebebeb' },
-                        grid: { color: 'rgba(160, 160, 160, 0.15)' },
-                        pointLabels: { font: { size: 12 }, color: '#ebebeb' }
+                        ticks: { display: false, color: this.COLOR_PALETTE[0] },
+                        grid: { color: this.COLOR_PALETTE[9] },
+                        pointLabels: { font: { size: 12 }, color: this.COLOR_PALETTE[0] }
                     }
                 },
                 plugins: {
                     legend: {
                         position: 'top',
-                        labels: { color: '#ebebeb' }
+                        labels: { color: this.COLOR_PALETTE[0] }
                     },
                     tooltip: {
-                        titleColor: '#ebebeb',
-                        bodyColor: '#ebebeb',
+                        titleColor: this.COLOR_PALETTE[0],
+                        bodyColor: this.COLOR_PALETTE[0],
+                        backgroundColor: this.COLOR_PALETTE[14],
                         callbacks: {
                             title: items => items[0].label,
                             label: ctxItem => {
@@ -510,6 +666,44 @@ export class StatisticsPage {
     static createCoursesCompletionChart(data, canvasId) {
         const canvas = document.getElementById(canvasId);
         if (!canvas) return;
+
+        // Filter out courses with no completions
+        const filteredData = (data || []).filter(entry => Number(entry.completed) > 0);
+
+        // Destroy existing
+        const existing = Chart.getChart(canvasId);
+        if (existing) existing.destroy();
+
+        if (filteredData.length === 0) {
+            const parent = canvas.parentElement;
+            parent.querySelectorAll('.no-data-placeholder').forEach(el => el.remove());
+            
+            canvas.style.display = 'none';
+            const placeholder = document.createElement('div');
+            placeholder.className = 'no-data-placeholder';
+            placeholder.style.textAlign = 'center';
+            placeholder.style.padding = '20px';
+            placeholder.innerHTML = `
+                <p>Brak rozpoczętych kursów.</p>
+                <button class="btn-primary" style="background-color:var(--btn-primary-bg, #007bff); color:#fff; border:none; padding:8px 16px; border-radius:4px; cursor:pointer;" >Zobacz kursy</button>
+            `;
+            parent.appendChild(placeholder);
+             const btn = placeholder.querySelector('button');
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                window.history.pushState(null, '', '/dashboard/courses');
+                window.dispatchEvent(new Event('popstate'));
+            });
+            return;
+        }
+
+        // Use filteredData
+        data = filteredData;
+
+        canvas.style.display = 'block';
+        const parent = canvas.parentElement;
+        parent.querySelectorAll('.no-data-placeholder').forEach(el => el.remove());
+
         const ctx = canvas.getContext('2d');
 
         // Raw labels and percentage calculation
@@ -533,16 +727,11 @@ export class StatisticsPage {
         canvas.style.height = `${computedHeight}px`;
 
         // Make parent scrollable if there are too many items
-        const parent = canvas.parentElement;
         if (parent) {
             parent.style.maxHeight = `${maxH}px`;
             parent.style.overflowY = labels.length * perItem > maxH ? 'auto' : 'visible';
             parent.style.paddingRight = '8px'; // avoid clipping scrollbar over canvas
         }
-
-        // Destroy existing chart instance
-        const existing = Chart.getChart(canvasId);
-        if (existing) existing.destroy();
 
         // Colors for bars
         const colors = labels.map((_, i) => `hsla(${(i * 37) % 360}, 65%, 55%, 0.75)`);
@@ -563,8 +752,7 @@ export class StatisticsPage {
                 }]
             },
             options: {
-                // ensure all chart text is #ebebeb
-                color: '#ebebeb',
+                color: this.COLOR_PALETTE[0],
                 indexAxis: 'y',
                 responsive: true,
                 maintainAspectRatio: false,
@@ -575,16 +763,16 @@ export class StatisticsPage {
                         ticks: {
                             callback: value => `${value}%`,
                             precision: 0,
-                            color: '#ebebeb'
+                            color: this.COLOR_PALETTE[0]
                         },
-                        grid: { display: true, color: 'rgba(235,235,235,0.06)' }
+                        grid: { display: true, color: this.COLOR_PALETTE[4] }
                     },
                     y: {
                         ticks: {
                             autoSkip: false,
                             maxRotation: 0,
                             minRotation: 0,
-                            color: '#ebebeb'
+                            color: this.COLOR_PALETTE[0]
                         },
                         grid: { display: false }
                     }
@@ -592,11 +780,12 @@ export class StatisticsPage {
                 plugins: {
                     legend: {
                         display: false,
-                        labels: { color: '#ebebeb' }
+                        labels: { color: this.COLOR_PALETTE[0] }
                     },
                     tooltip: {
-                        titleColor: '#ebebeb',
-                        bodyColor: '#ebebeb',
+                        titleColor: this.COLOR_PALETTE[0],
+                        bodyColor: this.COLOR_PALETTE[0],
+                        backgroundColor: this.COLOR_PALETTE[14],
                         callbacks: {
                             // show full course name in tooltip title
                             title: items => {
@@ -681,7 +870,7 @@ static tasksChartCompletionStatusByStudent(canvasId = "tasksStatusChart", tasks 
             if (existing) existing.destroy();
             const parent = canvas.parentElement;
             if (parent) {
-                parent.innerHTML = '<p class="no-data" style="color:#ebebeb;margin:8px 0;">Brak danych zadań do wyświetlenia.</p>';
+                parent.innerHTML = `<p class="no-data" style="color:${this.COLOR_PALETTE[0]};margin:8px 0;">Brak danych zadań do wyświetlenia.</p>`;
             }
             return;
         }
@@ -718,21 +907,21 @@ static tasksChartCompletionStatusByStudent(canvasId = "tasksStatusChart", tasks 
                     {
                         label: 'Ukończone (%)',
                         data: completedData,
-                        backgroundColor: 'rgba(76,175,80,0.85)',
-                        borderColor: 'rgba(56,142,60,1)',
+                        backgroundColor: this.COLOR_PALETTE[10],
+                        borderColor: this.COLOR_PALETTE[11],
                         borderWidth: 1
                     },
                     {
                         label: 'Pozostałe (%)',
                         data: remainingData,
-                        backgroundColor: 'rgba(220,53,69,0.28)',
-                        borderColor: 'rgba(220,53,69,0.9)',
+                        backgroundColor: this.COLOR_PALETTE[12],
+                        borderColor: this.COLOR_PALETTE[13],
                         borderWidth: 1
                     }
                 ]
             },
             options: {
-                color: '#ebebeb',
+                color: this.COLOR_PALETTE[0],
                 indexAxis: 'y',
                 responsive: true,
                 maintainAspectRatio: false,
@@ -741,23 +930,24 @@ static tasksChartCompletionStatusByStudent(canvasId = "tasksStatusChart", tasks 
                         stacked: true,
                         beginAtZero: true,
                         max: 100,
-                        ticks: { callback: v => `${v}%`, color: '#ebebeb', precision: 0 },
-                        grid: { color: 'rgba(235,235,235,0.06)' }
+                        ticks: { callback: v => `${v}%`, color: this.COLOR_PALETTE[0], precision: 0 },
+                        grid: { color: this.COLOR_PALETTE[4] }
                     },
                     y: {
                         stacked: true,
-                        ticks: { color: '#ebebeb', autoSkip: false },
+                        ticks: { color: this.COLOR_PALETTE[0], autoSkip: false },
                         grid: { display: false }
                     }
                 },
                 plugins: {
                     legend: {
                         position: 'top',
-                        labels: { color: '#ebebeb' }
+                        labels: { color: this.COLOR_PALETTE[0] }
                     },
                     tooltip: {
-                        titleColor: '#ebebeb',
-                        bodyColor: '#ebebeb',
+                        titleColor: this.COLOR_PALETTE[0],
+                        bodyColor: this.COLOR_PALETTE[0],
+                        backgroundColor: this.COLOR_PALETTE[14] ,
                         callbacks: {
                             title: items => items[0].label || '',
                             label: ctxItem => {

@@ -114,29 +114,59 @@ export class UsersPage {
   }
 
   static renderUsersList(container, usersData) {
-    const headers = ["Lp.", "Imię", "Drugie imię", "Nazwisko", "Email", "Rola", "Klasa", "Akcje"];
-    const data = usersData.map((user, index) => [
-      index + 1,
-      user[0],
-      user[1],
-      user[2],
-      user[3],
-      user[5], // Role
-      user[6] || "-", // Class
-      {
-        type: "actions",
-        actions: [
+    const headers = ["Lp.", "Imię", "Drugie imię", "Nazwisko", "Login", "Rola", "Klasa", "Akcje"];
+    const data = usersData.map((user, index) => {
+        const [id, firstName, middleName, lastName, login, role, className] = user;
+        
+        return [
+          index + 1,
+          firstName,
+          middleName,
+          lastName,
+          login,
+          role, 
+          className || "-", 
           {
-            label: "Edytuj",
-            action: () => alert(`Edycja użytkownika: ${user[0]} ${user[2]}`),
+            type: "actions",
+            actions: [
+              {
+                label: "Resetuj Hasło",
+                action: async () => {
+                    if(confirm(`Czy zresetować hasło dla użytkownika ${firstName} ${lastName}?`)) {
+                        try {
+                            const res = await DataService.resetUserPassword(id);
+                            if(res.success) alert("Hasło zresetowane.");
+                            else alert("Błąd: " + (res.error || "Nieznany"));
+                        } catch(e) { console.error(e); alert("Wystąpił błąd."); }
+                    }
+                },
+              },
+              {
+                label: "Zmień Klasę",
+                action: async () => {
+                    // Simple prompt for now
+                    const newClass = prompt("Podaj nową klasę:", className || "");
+                    if(newClass !== null && newClass !== className) {
+                         try {
+                            const res = await DataService.changeUserClass(id, newClass);
+                             if(res.success) {
+                                 alert("Klasa zmieniona.");
+                                 // Optional: reload page or update row
+                                 location.reload(); 
+                             }
+                            else alert("Błąd: " + (res.error || "Nieznany"));
+                        } catch(e) { console.error(e); alert("Wystąpił błąd."); }
+                    }
+                },
+              },
+              {
+                label: "Usuń",
+                action: () => alert(`Funkcja usuwania w przygotowaniu: ${firstName} ${lastName}`),
+              },
+            ],
           },
-          {
-            label: "Usuń",
-            action: () => alert(`Usuwanie użytkownika: ${user[0]} ${user[2]}`),
-          },
-        ],
-      },
-    ]);
+        ];
+    });
 
     const table = UIFacade.createTable(data, headers);
     container.appendChild(table);

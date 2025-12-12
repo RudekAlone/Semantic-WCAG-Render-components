@@ -20,7 +20,6 @@
     flex-grow: 1;
     flex-basis: calc(20% - 10px);
     text-align: center;
-    text-shadow: 0 0 2px #000;
     transition: 400ms background-color, 200ms transform ease-in-out, 0 outline;
   }
   & button:focus,
@@ -29,11 +28,13 @@
     transform: scale(1.04);
     border-radius: 0;
     transition: transform 0.2s;
-    text-shadow: 1px 2px 0px #000;
     z-index: 1;
     transition: 400ms background-color, 200ms transform ease-in-out, 0 outline;
-
   }
+& button:hover *{
+    text-transform: none;
+    transform: scale(2);
+}
 
   @include respond-to(xl) {
     button {

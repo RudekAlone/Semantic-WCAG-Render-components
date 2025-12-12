@@ -121,7 +121,7 @@ export class TasksStatusPage {
           taskItem.textContent = task.name;
           tasksList.appendChild(taskItem);
           taskItem.addEventListener("click", () => {
-            this.renderTaskStatus(studentsTasksStatus, task.name);
+            this.renderTaskStatus(studentsTasksStatus, task.name, className);
           });
         });
         contentArea.appendChild(tasksList);
@@ -135,11 +135,11 @@ export class TasksStatusPage {
     }
   }
 
-  static async renderTaskStatus(container, taskName) {
+  static async renderTaskStatus(container, taskName, className) {
     container.innerHTML = '<div class="loader">Ładowanie statusów...</div>';
     
     try {
-        const studentsTasksData = await DataService.getTaskStatus(taskName);
+        const studentsTasksData = await DataService.getTaskStatus(taskName, className);
         
         container.innerHTML = "";
         const title = document.createElement("h3");
@@ -148,14 +148,14 @@ export class TasksStatusPage {
         
         const headers = ["Nr", "Imię", "Nazwisko", "Status"];
         const elements = [
-          ...studentsTasksData.map((status) => [
-            status.userNumber,
-            status.userName,
-            status.userLastName,
-            { type: "checkbox", value: [status.status,"Brak dostępu - zadanie po terminie"] },
+          ...studentsTasksData.map((status, index) => [
+            status.id || index + 1,
+            status.first_name,
+            status.last_name,
+            { type: "checkbox", value: [status.status === "1", "Zaznacz jako ukończone"] }, // Jeśli "1" to checked
     
           ]),
-        ]
+        ];
     
         const statusList = RenderTable.renderResponsiveTable(elements, headers);
     

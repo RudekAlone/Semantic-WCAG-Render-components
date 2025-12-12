@@ -76,16 +76,20 @@ export class StudentsTasks{
         contentSection.id = "student-tasks-content";
 
         try {
+            const allTasks = await DataService.getTasks();
             let tasksData = [];
-            if(subjectId === "aso"){
-                tasksData = await DataService.getStudentTasksASO();
-                info.textContent = `Wyświetlanie zadań dla klasy ${classId.toUpperCase()} i przedmiotu ASO.`;
-            } else if(subjectId === "bd"){
-                tasksData = await DataService.getStudentTasksBD();
-                info.textContent = `Wyświetlanie zadań dla klasy ${classId.toUpperCase()} i przedmiotu BD.`;
+            
+            if(subjectId === "all") {
+                 tasksData = allTasks;
+                 info.textContent = `Wyświetlanie zadań dla klasy ${classId.toUpperCase()} (Wszystkie przedmioty).`;
             } else {
+                 tasksData = allTasks.filter(t => t.subject === subjectId);
+                 info.textContent = `Wyświetlanie zadań dla klasy ${classId.toUpperCase()} i przedmiotu ${subjectId.toUpperCase()}.`;
+            }
+
+            if (tasksData.length === 0) {
                 container.innerHTML = "";
-                info.textContent = `Brak dostępnych danych dla wybranego przedmiotu.`;
+                info.textContent = `Brak dostępnych zadań dla wybranego przedmiotu.`;
                 container.appendChild(info);
                 return;
             }
@@ -94,12 +98,12 @@ export class StudentsTasks{
             container.appendChild(info);
             container.appendChild(contentSection);
 
-            const tasksList = this.renderSubjectList(tasksData);
+            const tasksList = this.renderSubjectList(tasksData, classId);
             contentSection.appendChild(tasksList);
 
             const tableStatus = document.createElement("section");
             tableStatus.id = "student-tasks-status";
-            tableStatus.appendChild(document.createTextNode("Wybierz zadanie, aby zobaczyć statusy uczniów."));
+            tableStatus.innerHTML = "<p>Wybierz zadanie, aby zobaczyć statusy uczniów.</p>";
             contentSection.appendChild(tableStatus);
             container.appendChild(tableStatus);
 
@@ -110,10 +114,9 @@ export class StudentsTasks{
 
     }
 
-    static renderSubjectList(tasksData) {
-
+    static renderSubjectList(tasksData, classId) {
         const ul = document.createElement("ul");
-        // Utworzenie elementów listy dla każdego zadania niepowtarzając nazwy
+        // Unique names
         const tasksName = [...new Set(tasksData.map((task) => task.name))];
 
         tasksName.forEach((name) => {
@@ -121,14 +124,22 @@ export class StudentsTasks{
             li.textContent = name;
             li.tabIndex = 0;
             ul.appendChild(li);
-            li.addEventListener("click", () => {
-                const completionPercentages = this.calculateCompletionPercentageTasksByStudent(tasksData);
+            
+            li.addEventListener("click", async () => {
                 const tableStatus = document.getElementById("student-tasks-status");
-                tableStatus.innerHTML = ""; // Clear previous content
-                const filteredTasks = tasksData.filter((task) => task.name === name);
-                const table = this.renderTableStatusByTask(filteredTasks, completionPercentages);
-                tableStatus.appendChild(table);
+                tableStatus.innerHTML = '<div class="loader">Ładowanie statusów...</div>';
+                
+                try {
+                    const statusData = await DataService.getTaskStatus(name, classId);
+                    tableStatus.innerHTML = ""; 
+                    const table = this.renderTableStatusByTask(statusData, name);
+                    tableStatus.appendChild(table);
+                } catch(e) {
+                    console.error(e);
+                    tableStatus.innerHTML = '<p class="error">Błąd pobierania statusów.</p>';
+                }
             });
+            
             li.addEventListener("keypress", (e) => {
                 if (e.key === "Enter") {
                     li.click();
@@ -137,46 +148,24 @@ export class StudentsTasks{
         });
 
         return ul;
-
     }
 
-    static calculateCompletionPercentageTasksByStudent(taskData) {
-        const studentTasksCount = {};
-        const studentCompletedTasksCount = {};
-        taskData.forEach((task) => {
-            const studentKey = `${task.studentName} ${task.studentMiddleName} ${task.studentLastName}`;
-            if (!studentTasksCount[studentKey]) {
-                studentTasksCount[studentKey] = 0;
-                studentCompletedTasksCount[studentKey] = 0;
-            }
-            studentTasksCount[studentKey]++;
-            if (task.status === "1") {
-                studentCompletedTasksCount[studentKey]++;
-            }
-        });
+    // Removed calculateCompletionPercentageTasksByStudent as we cannot compute it efficiently without all data
 
-        const studentCompletionPercentage = {};
-        for (const studentKey in studentTasksCount) {
-            const totalTasks = studentTasksCount[studentKey];
-            const completedTasks = studentCompletedTasksCount[studentKey];
-            const percentage = ((completedTasks / totalTasks) * 100).toFixed(2);
-            studentCompletionPercentage[studentKey] = percentage;
-        }
-        return studentCompletionPercentage;
-    }
+    static renderTableStatusByTask(taskData, taskName) {
+        // taskData is array of { id, first_name, last_name, status, class_name }
+        
+        const headers = ["Nr", "Imię", "Nazwisko", "Klasa", "Status", "Termin"];
+        const rows = taskData.map((s, index) => [
+            s.id || index + 1,
+            s.first_name,
+            s.last_name,
+            s.class_name || "-",
+            s.status === "1" ? "🟢 Zrobione" : (s.status === "0" ? "🟡 W trakcie" : "🔴 Przeterminowane"),
+            "-" // Termin not in getTaskStatus result, only in getStudentTasks. Can be fetched or ignored.
+        ]);
 
-    static renderTableStatusByTask(taskData, completionPercentages) {
-        const table = UIFacade.createTable(
-            taskData.map((task) => [
-                task.studentName,
-                task.studentMiddleName,
-                task.studentLastName,
-                task.status === "1" ? "🟢 Zrobione" : task.status === "0" ? "🟡 W trakcie" : "🔴 Nie rozpoczęte",
-                task.deadline,
-                completionPercentages[`${task.studentName} ${task.studentMiddleName} ${task.studentLastName}`] + "%"
-            ]),
-            ["Imię", "Drugie imię", "Nazwisko", "Status", "Termin", "Procent ukończenia zadań z tego przedmiotu"]
-        );
+        const table = UIFacade.createTable(rows, headers);
         return table;
     }
 }

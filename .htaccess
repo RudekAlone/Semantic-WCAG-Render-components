@@ -10,5 +10,8 @@ RewriteRule ^ - [L]
 RewriteCond %{REQUEST_URI} ^/(css|js|images|favicons)/
 RewriteRule ^ - [L]
 
+# Przekieruj ścieżki dashboardu do dashboard.html
+RewriteRule ^dashboard(/.*)?$ dashboard.html [L]
+
 # Przekieruj wszystko inne do backend/core/api.php
 RewriteRule ^ backend/core/api.php [L]

@@ -24,30 +24,24 @@ class CourseService
             return "Course not found";
         }
 
-        if ($course['status'] === 'public') {
-            // dostęp dla wszystkich
-            return $this->renderCourse($course);
-        }
-
-        // kurs prywatny → sprawdź rolę
-        if ($this->auth->isLoggedIn() && in_array($_SESSION['role'], ['teacher', 'admin'])) {
-            return $this->renderCourse($course);
-        }
-
-        http_response_code(403);
-        return "Access denied";
+        // Wszystkie kursy są publiczne - możesz dodać kolumnę 'status' później jeśli potrzebne
+        return $this->renderCourse($course);
     }
 
     private function renderCourse(array $course)
     {
+        // Używamy 'name' zamiast 'title' i 'hash' zamiast 'slug'
+        $courseName = htmlspecialchars($course['name'] ?? 'Kurs');
+        $courseHash = htmlspecialchars($course['hash'] ?? '');
+        
         return <<<HTML
 <!DOCTYPE html>
-<html lang="pl">
+<html lang="pl" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
-    <title>Ładowanie kursu {$course['title']}</title>
+    <title>Ładowanie kursu {$courseName}</title>
     <link rel="stylesheet" href="/css/style.css">
         <link
       rel="stylesheet"
@@ -68,7 +62,7 @@ class CourseService
     </h1>
   </header>
   <main class="course-page">
-    <span id="course-slug" style="display:none;">{$course['slug']}</span>
+    <span id="course-slug" style="display:none;">{$courseHash}</span>
   </main>
     <footer>
     <p>&copy; 2026 Koala-V</p>

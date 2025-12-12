@@ -32,7 +32,7 @@ export class CoursesPage {
             const courseCard = UIFacade.createCourseCard(
               course.name,
               course.img, 
-              course.hash
+              `courses/${course.hash}`
             );
             coursesList.appendChild(courseCard);
           });

@@ -42,7 +42,7 @@ export class TasksPage {
   static async _loadDataAndRender(container) {
     try {
       const [tasks, subjectNames, statusMap] = await Promise.all([
-        DataService.getTasks(),
+        DataService.getAllStudentTasks(),
         DataService.getSubjectNames(),
         DataService.getStatusMap()
       ]);
@@ -81,24 +81,10 @@ export class TasksPage {
             "secondary",
             "button",
             () => {
-              const filteredTasks = tasks.filter(
-                (task) => task.subject === option.value
-              );
-              listTasksSection.innerHTML = "";
-              const buttons = navSubjectSection.querySelectorAll("button");
-              buttons.forEach((btn) => btn.classList.remove("active"));
-              button.classList.add("active");
-
-              // set url as #subject-value
-              history.replaceState(
-                null,
-                "",
-                window.location.pathname + `#tasks-${option.value}`
-              );
-
-              listTasksSection.appendChild(
-                this.renderTaskListElements(filteredTasks, taskPreviewSection, statusMap)
-              );
+              this.activateSubject(option.value, tasks, listTasksSection, navSubjectSection, taskPreviewSection, statusMap);
+              // Update URL without reload
+              const newUrl = `/dashboard/tasks/${option.value}`;
+              history.pushState({ pageId: 'tasks', param: option.value }, "", newUrl);
             }
           );
           button.dataset.subject = option.value;
@@ -106,28 +92,55 @@ export class TasksPage {
         });
       }
 
-      // Initial load
-      const hash = window.location.hash;
-      let initialSubject = subjects[0];
+      // Initial load based on URL path or default
+      const pathParts = window.location.pathname.split('/');
+      // assumed path /dashboard/tasks/{subject}
+      // parts: ["", "dashboard", "tasks", "subject"]
+      let initialSubject = null;
+      if (pathParts.length >= 4 && pathParts[2] === 'tasks') {
+          initialSubject = pathParts[3];
+      }
 
-      if (hash.startsWith("#zadania-")) {
-        initialSubject = hash.replace("#zadania-", "");
+      // Fallback for Hash (just in case)
+      if (!initialSubject && window.location.hash.includes('tasks-')) {
+          initialSubject = window.location.hash.split('tasks-')[1];
+      }
+
+      if (initialSubject && subjects.includes(initialSubject)) {
         const button = navSubjectSection.querySelector(
-          "button[data-subject='" + initialSubject + "']"
+          `button[data-subject='${initialSubject}']`
         );
         if (button) {
-          button.click();
+           this.activateSubject(initialSubject, tasks, listTasksSection, navSubjectSection, taskPreviewSection, statusMap);
         } else {
-          navSubjectSection.querySelector("button")?.click();
+             // Fallback if subject from URL not found (e.g. permission issue or typo)
+             this.activateSubject(subjects[0], tasks, listTasksSection, navSubjectSection, taskPreviewSection, statusMap);
         }
       } else {
-        navSubjectSection.querySelector("button")?.click();
+         this.activateSubject(subjects[0], tasks, listTasksSection, navSubjectSection, taskPreviewSection, statusMap);
       }
 
     } catch (error) {
       console.error("Błąd ładowania zadań:", error);
       container.innerHTML = '<p class="error">Nie udało się pobrać listy zadań.</p>';
     }
+  }
+
+  static activateSubject(subjectValue, tasks, listTasksSection, navSubjectSection, taskPreviewSection, statusMap) {
+      const filteredTasks = tasks.filter(
+        (task) => task.subject === subjectValue
+      );
+      listTasksSection.innerHTML = "";
+      
+      const buttons = navSubjectSection.querySelectorAll("button");
+      buttons.forEach((btn) => btn.classList.remove("active"));
+      
+      const activeButton = navSubjectSection.querySelector(`button[data-subject='${subjectValue}']`);
+      if (activeButton) activeButton.classList.add("active");
+
+      listTasksSection.appendChild(
+        this.renderTaskListElements(filteredTasks, taskPreviewSection, statusMap)
+      );
   }
 
   /**

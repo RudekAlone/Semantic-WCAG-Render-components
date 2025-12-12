@@ -1,33 +1,37 @@
 /* Regular */
 @font-face {
-  font-family: "OpenDyslexic";
-  src: url("/fonts/OpenDyslexic-Regular.woff2") format("woff2"), url("/fonts/OpenDyslexic-Regular.woff") format("woff"), url("/fonts/OpenDyslexic-Regular.otf") format("opentype"), url("/fonts/OpenDyslexic-Regular.eot"); /* IE */
-  font-weight: normal;
+  font-family: "Atkinson Hyperlegible";
+  src: url("/fonts/AtkinsonHyperlegible-Regular.ttf") format("truetype");
+  font-weight: 400;
   font-style: normal;
-}
-/* Bold */
-@font-face {
-  font-family: "OpenDyslexic";
-  src: url("/fonts/OpenDyslexic-Bold.woff2") format("woff2"), url("/fonts/OpenDyslexic-Bold.woff") format("woff"), url("/fonts/OpenDyslexic-Bold.otf") format("opentype"), url("/fonts/OpenDyslexic-Bold.eot");
-  font-weight: bold;
-  font-style: normal;
+  font-display: swap;
 }
 /* Italic */
 @font-face {
-  font-family: "OpenDyslexic";
-  src: url("/fonts/OpenDyslexic-Italic.woff2") format("woff2"), url("/fonts/OpenDyslexic-Italic.woff") format("woff"), url("/fonts/OpenDyslexic-Italic.otf") format("opentype"), url("/fonts/OpenDyslexic-Italic.eot");
-  font-weight: normal;
+  font-family: "Atkinson Hyperlegible";
+  src: url("/fonts/AtkinsonHyperlegible-Italic.ttf") format("truetype");
+  font-weight: 400;
   font-style: italic;
+  font-display: swap;
+}
+/* Bold */
+@font-face {
+  font-family: "Atkinson Hyperlegible";
+  src: url("/fonts/AtkinsonHyperlegible-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
 }
 /* Bold Italic */
 @font-face {
-  font-family: "OpenDyslexic";
-  src: url("/fonts/OpenDyslexic-Bold-Italic.woff2") format("woff2"), url("/fonts/OpenDyslexic-Bold-Italic.woff") format("woff"), url("/fonts/OpenDyslexic-Bold-Italic.otf") format("opentype"), url("/fonts/OpenDyslexic-Bold-Italic.eot");
-  font-weight: bold;
+  font-family: "Atkinson Hyperlegible";
+  src: url("/fonts/AtkinsonHyperlegible-BoldItalic.ttf") format("truetype");
+  font-weight: 700;
   font-style: italic;
+  font-display: swap;
 }
-:root {
-  --text-color: #ebebeb;
+:root[data-theme=dark] {
+  --text-color: #e5ebfa;
   --background-color: #030303;
   --bg-layer-1: #161616;
   --bg-layer-2: #1d1d1d;
@@ -36,24 +40,24 @@
   --bg-gradient-1: linear-gradient(142deg, rgb(0, 140, 195) 0%, rgb(47, 187, 105) 50%, rgb(243, 227, 85) 100%);
   --bg-gradient-2: linear-gradient(90deg, rgb(155, 42, 123) 0%, rgb(199, 87, 133) 50%, rgb(237, 83, 221) 100%);
   --bg-gradient-3: linear-gradient(90deg, rgb(123, 155, 42) 0%, rgb(199, 133, 87) 50%, rgb(221, 237, 83) 100%);
-  --focus-outline-color: #00FFBF;
-  --accent-color: #009FFF;
+  --focus-outline-color: #00ffbf;
+  --accent-color: #009fff;
   --input-bg-color: #101010;
   --input-bg-color-hover: #1a1a1a;
   --input-border: 1px solid #3a3a3a;
   --input-border-hover: 1px solid #9b9b9b;
   --outline-focus: 2px solid var(--focus-outline-color);
   --outline-hover: 1px solid var(--focus-outline-color);
-  --button-bg-primary: #004C98;
-  --button-bg-secondary: #464E55;
+  --button-bg-primary: #004c98;
+  --button-bg-secondary: #464e55;
   --button-bg-tertiary: #005614;
   --button-bg-quaternary: #991825;
-  --button-bg-fifth: #68471E;
-  --button-bg-hover-primary: #113F70;
-  --button-bg-hover-secondary: #30363B;
-  --button-bg-hover-tertiary: #0E491B;
+  --button-bg-fifth: #68471e;
+  --button-bg-hover-primary: #113f70;
+  --button-bg-hover-secondary: #30363b;
+  --button-bg-hover-tertiary: #0e491b;
   --button-bg-hover-quaternary: #7e121d;
-  --button-bg-hover-fifth: #4B3418;
+  --button-bg-hover-fifth: #4b3418;
   --form-bg-color: #353535;
   --form-border: 1px solid #606060;
   --form-input-wrapper-bg-color: #444444;
@@ -79,6 +83,11 @@
   --hint-warning-border-color: #ffc400;
   --hint-danger-background-color: rgba(183, 28, 28, 0.2196078431);
   --hint-danger-border-color: #f44336;
+  --exam-item-header-bg-color: #141414;
+  --exam-passed-text-color: #8FF993;
+  --exam-failed-text-color: #FF7474;
+  --exam-empty-text-color: #C484FD;
+  /* Fonts */
   --font-family-sans: Segoe UI, Tahoma, Geneva, Verdana, sans-serif;
   --font-family-mono: Courier New, Courier, monospace;
   --font-family-gill-sans: Gill Sans, Gill Sans MT, Calibri, Trebuchet MS, sans-serif;
@@ -86,7 +95,75 @@
   --font-family-arial: Arial, Helvetica, sans-serif;
   --font-family-verdana: Verdana, Geneva, Tahoma, sans-serif;
   --font-family-comic-sans: Comic Sans MS, cursive, sans-serif;
-  --font-family-dyslexia: 'OpenDyslexic', Verdana, Geneva, Tahoma, Arial, sans-serif;
+  --font-family-atkinson-hyperlegible: 'Atkinson Hyperlegible', sans-serif;
+}
+
+:root[data-theme=light] {
+  --text-color: #121212;
+  --background-color: #ffffff;
+  --bg-layer-1: #f3f3f3;
+  --bg-layer-2: #eeeeee;
+  --bg-layer-3: #e0e0e0;
+  --bg-layer-4: #cccccc;
+  --bg-gradient-1: linear-gradient(142deg, rgb(103, 209, 255) 0%, rgb(119, 255, 171) 50%, rgb(255, 244, 145) 100%);
+  --bg-gradient-2: linear-gradient(90deg, rgb(190, 80, 150) 0%, rgb(220, 130, 160) 50%, rgb(255, 120, 240) 100%);
+  --bg-gradient-3: linear-gradient(90deg, rgb(160, 190, 80) 0%, rgb(220, 170, 120) 50%, rgb(255, 240, 120) 100%);
+  --focus-outline-color: #008060;
+  --accent-color: #0077c9;
+  --input-bg-color: #ffffff;
+  --input-bg-color-hover: #f0f0f0;
+  --input-border: 1px solid #777777;
+  --input-border-hover: 1px solid #464646;
+  --outline-focus: 3px solid var(--focus-outline-color);
+  --outline-hover: 2px solid var(--focus-outline-color);
+  --button-bg-primary: #7dbeff;
+  --button-bg-secondary: #bcc7d1;
+  --button-bg-tertiary: #78f198;
+  --button-bg-quaternary: #ffadad;
+  --button-bg-fifth: #ffde71;
+  --button-bg-hover-primary: #369aff;
+  --button-bg-hover-secondary: #85939e;
+  --button-bg-hover-tertiary: #2dc355;
+  --button-bg-hover-quaternary: #f96767;
+  --button-bg-hover-fifth: #d6ad26;
+  --form-bg-color: #ffffff;
+  --form-border: 1px solid #b0b0b0;
+  --form-input-wrapper-bg-color: #f5f5f5;
+  --hr-color: #a0a0a0;
+  --link-color: #004A6D;
+  --link-hover-color: #092ACF;
+  --link-visited-color: #71139A;
+  --link-visited-hover-color: #572f68;
+  --quiz-text-color: #333333;
+  --quiz-correct-color: #4caf50;
+  --quiz-incorrect-color: #f44336;
+  --task-text-color: #333333;
+  --task-bold-color: #00a000;
+  --task-italic-color: #00796b;
+  --task-italic-bold-color: #d84315;
+  --task-bold-italic-color: #bf360c;
+  --hint-text-color: #121212;
+  --hint-info-background-color: #e3f2fd;
+  --hint-info-border-color: #2196f3;
+  --hint-success-background-color: #e8f5e9;
+  --hint-success-border-color: #4caf50;
+  --hint-warning-background-color: #fff8e1;
+  --hint-warning-border-color: #ffc107;
+  --hint-danger-background-color: #ffebee;
+  --hint-danger-border-color: #f44336;
+  --exam-item-header-bg-color: #fff;
+  --exam-passed-text-color: #035B06;
+  --exam-failed-text-color: #A10000;
+  --exam-empty-text-color: #6E00CE;
+  /* Fonts */
+  --font-family-sans: Segoe UI, Tahoma, Geneva, Verdana, sans-serif;
+  --font-family-mono: Courier New, Courier, monospace;
+  --font-family-gill-sans: Gill Sans, Gill Sans MT, Calibri, Trebuchet MS, sans-serif;
+  --font-family-georgia: Georgia, Times New Roman, Times, serif;
+  --font-family-arial: Arial, Helvetica, sans-serif;
+  --font-family-verdana: Verdana, Geneva, Tahoma, sans-serif;
+  --font-family-comic-sans: Comic Sans MS, cursive, sans-serif;
+  --font-family-atkinson-hyperlegible: 'Atkinson Hyperlegible', sans-serif;
 }
 
 #tasks-status-page {

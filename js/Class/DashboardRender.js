@@ -33,24 +33,33 @@ export class DashboardRender {
       navPanels.appendChild(button);
     });
 
-    // delegacja zdarzeń
+    // Obsługa historii (Back/Forward)
+    window.addEventListener("popstate", () => {
+      this.handleRoute(pages, contentArea);
+    });
+
+    // delegacja zdarzeń - Intercept clicks
     navPanels.addEventListener("click", (e) => {
       const btn = e.target.closest("button[id^='nav-']");
       if (!btn) return;
-      const page = { id: btn.dataset.pageId };
-      this.urlMapping(page, contentArea);
-      this.loadPageContent(page, contentArea);
+      e.preventDefault(); // Stop default button behavior if any
+      const pageId = btn.dataset.pageId;
+      
+      this.navigateTo(pageId, null, pages, contentArea);
     });
+
+    // Obsługa środkowego przycisku myszy (nowa karta)
     navPanels.addEventListener("mousedown",  (e) => {
       if (e.button === 1) {
         const btn = e.target.closest("button[id^='nav-']");
         if (!btn) return;
-        const page = { id: btn.dataset.pageId };
-        window.open(`#${page.id}`, "_blank");
+        const pageId = btn.dataset.pageId;
+        window.open(`/dashboard/${pageId}`, "_blank");
         e.preventDefault();
       }
     });
-    this.urlMapping(pages, contentArea); // domyślna strona
+
+    this.handleRoute(pages, contentArea); // domyślna strona lub z URL
     return dashboard;
   }
 
@@ -80,68 +89,91 @@ export class DashboardRender {
       "students-tasks": () => StudentsTasks.renderStudentsTasksPage(),
       statistics: () => StatisticsPage.renderStatisticsPage(),
     };
+
     const renderer = PAGE_RENDERERS[page.id];
     if (renderer) {
       contentArea.appendChild(renderer());
       return;
     }
+
     const placeholder = document.createElement("div");
-    placeholder.innerHTML = `Strona <i>${page.name}</i> jest w budowie.`;
+    placeholder.innerHTML = `Strona <i>${page.name} (ID: ${page.id})</i> jest w budowie.`;
     contentArea.appendChild(placeholder);
   }
 
-  static urlMapping(pages, contentArea) {
-    if (Array.isArray(pages)) {
-      // jeśli przekazano listę stron, ustaw domyślną (np. pierwszą)
-      if (pages.length > 0) {
-        const hash = window.location.hash.replace("#", "");
-        if (hash.includes("tasks-")) {
-          const taskId = hash.split("tasks-")[1];
-          const page = { id: "tasks" };
+  static navigateTo(pageId, param, pages, contentArea) {
+      let url = `/dashboard/${pageId}`;
+      if (param) {
+          url += `/${param}`;
+      }
+      history.pushState({ pageId, param }, "", url);
+      
+      const page = Array.isArray(pages) ? pages.find(p => p.id === pageId) : pages;
+      if (page) {
           this.loadPageContent(page, contentArea);
-          // symuluj kliknięcie przycisku przedmiotu
-          setTimeout(() => {
+          this.handleDeepLinking(pageId, param);
+      }
+  }
+
+  static handleRoute(pages, contentArea) {
+    const path = window.location.pathname.replace('/dashboard', '').replace(/^\//, ''); // remove leading /dashboard and /
+    const parts = path.split('/');
+    const pageId = parts[0] || 'dashboard'; // Default to dashboard
+    const param = parts[1] || null;
+
+    let page;
+    if (Array.isArray(pages)) {
+        page = pages.find(p => p.id === pageId);
+        if (!page) {
+            page = pages[0]; // Fallback to first page if not found
+        }
+    } else {
+        page = pages;
+    }
+
+    if (page) {
+        this.loadPageContent(page, contentArea);
+        this.handleDeepLinking(pageId, param);
+    }
+  }
+
+  static handleDeepLinking(pageId, param) {
+      if (!param) return;
+      
+      if (pageId === 'tasks') {
+          // tasks/{taskId}
+           setTimeout(() => {
             const navSection = document.querySelector("#nav-subject-section");
-            const subjectButton = navSection.querySelector(
-              `button[data-subject="${taskId}"]`
-            );
-            if (subjectButton) {
-              subjectButton.click();
+            if (navSection) {
+                 const subjectButton = navSection.querySelector(
+                `button[data-subject="${param}"]` // param is taskId here
+                );
+                if (subjectButton) {
+                subjectButton.click();
+                }
             }
           }, 300);
-          return;
-        } else if (hash.includes("course-")) {
-          const courseName = hash.split("course-")[1];
-          const page = { id: "manage-courses" };
-          this.loadPageContent(page, contentArea);
-          // symuluj kliknięcie przycisku przedmiotu
-          setTimeout(() => {
+      } else if (pageId === 'manage-courses') {
+           // manage-courses/{courseName}
+           setTimeout(() => {
             const navCourses = document.querySelector("#courses");
-            const courseLink = navCourses.querySelector(
-              `a[href="#course-${courseName}"]`
-            );
-            if (courseLink) {
-              courseLink.click();
+            if (navCourses) {
+                 const courseLink = navCourses.querySelector(
+                `a[href$="${param}"]` // Try to match end of href or data-attribute if available. original code used href="#course-NAME"
+                // Actually the original code looked for href="#course-NAME". 
+                // We should assume the rendering of that page might still generate hash links?
+                // Or we need to update that page too? 
+                // For now, let's assume the DOM elements still have the IDs or attributes we can target. 
+                // Original: `a[href="#course-${courseName}"]`
+                // Let's use `a[data-course="${param}"]` if possible or adapt selector.
+                // Reverting to approximate original selector pattern in loose sense or keeping it.
+                 );
+                 // Since I didn't change CoursesManagerPage, it probably still puts href="#course-..."
+                 // So selector should be `a[href*="${param}"]`
+                 const legacyLink = navCourses.querySelector(`a[href*="course-${param}"]`);
+                 if (legacyLink) legacyLink.click();
             }
           }, 100);
-          return;
-        }
-        const page = pages.find((p) => p.id === hash);
-        let defaultPage;
-        if (page) {
-          this.loadPageContent(page, contentArea);
-          window.location.hash = `#${page.id}`;
-          return;
-        } else {
-          defaultPage = pages[0];
-        }
-        this.loadPageContent(defaultPage, contentArea);
-        window.location.hash = `#${defaultPage.id}`;
       }
-    } else {
-      // jeśli przekazano pojedynczą stronę
-      this.loadPageContent(pages, contentArea);
-      window.location.hash = `#${pages.id}`;
-    }
   }
 }

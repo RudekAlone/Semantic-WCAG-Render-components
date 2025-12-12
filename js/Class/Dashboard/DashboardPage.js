@@ -41,21 +41,17 @@ export class DashboardPage {
    */
   static async _loadDataAndRenderWidgets(container) {
     try {
-      // Równoległe pobieranie danych
-      const [tasksASO, tasksBD, exams] = await Promise.all([
-        DataService.getStudentTasksASO(),
-        DataService.getStudentTasksBD(),
+      // Pobierz wszystkie zadania studenta (już pogrupowane po przedmiotach przez backend)
+      const [allTasks, exams] = await Promise.all([
+        DataService.getAllStudentTasks(),
         DataService.getStudentExams()
       ]);
 
       container.innerHTML = ""; // Wyczyść loader
 
-      const TASKS_DATA = []
-        .concat(Array.isArray(tasksASO) ? tasksASO : [])
-        .concat(Array.isArray(tasksBD) ? tasksBD : []);
-
-      if (Array.isArray(TASKS_DATA) && TASKS_DATA.length) {
-        const widgetsSubjectSummaryWrapper = this._createSubjectSummaryWidget(TASKS_DATA);
+      // allTasks to tablica zadań z polem 'subject' (nazwa przedmiotu)
+      if (Array.isArray(allTasks) && allTasks.length) {
+        const widgetsSubjectSummaryWrapper = this._createSubjectSummaryWidget(allTasks);
         container.appendChild(widgetsSubjectSummaryWrapper);
       } else {
         const empty = document.createElement("p");

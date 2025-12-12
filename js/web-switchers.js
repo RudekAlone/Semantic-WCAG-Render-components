@@ -12,7 +12,20 @@ const slider = document.createElement("span");
 slider.classList.add("slider", "round");
 themeSwitcher.appendChild(slider);
 
-document.querySelector("header").appendChild(themeSwitcher);
+
+document.addEventListener("DOMContentLoaded", () => {
+  if(document.querySelector("header>button")){
+  const wrapper = document.createElement("div");
+  wrapper.style.display = "inline-block";
+  wrapper.style.marginLeft = "10px";
+  const button = document.querySelector("header>button");
+  wrapper.appendChild(themeSwitcher);
+  button.parentNode.insertBefore(wrapper, button);
+  wrapper.appendChild(button);
+}else{
+  document.querySelector("header").appendChild(themeSwitcher);
+}
+});
 
 // Obsługa przełącznika motywu
 
