@@ -36,10 +36,9 @@ class Router {
         if ($path === 'courses') {
             return ['controller' => 'Courses', 'action' => 'getAll'];
         }
-     if (preg_match('#^courses/([a-zA-Z0-9_-]+)$#', $path, $matches)) {
-    return ['controller' => 'Courses', 'action' => 'view', 'params' => $matches[1]];
-}
-
+        if (preg_match('#^courses/([a-zA-Z0-9-]+)$#', $path, $matches)) {
+            return ['controller' => 'Courses', 'action' => 'view', 'params' => $matches[1]];
+        }
 
         if ($path === 'classes') {
             return ['controller' => 'Classes', 'action' => 'getAll'];

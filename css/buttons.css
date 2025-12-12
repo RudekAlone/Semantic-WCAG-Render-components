@@ -3,11 +3,7 @@
   font-family: "Atkinson Hyperlegible";
   src: url("/fonts/AtkinsonHyperlegible-Regular.ttf") format("truetype");
   font-weight: 400;
-  font-family: "Atkinson Hyperlegible";
-  src: url("/fonts/AtkinsonHyperlegible-Regular.ttf") format("truetype");
-  font-weight: 400;
   font-style: normal;
-  font-display: swap;
   font-display: swap;
 }
 /* Italic */
@@ -15,19 +11,7 @@
   font-family: "Atkinson Hyperlegible";
   src: url("/fonts/AtkinsonHyperlegible-Italic.ttf") format("truetype");
   font-weight: 400;
-  font-family: "Atkinson Hyperlegible";
-  src: url("/fonts/AtkinsonHyperlegible-Italic.ttf") format("truetype");
-  font-weight: 400;
   font-style: italic;
-  font-display: swap;
-}
-/* Bold */
-@font-face {
-  font-family: "Atkinson Hyperlegible";
-  src: url("/fonts/AtkinsonHyperlegible-Bold.ttf") format("truetype");
-  font-weight: 700;
-  font-style: normal;
-  font-display: swap;
   font-display: swap;
 }
 /* Bold */
@@ -43,15 +27,9 @@
   font-family: "Atkinson Hyperlegible";
   src: url("/fonts/AtkinsonHyperlegible-BoldItalic.ttf") format("truetype");
   font-weight: 700;
-  font-family: "Atkinson Hyperlegible";
-  src: url("/fonts/AtkinsonHyperlegible-BoldItalic.ttf") format("truetype");
-  font-weight: 700;
   font-style: italic;
   font-display: swap;
-  font-display: swap;
 }
-:root[data-theme=dark] {
-  --text-color: #e5ebfa;
 :root[data-theme=dark] {
   --text-color: #e5ebfa;
   --background-color: #030303;
@@ -64,8 +42,6 @@
   --bg-gradient-3: linear-gradient(90deg, rgb(123, 155, 42) 0%, rgb(199, 133, 87) 50%, rgb(221, 237, 83) 100%);
   --focus-outline-color: #00ffbf;
   --accent-color: #009fff;
-  --focus-outline-color: #00ffbf;
-  --accent-color: #009fff;
   --input-bg-color: #101010;
   --input-bg-color-hover: #1a1a1a;
   --input-border: 1px solid #3a3a3a;
@@ -74,20 +50,13 @@
   --outline-hover: 1px solid var(--focus-outline-color);
   --button-bg-primary: #004c98;
   --button-bg-secondary: #464e55;
-  --button-bg-primary: #004c98;
-  --button-bg-secondary: #464e55;
   --button-bg-tertiary: #005614;
   --button-bg-quaternary: #991825;
   --button-bg-fifth: #68471e;
   --button-bg-hover-primary: #113f70;
   --button-bg-hover-secondary: #30363b;
   --button-bg-hover-tertiary: #0e491b;
-  --button-bg-fifth: #68471e;
-  --button-bg-hover-primary: #113f70;
-  --button-bg-hover-secondary: #30363b;
-  --button-bg-hover-tertiary: #0e491b;
   --button-bg-hover-quaternary: #7e121d;
-  --button-bg-hover-fifth: #4b3418;
   --button-bg-hover-fifth: #4b3418;
   --form-bg-color: #353535;
   --form-border: 1px solid #606060;
@@ -161,10 +130,10 @@
   --form-border: 1px solid #b0b0b0;
   --form-input-wrapper-bg-color: #f5f5f5;
   --hr-color: #a0a0a0;
-  --link-color: #004A6D;
-  --link-hover-color: #092ACF;
-  --link-visited-color: #71139A;
-  --link-visited-hover-color: #572f68;
+  --link-color: #1976d2;
+  --link-hover-color: #42a5f5;
+  --link-visited-color: #7b1fa2;
+  --link-visited-hover-color: #9c27b0;
   --quiz-text-color: #333333;
   --quiz-correct-color: #4caf50;
   --quiz-incorrect-color: #f44336;
@@ -194,7 +163,6 @@
   --font-family-arial: Arial, Helvetica, sans-serif;
   --font-family-verdana: Verdana, Geneva, Tahoma, sans-serif;
   --font-family-comic-sans: Comic Sans MS, cursive, sans-serif;
-  --font-family-atkinson-hyperlegible: 'Atkinson Hyperlegible', sans-serif;
   --font-family-atkinson-hyperlegible: 'Atkinson Hyperlegible', sans-serif;
 }
 
@@ -252,10 +220,6 @@ button:hover.bg-fifth {
 button:disabled {
   cursor: not-allowed;
   filter: opacity(0.6);
-}
-
-button .emoji {
-  text-shadow: 0px 0px 1px rgba(0, 0, 0, 0.8), 0px 0px 1px rgba(0, 0, 0, 0.8), 0px 0px 1px rgba(0, 0, 0, 0.8), 0px 0px 1px rgba(0, 0, 0, 0.8);
 }
 
 button .emoji {

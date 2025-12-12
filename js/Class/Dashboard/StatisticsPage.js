@@ -48,53 +48,7 @@ export class StatisticsPage {
   ];
 
 
-
-    /**
-     * Globalna pula kolorów do wykresów
-     */
-    static get COLOR_PALETTE() {
-    const theme = document.documentElement.getAttribute("data-theme");
-    return theme === "dark" ? this.COLOR_PALETTE_DARK : this.COLOR_PALETTE_LIGHT;
-  }
-    static COLOR_PALETTE_LIGHT = [
-    "rgba(33, 33, 33, 1)", // 0
-    "rgba(75,192,192,0.35)", // 1
-    "rgba(75,192,192,0.04)", // 2
-    "rgba(75, 192, 192, 1)", // 3
-    "rgba(200, 200, 200, 0.15)", // 4
-    "rgba(148, 54, 235, 0.7)", // 5
-    "rgba(255, 206, 86, 0.7)", // 6
-    "rgba(54,162,235,0.22)", // 7
-    "rgba(54,162,235,0.9)", // 8
-    "rgba(160, 160, 160, 0.15)", // 9
-    "rgba(68, 190, 72, 0.85)", // 10
-    "rgba(51, 126, 54, 1)", // 11
-    "rgba(220,53,69,0.28)", // 12
-    "rgba(220,53,69,0.9)", // 13
-    "rgba(240, 240, 240, 1)" // 14
-    ];
-
-      static COLOR_PALETTE_DARK = [
-    "rgba(235, 235, 235, 1)", // 0
-    "rgba(75,192,192,0.35)", // 1
-    "rgba(75,192,192,0.04)", // 2
-    "rgba(75, 192, 192, 1)", // 3
-    "rgba(235,235,235,0.06)", // 4
-    "rgba(148, 54, 235, 0.7)", // 5
-    "rgba(255, 206, 86, 0.7)", // 6
-    "rgba(54,162,235,0.22)", // 7
-    "rgba(54,162,235,0.9)", // 8
-    "rgba(160, 160, 160, 0.15)", // 9
-    "rgba(68, 190, 72, 0.85)", // 10
-    "rgba(51, 126, 54, 1)", // 11
-    "rgba(220,53,69,0.28)", // 12
-    "rgba(220,53,69,0.9)", // 13
-    "rgba(33, 33, 33, 1)" // 14
-  ];
-
-
     static renderStatisticsPage() {
-
 
         const container = document.createElement("section");
         container.id = "statistics-page";
@@ -354,8 +308,6 @@ export class StatisticsPage {
         const gradient = ctx.createLinearGradient(0, 0, 0, computedHeight);
         gradient.addColorStop(0, this.COLOR_PALETTE[1]);
         gradient.addColorStop(1, this.COLOR_PALETTE[2]);
-        gradient.addColorStop(0, this.COLOR_PALETTE[1]);
-        gradient.addColorStop(1, this.COLOR_PALETTE[2]);
 
         const loginCounts = data.map(entry => entry.logins);
 
@@ -366,7 +318,6 @@ export class StatisticsPage {
                 datasets: [{
                     label: 'Liczba logowań',
                     data: loginCounts,
-                    borderColor: this.COLOR_PALETTE[3],
                     borderColor: this.COLOR_PALETTE[3],
                     backgroundColor: gradient,
                     fill: true,
@@ -388,15 +339,11 @@ export class StatisticsPage {
                         position: 'top',
                         labels: {
                             color: this.COLOR_PALETTE[0]
-                            color: this.COLOR_PALETTE[0]
                         }
                     },
                     tooltip: {
                         mode: 'index',
                         intersect: false,
-                        titleColor: this.COLOR_PALETTE[0],
-                        bodyColor: this.COLOR_PALETTE[0],
-                        backgroundColor: this.COLOR_PALETTE[14] 
                         titleColor: this.COLOR_PALETTE[0],
                         bodyColor: this.COLOR_PALETTE[0],
                         backgroundColor: this.COLOR_PALETTE[14] 
@@ -409,15 +356,11 @@ export class StatisticsPage {
                             maxRotation: 45,
                             minRotation: 0,
                             color: this.COLOR_PALETTE[0]
-                            color: this.COLOR_PALETTE[0]
                         },
-                        grid: { display: false, color: this.COLOR_PALETTE[4] }
                         grid: { display: false, color: this.COLOR_PALETTE[4] }
                     },
                     y: {
                         beginAtZero: true,
-                        ticks: { precision: 0, color: this.COLOR_PALETTE[0] },
-                        grid: { color: this.COLOR_PALETTE[4] }
                         ticks: { precision: 0, color: this.COLOR_PALETTE[0] },
                         grid: { color: this.COLOR_PALETTE[4] }
                     }
@@ -489,19 +432,16 @@ export class StatisticsPage {
                         label: 'Ilość trzykrotnie pod rząd udzielonych poprawnie odpowiedzi',
                         data: completedCounts,
                         backgroundColor: this.COLOR_PALETTE[5]
-                        backgroundColor: this.COLOR_PALETTE[5]
                     },
                     {
                         label: 'Ilość wszystkich pytań',
                         data: totalCounts,
-                        backgroundColor: this.COLOR_PALETTE[6]
                         backgroundColor: this.COLOR_PALETTE[6]
                     }
                 ]
             },
             options: {
                 // default text color for all chart text
-                color: this.COLOR_PALETTE[0],
                 color: this.COLOR_PALETTE[0],
                 indexAxis: 'y',
                 responsive: true,
@@ -519,17 +459,14 @@ export class StatisticsPage {
                         ticks: {
                             precision: 0,
                             color: this.COLOR_PALETTE[0]
-                            color: this.COLOR_PALETTE[0]
                         },
                         grid: {
-                            color: this.COLOR_PALETTE[4]
                             color: this.COLOR_PALETTE[4]
                         }
                     },
                     y: {
                         ticks: {
                             autoSkip: false,
-                            color: this.COLOR_PALETTE[0]
                             color: this.COLOR_PALETTE[0]
                         },
                         grid: {
@@ -542,13 +479,9 @@ export class StatisticsPage {
                         position: 'top',
                         labels: {
                             color: this.COLOR_PALETTE[0]
-                            color: this.COLOR_PALETTE[0]
                         }
                     },
                     tooltip: {
-                        titleColor: this.COLOR_PALETTE[0],
-                        bodyColor: this.COLOR_PALETTE[0],
-                        backgroundColor: this.COLOR_PALETTE[14] 
                         titleColor: this.COLOR_PALETTE[0],
                         bodyColor: this.COLOR_PALETTE[0],
                         backgroundColor: this.COLOR_PALETTE[14] 
@@ -646,7 +579,6 @@ export class StatisticsPage {
             const parent = canvas.parentElement;
             if (parent) {
                 parent.innerHTML = `<p class="no-data" style="color:${this.COLOR_PALETTE[0]};margin:8px 0;">Brak dopasowań do branż — brak sensownych danych do wykresu.</p>`;
-                parent.innerHTML = `<p class="no-data" style="color:${this.COLOR_PALETTE[0]};margin:8px 0;">Brak dopasowań do branż — brak sensownych danych do wykresu.</p>`;
             }
             return;
         }
@@ -656,8 +588,6 @@ export class StatisticsPage {
         const labels = filtered.map(b => b.key);
         const dataScores = scores;
 
-        const bgColor = this.COLOR_PALETTE[7];
-        const borderColor = this.COLOR_PALETTE[8];
         const bgColor = this.COLOR_PALETTE[7];
         const borderColor = this.COLOR_PALETTE[8];
         const pointColors = dataScores.map((v, i) => `hsla(${(i * 37) % 360},70%,45%,1)`);
@@ -686,7 +616,6 @@ export class StatisticsPage {
             },
             options: {
                 color: this.COLOR_PALETTE[0],
-                color: this.COLOR_PALETTE[0],
                 responsive: true,
                 maintainAspectRatio: false,
                 elements: { line: { tension: 0.28 } },
@@ -698,21 +627,14 @@ export class StatisticsPage {
                         ticks: { display: false, color: this.COLOR_PALETTE[0] },
                         grid: { color: this.COLOR_PALETTE[9] },
                         pointLabels: { font: { size: 12 }, color: this.COLOR_PALETTE[0] }
-                        ticks: { display: false, color: this.COLOR_PALETTE[0] },
-                        grid: { color: this.COLOR_PALETTE[9] },
-                        pointLabels: { font: { size: 12 }, color: this.COLOR_PALETTE[0] }
                     }
                 },
                 plugins: {
                     legend: {
                         position: 'top',
                         labels: { color: this.COLOR_PALETTE[0] }
-                        labels: { color: this.COLOR_PALETTE[0] }
                     },
                     tooltip: {
-                        titleColor: this.COLOR_PALETTE[0],
-                        bodyColor: this.COLOR_PALETTE[0],
-                        backgroundColor: this.COLOR_PALETTE[14],
                         titleColor: this.COLOR_PALETTE[0],
                         bodyColor: this.COLOR_PALETTE[0],
                         backgroundColor: this.COLOR_PALETTE[14],
@@ -831,7 +753,6 @@ export class StatisticsPage {
             },
             options: {
                 color: this.COLOR_PALETTE[0],
-                color: this.COLOR_PALETTE[0],
                 indexAxis: 'y',
                 responsive: true,
                 maintainAspectRatio: false,
@@ -843,9 +764,7 @@ export class StatisticsPage {
                             callback: value => `${value}%`,
                             precision: 0,
                             color: this.COLOR_PALETTE[0]
-                            color: this.COLOR_PALETTE[0]
                         },
-                        grid: { display: true, color: this.COLOR_PALETTE[4] }
                         grid: { display: true, color: this.COLOR_PALETTE[4] }
                     },
                     y: {
@@ -853,7 +772,6 @@ export class StatisticsPage {
                             autoSkip: false,
                             maxRotation: 0,
                             minRotation: 0,
-                            color: this.COLOR_PALETTE[0]
                             color: this.COLOR_PALETTE[0]
                         },
                         grid: { display: false }
@@ -863,12 +781,8 @@ export class StatisticsPage {
                     legend: {
                         display: false,
                         labels: { color: this.COLOR_PALETTE[0] }
-                        labels: { color: this.COLOR_PALETTE[0] }
                     },
                     tooltip: {
-                        titleColor: this.COLOR_PALETTE[0],
-                        bodyColor: this.COLOR_PALETTE[0],
-                        backgroundColor: this.COLOR_PALETTE[14],
                         titleColor: this.COLOR_PALETTE[0],
                         bodyColor: this.COLOR_PALETTE[0],
                         backgroundColor: this.COLOR_PALETTE[14],
@@ -957,7 +871,6 @@ static tasksChartCompletionStatusByStudent(canvasId = "tasksStatusChart", tasks 
             const parent = canvas.parentElement;
             if (parent) {
                 parent.innerHTML = `<p class="no-data" style="color:${this.COLOR_PALETTE[0]};margin:8px 0;">Brak danych zadań do wyświetlenia.</p>`;
-                parent.innerHTML = `<p class="no-data" style="color:${this.COLOR_PALETTE[0]};margin:8px 0;">Brak danych zadań do wyświetlenia.</p>`;
             }
             return;
         }
@@ -996,8 +909,6 @@ static tasksChartCompletionStatusByStudent(canvasId = "tasksStatusChart", tasks 
                         data: completedData,
                         backgroundColor: this.COLOR_PALETTE[10],
                         borderColor: this.COLOR_PALETTE[11],
-                        backgroundColor: this.COLOR_PALETTE[10],
-                        borderColor: this.COLOR_PALETTE[11],
                         borderWidth: 1
                     },
                     {
@@ -1005,14 +916,11 @@ static tasksChartCompletionStatusByStudent(canvasId = "tasksStatusChart", tasks 
                         data: remainingData,
                         backgroundColor: this.COLOR_PALETTE[12],
                         borderColor: this.COLOR_PALETTE[13],
-                        backgroundColor: this.COLOR_PALETTE[12],
-                        borderColor: this.COLOR_PALETTE[13],
                         borderWidth: 1
                     }
                 ]
             },
             options: {
-                color: this.COLOR_PALETTE[0],
                 color: this.COLOR_PALETTE[0],
                 indexAxis: 'y',
                 responsive: true,
@@ -1024,12 +932,9 @@ static tasksChartCompletionStatusByStudent(canvasId = "tasksStatusChart", tasks 
                         max: 100,
                         ticks: { callback: v => `${v}%`, color: this.COLOR_PALETTE[0], precision: 0 },
                         grid: { color: this.COLOR_PALETTE[4] }
-                        ticks: { callback: v => `${v}%`, color: this.COLOR_PALETTE[0], precision: 0 },
-                        grid: { color: this.COLOR_PALETTE[4] }
                     },
                     y: {
                         stacked: true,
-                        ticks: { color: this.COLOR_PALETTE[0], autoSkip: false },
                         ticks: { color: this.COLOR_PALETTE[0], autoSkip: false },
                         grid: { display: false }
                     }
@@ -1038,12 +943,8 @@ static tasksChartCompletionStatusByStudent(canvasId = "tasksStatusChart", tasks 
                     legend: {
                         position: 'top',
                         labels: { color: this.COLOR_PALETTE[0] }
-                        labels: { color: this.COLOR_PALETTE[0] }
                     },
                     tooltip: {
-                        titleColor: this.COLOR_PALETTE[0],
-                        bodyColor: this.COLOR_PALETTE[0],
-                        backgroundColor: this.COLOR_PALETTE[14] ,
                         titleColor: this.COLOR_PALETTE[0],
                         bodyColor: this.COLOR_PALETTE[0],
                         backgroundColor: this.COLOR_PALETTE[14] ,

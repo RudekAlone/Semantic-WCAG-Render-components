@@ -12,7 +12,6 @@ class CourseRepository {
 
     public function findBySlug(string $slug) {
         $sql = "SELECT * FROM courses WHERE hash = ? LIMIT 1";
-        $sql = "SELECT * FROM courses WHERE hash = ? LIMIT 1";
         $result = $this->db->query($sql, [$slug]);
         return $result ? $result[0] : null;
     }
