@@ -80,7 +80,7 @@ export class ClassesPage {
 
     const classesTable = RenderTable.renderResponsiveTable(
       tableClassesData,
-      ["ID", "Nazwa klasy", "Rok szkolny", "Liczba uczniów", "Zarządzaj"],
+      ["ID", "Nazwa klasy", "Rok szkolny", "Liczba uczniów", "Zarządzaj", "Usuń"],
       false,
       this.rebrandTableClasses.bind(this)
     );

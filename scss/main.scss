@@ -40,7 +40,10 @@ html,
 body {
   background-color: var(--background-color);
   color: var(--text-color);
-  overflow-x: hidden;
+  height: 100dvh; 
+  overflow: hidden; 
+  display: flex;
+  flex-direction: column;
 }
 
 header {
@@ -52,6 +55,7 @@ header {
     justify-content: space-between;
     align-items: center;
     padding: 0px 5px;
+    flex-shrink: 0; /* Header doesn't shrink */
   }
   & a {
     height: 60px;
@@ -80,10 +84,16 @@ header {
   }
 }
 
+main {
+    flex: 1;
+    overflow-y: auto; /* Default scroll for main content */
+    width: 100%;
+}
+
 main:not(.course-page) {
   & {
-    min-height: calc(100vh - 60px);
-    margin: 0 20px;
+    /* min-height removed handled by flex: 1 */
+    margin: 0; 
     padding: 20px;
     display: flex;
     flex-direction: column;
@@ -102,6 +112,11 @@ main:not(.course-page) {
   @include respond-to(sm) {
     padding: 5px;
   }
+}
+
+main.course-page {
+    overflow: hidden; /* Disable scroll on main for course page, panels handle it */
+    padding: 0 20px; /* Optional padding */
 }
 
 footer {
@@ -188,7 +203,8 @@ a {
     background-color: #7bb9f5;
     transition: 0.4s;
     border-radius: 20px;
-    box-shadow: 0 0 0.25em rgba(67, 71, 85, 0.27), 0.2px 0.2em 24px 0 rgba(1, 29, 77, 0.15);
+    box-shadow: 0 0 0.25em rgba(67, 71, 85, 0.27),
+      0.2px 0.2em 24px 0 rgba(1, 29, 77, 0.15);
 
     &:before {
       position: absolute;

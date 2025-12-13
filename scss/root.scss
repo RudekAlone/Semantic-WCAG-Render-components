@@ -2,7 +2,7 @@
 
 // Definicje kolorów dla motywu ciemnego
 $dark-theme-colors: (
-  text-color: #e5ebfa,
+  text-color: #c1c1c1,
   // Warstwy tła
   background-color: #030303,
   bg-layer-1: #161616,
@@ -73,11 +73,15 @@ $dark-theme-colors: (
 
   // ============MARKDOWN_PREVIEW=================
   // Task Preview
+  task-first-heading-color: #4e86ff,
   task-text-color: #f3f3f3,
   task-bold-color: #3bff65,
   task-italic-color: #81d4fa,
   task-italic-bold-color: #ffab40,
   task-bold-italic-color: #ff6e40,
+  task-code-bg-color: #2d2d2d,
+  task-code-text-color: #ffffff,
+  task-code-border-color: #555555,
 
   // Hint box
   hint-info-background-color: #263238,
@@ -94,11 +98,21 @@ $dark-theme-colors: (
   exam-passed-text-color: #8FF993,
   exam-failed-text-color: #FF7474,
   exam-empty-text-color: #C484FD,
+
+  // Tabele
+  table-header-bg-color: #111111,
+  table-header-hover-bg-color: #222222,
+  table-row-bg-color: #121212,
+  table-row-hover-bg-color: #2b2b2b,
+  table-border-color: #2f2f2f,
+  table-hover-color: #009fff,
+  table-header-hover-color: #00bfff,
+
 );
 
 $light-theme-colors: (
   // Tekst
-  text-color: #121212,
+  text-color: #141414,
 
   // Ciemniejszy tekst na jasnym tle
   // Warstwy tła (odwrócone i jaśniejsze)
@@ -190,11 +204,16 @@ $light-theme-colors: (
   // Ciemniejsza czerwień
   // ============MARKDOWN_PREVIEW=================
   // Task Preview
+  task-first-heading-color: #0086d7,
   task-text-color: #333333,
   task-bold-color: #00a000,
   task-italic-color: #00796b,
   task-italic-bold-color: #d84315,
   task-bold-italic-color: #bf360c,
+  task-code-bg-color: #ffffff,
+  task-code-text-color: #000000,
+  task-code-border-color: #b9b9b9,
+
 
   // Hint box
   hint-text-color: #121212,
@@ -213,6 +232,15 @@ $light-theme-colors: (
   exam-passed-text-color: #035B06,
   exam-failed-text-color: #A10000,
   exam-empty-text-color: #6E00CE,
+
+    // Tabele
+  table-header-bg-color: #d2d2d2,
+  table-header-hover-bg-color: #f0f0f0,
+  table-row-bg-color: #ffffff,
+  table-row-hover-bg-color: #ffffff,
+  table-border-color: #cccccc,
+  table-hover-color: #000ff4,
+  table-header-hover-color: #0076f4,
 
 );
 

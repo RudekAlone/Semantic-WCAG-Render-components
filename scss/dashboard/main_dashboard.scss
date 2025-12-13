@@ -2,11 +2,21 @@
 #dashboard {
   width: 100%;
 }
+.dashboard-page header h1 {
+  text-align: center;
+  width: 100%;
+  font-family: var(--font-family-georgia);
+}
 
 #dashboard-content {
-  background-color: var(--bg-layer-1);
-  margin-top: 20px;
-  padding: 20px;
+  & {
+    background-color: var(--bg-layer-1);
+    margin-top: 20px;
+    padding: 20px;
+  }
+  @include respond-to(md) {
+    padding: 20px 0;
+  }
 }
 
 #dashboard nav {
@@ -15,6 +25,7 @@
     justify-content: space-between;
     flex-wrap: wrap;
     gap: 5px;
+    padding: 5px 15px;
   }
   & button {
     flex-grow: 1;
@@ -31,10 +42,10 @@
     z-index: 1;
     transition: 400ms background-color, 200ms transform ease-in-out, 0 outline;
   }
-& button:hover *{
+  & button:hover * {
     text-transform: none;
     transform: scale(2);
-}
+  }
 
   @include respond-to(xl) {
     button {

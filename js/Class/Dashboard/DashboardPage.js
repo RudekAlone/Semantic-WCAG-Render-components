@@ -54,10 +54,19 @@ export class DashboardPage {
         const widgetsSubjectSummaryWrapper = this._createSubjectSummaryWidget(allTasks);
         container.appendChild(widgetsSubjectSummaryWrapper);
       } else {
+              const widgetsSubjectSummaryWrapper = document.createElement("section");
+      widgetsSubjectSummaryWrapper.classList.add(
+        "widget",
+        "subject-summary-widget"
+      );
+      const widgetsSubjectSummaryTitle = document.createElement("h2");
+      widgetsSubjectSummaryTitle.textContent = "Podsumowanie przedmiotów";
+      widgetsSubjectSummaryWrapper.appendChild(widgetsSubjectSummaryTitle);
         const empty = document.createElement("p");
         empty.classList.add("no-data");
         empty.textContent = "Brak danych zadań do wyświetlenia.";
-        container.appendChild(empty);
+        widgetsSubjectSummaryWrapper.appendChild(empty);
+        container.appendChild(widgetsSubjectSummaryWrapper);
       }
 
       container.appendChild(this.examSection(exams));

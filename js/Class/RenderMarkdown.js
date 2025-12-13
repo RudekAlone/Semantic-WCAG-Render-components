@@ -21,27 +21,32 @@ export class RenderMarkdown {
    * @param {string} markdownContent - Treść w formacie Markdown.
    */
   static convertMarkdownToHTML(container, markdownContent) {
-  const htmlContent = marked.parse(markdownContent);
-  container.innerHTML = htmlContent;
+    const htmlContent = marked.parse(markdownContent);
+    container.innerHTML = htmlContent;
 
-  container.querySelectorAll("pre code").forEach((block) => {
-    hljs.highlightElement(block);
-  });
+    container.querySelectorAll("pre code").forEach((block) => {
+      hljs.highlightElement(block);
+    });
 
-  renderMathInElement(container, {
-    delimiters: [
-      { left: "$$", right: "$$", display: true },
-      { left: "$", right: "$", display: false },
-    ],
-  });
-
-  // Szukamy elementów z klasą .mord
-  container.querySelectorAll('.mord').forEach((el) => {
-    if (el.getAttribute('style') === 'color: transparent;') {
-      el.textContent = " "; // zamiana na spację
+    if (typeof renderMathInElement === 'function') {
+        renderMathInElement(container, {
+            delimiters: [
+                {left: "$$", right: "$$", display: true},
+                {left: "$", right: "$", display: false},
+                {left: "\\(", right: "\\)", display: false},
+                {left: "\\[", right: "\\]", display: true}
+            ],
+            throwOnError: false
+        });
     }
-  });
-}
+
+    // Szukamy elementów z klasą .mord (dla pewności, z hacku użytkownika)
+    container.querySelectorAll('.mord').forEach((el) => {
+      if (el.getAttribute('style') === 'color: transparent;') {
+        el.textContent = " "; 
+      }
+    });
+  }
 
 
   /**
@@ -72,7 +77,6 @@ export class RenderMarkdown {
           "tabButton",
           "button",
           () => {
-            console.log("Tab button clicked:", index);
             // aktywacja przycisków i paneli
             nav.querySelectorAll("button").forEach((btn, i) => {
               if (i === index) {
@@ -104,6 +108,7 @@ export class RenderMarkdown {
         if (index === 0) {
           content.classList.add("active");
         }
+        // Rekurencyjne renderowanie dla treści w tabie
         this.convertMarkdownToHTML(content, content.innerHTML);
       });
 
@@ -123,7 +128,7 @@ export class RenderMarkdown {
 
     dataQuizzes.forEach((quizElement) => {
       const questionText =
-        quizElement.querySelector("question")?.textContent || "Pytanie";
+        quizElement.querySelector("question")?.innerHTML || "Pytanie";
       const optionsElements = quizElement.querySelectorAll("options option");
 
       // Tworzymy semantyczny kontener quizu
@@ -134,6 +139,7 @@ export class RenderMarkdown {
       // Pytanie
       const questionEl = document.createElement("h3");
       questionEl.classList.add("quiz-question");
+      // Renderujemy HTML pytania (bo może zawierać markdown lub code blocks)
       this.convertMarkdownToHTML(questionEl, questionText);
       quizContainer.appendChild(questionEl);
 
@@ -147,7 +153,10 @@ export class RenderMarkdown {
         const button = document.createElement("button");
         button.classList.add("quiz-option");
         button.type = "button";
+        
+        // Renderujemy treść opcji (ważne dla KaTeX w opcjach!)
         this.convertMarkdownToHTML(button, option.textContent);
+        
         button.setAttribute("role", "radio");
         button.setAttribute("aria-checked", "false");
 
@@ -155,7 +164,7 @@ export class RenderMarkdown {
         button.addEventListener("click", () => {
           // reset
           ul.querySelectorAll("button").forEach((btn) => {
-            btn.classList.remove("correct", "wrong", "selected");
+            btn.classList.remove("correct", "incorrect", "selected");
             btn.setAttribute("aria-checked", "false");
           });
 
@@ -164,7 +173,7 @@ export class RenderMarkdown {
           if (option.hasAttribute("correct")) {
             button.classList.add("correct");
           } else {
-            button.classList.add("wrong");
+            button.classList.add("incorrect");
           }
         });
 

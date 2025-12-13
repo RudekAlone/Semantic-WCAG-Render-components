@@ -177,8 +177,24 @@ export class StatisticsPage {
             loginStatsSection.appendChild(loginCanvas);
             container.appendChild(loginStatsSection);
     
-            // Usuń setTimeout - renderuj od razu
+            // Renderuj od razu
             this.createLoginChart(loginStats, "loginStatisticsChart");
+
+            // Dodaj resize listener z debouncing aby odświeżać wykres przy zmianie rozmiaru okna
+            if (!this._resizeListenerAdded) {
+                let resizeTimeout;
+                window.addEventListener("resize", () => {
+                    clearTimeout(resizeTimeout);
+                    resizeTimeout = setTimeout(async () => {
+                        const currentYearValue = document.querySelector("#login-statistics-section select")?.value;
+                        if (currentYearValue) {
+                            const stats = await DataService.getLoginStatistics(false, currentYearValue);
+                            this.createLoginChart(stats, "loginStatisticsChart");
+                        }
+                    }, 250); // debounce 250ms
+                });
+                this._resizeListenerAdded = true;
+            }
     
             const tasksStatusSection = document.createElement("section");
             tasksStatusSection.id = "tasks-statistics-section";
@@ -260,56 +276,87 @@ export class StatisticsPage {
         const existing = Chart.getChart(canvasId);
         if (existing) existing.destroy();
 
-        if (!data || data.length === 0) {
+        // Pobierz wybrany rok szkolny z selecta
+        const yearSelect = document.querySelector(`#login-statistics-section select`);
+        const selectedYear = yearSelect ? parseInt(yearSelect.value) : new Date().getFullYear();
+        const nextYear = selectedYear + 1;
+
+        // Generuj statyczne etykiety dla roku szkolnego (wrzesień - sierpień)
+        const schoolYearMonths = [
+            { month: 9, year: selectedYear, label: `wrzesień ${selectedYear}`, shortLabel: `wrz ${selectedYear}` },
+            { month: 10, year: selectedYear, label: `październik ${selectedYear}`, shortLabel: `paź ${selectedYear}` },
+            { month: 11, year: selectedYear, label: `listopad ${selectedYear}`, shortLabel: `lis ${selectedYear}` },
+            { month: 12, year: selectedYear, label: `grudzień ${selectedYear}`, shortLabel: `gru ${selectedYear}` },
+            { month: 1, year: nextYear, label: `styczeń ${nextYear}`, shortLabel: `sty ${nextYear}` },
+            { month: 2, year: nextYear, label: `luty ${nextYear}`, shortLabel: `lut ${nextYear}` },
+            { month: 3, year: nextYear, label: `marzec ${nextYear}`, shortLabel: `mar ${nextYear}` },
+            { month: 4, year: nextYear, label: `kwiecień ${nextYear}`, shortLabel: `kwi ${nextYear}` },
+            { month: 5, year: nextYear, label: `maj ${nextYear}`, shortLabel: `maj ${nextYear}` },
+            { month: 6, year: nextYear, label: `czerwiec ${nextYear}`, shortLabel: `cze ${nextYear}` },
+            { month: 7, year: nextYear, label: `lipiec ${nextYear}`, shortLabel: `lip ${nextYear}` },
+            { month: 8, year: nextYear, label: `sierpień ${nextYear}`, shortLabel: `sie ${nextYear}` }
+        ];
+
+        // Utwórz mapę danych z backendu dla łatwego odnajdywania
+        const dataMap = new Map();
+        (data || []).forEach(entry => {
+            if (entry.date) {
+                dataMap.set(entry.date, Number(entry.logins) || 0);
+            }
+        });
+
+        // Responsive sizing detection
+        const isMobile = window.innerWidth < 768;
+        const isUltraMobile = window.innerWidth < 400;
+
+        // Dopasuj dane do statycznych miesięcy
+        const labels = [];
+        const loginCounts = [];
+        schoolYearMonths.forEach(({ month, year, label, shortLabel }) => {
+            const dateKey = `${year}-${String(month).padStart(2, '0')}`;
+            // Użyj ultra-skróconych etykiet na bardzo małych ekranach
+            if (isUltraMobile) {
+                labels.push(shortLabel.split(' ')[0]); // tylko "wrz", "paź", etc.
+            } else {
+                labels.push(isMobile ? shortLabel : label);
+            }
+            loginCounts.push(dataMap.get(dateKey) || 0);
+        });
+
+        // Sprawdź czy są jakiekolwiek dane
+        const hasData = loginCounts.some(count => count > 0);
+        if (!hasData) {
             const parent = canvas.parentElement;
-            // Clear any previous placeholder
             const oldPlaceholder = parent.querySelector('.no-data-placeholder');
             if(oldPlaceholder) oldPlaceholder.remove();
 
-            // Hide canvas
             canvas.style.display = 'none';
 
-            // Show placeholder
             const placeholder = document.createElement('div');
             placeholder.className = 'no-data-placeholder';
-            placeholder.innerHTML = `<p style="text-align:center; padding: 20px;">Brak danych logowania dla wybranego okresu.</p>`;
+            placeholder.innerHTML = `<p>Brak danych logowania dla roku szkolnego ${selectedYear}/${nextYear}.</p>`;
             parent.appendChild(placeholder);
             return;
         }
 
-        // Ensure canvas is visible (if previously hidden)
+        // Ensure canvas is visible
         canvas.style.display = 'block';
         const parent = canvas.parentElement;
         const oldPlaceholder = parent.querySelector('.no-data-placeholder');
         if(oldPlaceholder) oldPlaceholder.remove();
 
+        // Usuń stare style canvas - niech Chart.js zarządza rozmiarami
+        canvas.style.width = '';
+        canvas.style.height = '';
+        canvas.width = 0;
+        canvas.height = 0;
+
         const ctx = canvas.getContext('2d');
 
-        // Prepare readable month-year labels (safe parsing)
-        const labels = data.map(entry => {
-            const [year = '', month = ''] = (entry.date || '').split('-');
-            const monthIndex = Math.max(0, Math.min(11, parseInt(month, 10) - 1 || 0));
-            return `${MONTH_NAMES_PL[monthIndex] ?? ''} ${year}`.trim();
-        });
-
-
-        // Dynamic canvas height so chart remains readable on different datasets/sizes
-        const perItemHeight = 36;
-        const padding = 40;
-        const minHeight = 160;
-        const maxHeight = 600;
-        const computedHeight = Math.max(minHeight, Math.min(maxHeight, labels.length * perItemHeight + padding));
-        
-        // Ustaw rozmiar tylko przez CSS, NIE przez atrybuty canvas
-        canvas.style.width = '100%';
-        canvas.style.height = `${computedHeight}px`;
-
-        // Create subtle gradient for fill to improve readability
-        const gradient = ctx.createLinearGradient(0, 0, 0, computedHeight);
+        // Create gradient for fill (używa arbitrary height dla gradientu)
+        const gradient = ctx.createLinearGradient(0, 0, 0, 400);
         gradient.addColorStop(0, this.COLOR_PALETTE[1]);
         gradient.addColorStop(1, this.COLOR_PALETTE[2]);
-
-        const loginCounts = data.map(entry => entry.logins);
 
         new Chart(ctx, {
             type: 'line',
@@ -322,13 +369,13 @@ export class StatisticsPage {
                     backgroundColor: gradient,
                     fill: true,
                     tension: 0.25,
-                    pointRadius: 4,
-                    pointHoverRadius: 6,
+                    pointRadius: 3,
+                    pointHoverRadius: 5,
                 }]
             },
             options: {
                 color: this.COLOR_PALETTE[0],
-                responsive: false, // WYŁĄCZ responsive aby zapobiec pętli resize
+                responsive: true,
                 maintainAspectRatio: false,
                 interaction: {
                     mode: 'index',
@@ -338,7 +385,8 @@ export class StatisticsPage {
                     legend: {
                         position: 'top',
                         labels: {
-                            color: this.COLOR_PALETTE[0]
+                            color: this.COLOR_PALETTE[0],
+                            font: { size: 12 }
                         }
                     },
                     tooltip: {
@@ -346,7 +394,9 @@ export class StatisticsPage {
                         intersect: false,
                         titleColor: this.COLOR_PALETTE[0],
                         bodyColor: this.COLOR_PALETTE[0],
-                        backgroundColor: this.COLOR_PALETTE[14] 
+                        backgroundColor: this.COLOR_PALETTE[14],
+                        titleFont: { size: 13 },
+                        bodyFont: { size: 12 }
                     }
                 },
                 scales: {
@@ -355,13 +405,18 @@ export class StatisticsPage {
                             autoSkip: true,
                             maxRotation: 45,
                             minRotation: 0,
-                            color: this.COLOR_PALETTE[0]
+                            color: this.COLOR_PALETTE[0],
+                            font: { size: 11 }
                         },
                         grid: { display: false, color: this.COLOR_PALETTE[4] }
                     },
                     y: {
                         beginAtZero: true,
-                        ticks: { precision: 0, color: this.COLOR_PALETTE[0] },
+                        ticks: { 
+                            precision: 0, 
+                            color: this.COLOR_PALETTE[0],
+                            font: { size: 11 }
+                        },
                         grid: { color: this.COLOR_PALETTE[4] }
                     }
                 }
@@ -390,12 +445,13 @@ export class StatisticsPage {
 
             const placeholder = document.createElement('div');
             placeholder.className = 'no-data-placeholder';
-            placeholder.style.textAlign = 'center';
-            placeholder.style.padding = '20px';
-            placeholder.innerHTML = `
-                <p>Brak rozwiązanych quizów.</p>
-                <button class="btn-primary" onclick="window.history.pushState(null,'','/dashboard/quizzes'); window.dispatchEvent(new Event('popstate'));">Rozwiąż quiz</button>
-            `;
+            const p = document.createElement('p');
+            p.textContent = "Rozpocznij quiz, aby śledzić postępy tutaj.";
+            placeholder.appendChild(p);
+            const placeholderBtn = UIFacade.createButton("Zobacz quizy", "primary", "button", () => {
+                document.getElementById("nav-quizzes").click();
+            });
+            placeholder.appendChild(placeholderBtn);
             parent.appendChild(placeholder);
             return;
         }
@@ -410,14 +466,19 @@ export class StatisticsPage {
         const ctx = canvas.getContext('2d');
 
         const labels = data.map(entry => entry.quizName);
+        const fullLabels = [...labels]; // Kopia pełnych nazw dla tooltipów
+        
+        // Skracanie etykiet dla osi Y aby nie zajmowały za dużo miejsca
+        const truncatedLabels = labels.map(l => l.length > 30 ? l.substring(0, 30) + '...' : l);
+        
         const completedCounts = data.map(entry => entry.completed);
         const totalCounts = data.map(entry => entry.count);
 
-        // dynamic height: approx 38px per item (11 -> ~418px), with min/max caps
-        const perItemHeight = 38;
+        // dynamic height: approx 40px per item
+        const perItemHeight = 40;
         const padding = 20;
-        const minHeight = 150;
-        const maxHeight = 1200;
+        const minHeight = 300; // Zwiększone min-height
+        const maxHeight = 2000; // Zwiększony limit dla dużej ilości quizów
         const computedHeight = Math.max(minHeight, Math.min(maxHeight, labels.length * perItemHeight + padding));
 
         canvas.style.height = `${computedHeight}px`;
@@ -426,10 +487,10 @@ export class StatisticsPage {
         new Chart(ctx, {
             type: 'bar',
             data: {
-                labels: labels,
+                labels: truncatedLabels,
                 datasets: [
                     {
-                        label: 'Ilość trzykrotnie pod rząd udzielonych poprawnie odpowiedzi',
+                        label: 'Ilość nauczonych pytań',
                         data: completedCounts,
                         backgroundColor: this.COLOR_PALETTE[5]
                     },
@@ -441,7 +502,6 @@ export class StatisticsPage {
                 ]
             },
             options: {
-                // default text color for all chart text
                 color: this.COLOR_PALETTE[0],
                 indexAxis: 'y',
                 responsive: true,
@@ -450,7 +510,7 @@ export class StatisticsPage {
                     bar: {
                         borderRadius: 4,
                         borderSkipped: false,
-                        maxBarThickness: 40
+                        maxBarThickness: 32
                     }
                 },
                 scales: {
@@ -460,32 +520,36 @@ export class StatisticsPage {
                             precision: 0,
                             color: this.COLOR_PALETTE[0]
                         },
-                        grid: {
-                            color: this.COLOR_PALETTE[4]
-                        }
+                        grid: { color: this.COLOR_PALETTE[4] }
                     },
                     y: {
                         ticks: {
                             autoSkip: false,
                             color: this.COLOR_PALETTE[0]
                         },
-                        grid: {
-                            display: false
-                        }
+                        grid: { display: false }
                     }
                 },
                 plugins: {
                     legend: {
                         position: 'top',
-                        labels: {
-                            color: this.COLOR_PALETTE[0]
-                        }
+                        labels: { color: this.COLOR_PALETTE[0] }
                     },
                     tooltip: {
                         titleColor: this.COLOR_PALETTE[0],
                         bodyColor: this.COLOR_PALETTE[0],
-                        backgroundColor: this.COLOR_PALETTE[14] 
+                        backgroundColor: this.COLOR_PALETTE[14],
+                        callbacks: {
+                            title: (tooltipItems) => {
+                                // Pokaż pełną nazwę quizu w tytule tooltipa
+                                const index = tooltipItems[0].dataIndex;
+                                return fullLabels[index] || '';
+                            }
+                        }
                     }
+                },
+                layout: {
+                    padding: { left: 10, right: 20, top: 10, bottom: 10 }
                 }
             }
         });
@@ -578,7 +642,7 @@ export class StatisticsPage {
             if (existing) existing.destroy();
             const parent = canvas.parentElement;
             if (parent) {
-                parent.innerHTML = `<p class="no-data" style="color:${this.COLOR_PALETTE[0]};margin:8px 0;">Brak dopasowań do branż — brak sensownych danych do wykresu.</p>`;
+                parent.innerHTML = `<p class="no-data-placeholder">Brak dopasowań do branż, <br> brak sensownych danych do wykresu.</p>`;
             }
             return;
         }
@@ -681,12 +745,16 @@ export class StatisticsPage {
             canvas.style.display = 'none';
             const placeholder = document.createElement('div');
             placeholder.className = 'no-data-placeholder';
-            placeholder.style.textAlign = 'center';
-            placeholder.style.padding = '20px';
-            placeholder.innerHTML = `
-                <p>Brak rozpoczętych kursów.</p>
-                <button class="btn-primary" style="background-color:var(--btn-primary-bg, #007bff); color:#fff; border:none; padding:8px 16px; border-radius:4px; cursor:pointer;" >Zobacz kursy</button>
-            `;
+           
+            const p = document.createElement('p');
+            p.textContent = "Rozpocznij kurs, aby śledzić postępy tutaj.";
+            placeholder.appendChild(p);
+            const placeholderBtn = UIFacade.createButton("Zobacz kursy", "primary", "button", () => {
+                document.getElementById("nav-courses").click();
+            });
+            placeholder.appendChild(placeholderBtn);
+
+
             parent.appendChild(placeholder);
              const btn = placeholder.querySelector('button');
             btn.addEventListener('click', (e) => {
@@ -870,7 +938,7 @@ static tasksChartCompletionStatusByStudent(canvasId = "tasksStatusChart", tasks 
             if (existing) existing.destroy();
             const parent = canvas.parentElement;
             if (parent) {
-                parent.innerHTML = `<p class="no-data" style="color:${this.COLOR_PALETTE[0]};margin:8px 0;">Brak danych zadań do wyświetlenia.</p>`;
+                parent.innerHTML = `<p class="no-data-placeholder">Brak danych o aktywnych zadaniach.</p>`;
             }
             return;
         }

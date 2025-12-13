@@ -17,3 +17,8 @@
 @use "dashboard/classes_page";
 
 @use "courses/course-nav-menu";
+@use "courses/lesson-content";
+@use "courses/lesson-nav-content";
+
+
+@use "markdown/tasks-preview";

@@ -187,3 +187,56 @@
   --font-family-comic-sans: Comic Sans MS, cursive, sans-serif;
   --font-family-atkinson-hyperlegible: 'Atkinson Hyperlegible', sans-serif;
 }
+
+#course-lesson-content-nav {
+  height: calc(100dvh - 105px);
+  width: 300px;
+  background-color: var(--bg-layer-2);
+  overflow-y: auto;
+  margin: 4px 0;
+  box-shadow: 2px 3px 5px rgba(0, 0, 0, 0.4);
+}
+#course-lesson-content-nav li.nav-h1,
+#course-lesson-content-nav li.nav-h2,
+#course-lesson-content-nav li.nav-h3,
+#course-lesson-content-nav li.nav-h4 {
+  cursor: pointer;
+  list-style: none;
+}
+#course-lesson-content-nav li.nav-h1:hover,
+#course-lesson-content-nav li.nav-h2:hover,
+#course-lesson-content-nav li.nav-h3:hover,
+#course-lesson-content-nav li.nav-h4:hover {
+  background-color: var(--button-bg-hover-primary);
+  outline: 1px solid var(--accent-color);
+}
+#course-lesson-content-nav li.nav-h1:focus,
+#course-lesson-content-nav li.nav-h2:focus,
+#course-lesson-content-nav li.nav-h3:focus,
+#course-lesson-content-nav li.nav-h4:focus {
+  outline: var(--outline-focus);
+  outline-offset: 1px;
+}
+#course-lesson-content-nav li.nav-h1:focus-visible,
+#course-lesson-content-nav li.nav-h2:focus-visible,
+#course-lesson-content-nav li.nav-h3:focus-visible,
+#course-lesson-content-nav li.nav-h4:focus-visible {
+  outline: var(--outline-focus);
+  outline-offset: 1px;
+}
+#course-lesson-content-nav li.nav-h1 {
+  font-size: 1.1rem;
+  padding: 15px 0 5px 5px;
+}
+#course-lesson-content-nav li.nav-h2 {
+  font-size: 1rem;
+  padding: 0 0 5px 15px;
+}
+#course-lesson-content-nav li.nav-h3 {
+  font-size: 0.9rem;
+  padding: 0 0 5px 30px;
+}
+#course-lesson-content-nav li.nav-h4 {
+  font-size: 0.8rem;
+  padding: 0 0 5px 45px;
+}

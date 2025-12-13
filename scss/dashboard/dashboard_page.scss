@@ -5,7 +5,7 @@
   gap: 20px;
   min-height: 570px;
 
-  @include respond-to(sm) {
+  @include respond-to(lg) {
     flex-direction: column;
     align-items: center;
   }
@@ -17,18 +17,21 @@
   margin: 15px;
   border-radius: 5px;
   width: 50%;
-
-}
-
-
-.exam-section h2,
-.subject-summary-widget h2 {
+& h2 {
   text-align: center;
   margin-bottom: 15px;
   font-size: 1.5rem;
   background-color: var(--bg-layer-4);
-        border-top-left-radius: 5px;
-    border-top-right-radius: 5px;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}
+& p{
+  text-align: center;
+  padding: 20px;
+}
+  @include respond-to(lg) {
+    width: 100%;
+  }
 }
 
 .subject-summary-list {
@@ -36,10 +39,12 @@
   gap: 20px;
   justify-content: center;
   padding: 20px;
+  flex-wrap: wrap;
 
   @include respond-to(md) {
     flex-direction: column;
     align-items: center;
+    padding: 5px;
   }
 }
 
@@ -64,6 +69,9 @@
     justify-content: center;
     background-color: var(--bg-layer-4);
     @include shadow-box;
+  }
+  @include respond-to(sm) {
+    width: 100%;
   }
 }
 

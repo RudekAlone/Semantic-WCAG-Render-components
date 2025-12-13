@@ -1,0 +1,37 @@
+@use "../root.scss" as *;
+#task-preview-section {
+  :is(h1, h2, h3, h4, h5, h6):not(:first-child) {
+    font-family: var(--font-family-mono);
+  }
+
+  & ul, ol {
+    margin-left: 2rem;
+  }
+  & em > strong{
+    color: var(--task-italic-bold-color);
+  }
+    & strong > em{
+        color: var(--task-bold-italic-color);
+    }
+    & strong {
+    color: var(--task-bold-color);
+    }
+    & em {
+    color: var(--task-italic-color);
+    }
+    & code {
+    background-color: var(--task-code-bg-color);
+    color: var(--task-code-text-color);
+    padding: 0.2rem 0.4rem;
+    border-radius: 0.3rem;
+    font-family: var(--font-family-mono);
+        text-wrap-mode: nowrap;
+    border: 1px solid var(--task-code-border-color);
+    }
+    & .katex-display{
+       display: inline-block;
+    }
+    & table {
+        margin: 2rem 0;
+    }
+}

@@ -20,9 +20,9 @@
 <data-quiz>
   <question>
   Co zostanie wyświetlone w konsoli?
-   ```js
+  ```js
    console.log(2+2)
-   ```
+  ```
    </question>
   <options>
     <option>3</option>
@@ -52,7 +52,7 @@ console.log("test")
     </div>
 </data-tabs>
 
-```html
+````html
 <data-tabs>
     <tabs>
         <b>Tab 1</b>
@@ -68,7 +68,7 @@ console.log("test")
 ```
     </div>
 </data-tabs>
-```
+````
 
 ## Przyciski
 

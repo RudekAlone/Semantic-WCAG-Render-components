@@ -31,7 +31,7 @@
   font-display: swap;
 }
 :root[data-theme=dark] {
-  --text-color: #e5ebfa;
+  --text-color: #c1c1c1;
   --background-color: #030303;
   --bg-layer-1: #161616;
   --bg-layer-2: #1d1d1d;
@@ -69,11 +69,15 @@
   --quiz-text-color: #cdcdcd;
   --quiz-correct-color: #00c853;
   --quiz-incorrect-color: #d50000;
+  --task-first-heading-color: #4e86ff;
   --task-text-color: #f3f3f3;
   --task-bold-color: #3bff65;
   --task-italic-color: #81d4fa;
   --task-italic-bold-color: #ffab40;
   --task-bold-italic-color: #ff6e40;
+  --task-code-bg-color: #2d2d2d;
+  --task-code-text-color: #ffffff;
+  --task-code-border-color: #555555;
   --hint-info-background-color: #263238;
   --hint-info-border-color: #2196f3;
   --hint-text-color: #ffffff;
@@ -87,6 +91,13 @@
   --exam-passed-text-color: #8FF993;
   --exam-failed-text-color: #FF7474;
   --exam-empty-text-color: #C484FD;
+  --table-header-bg-color: #111111;
+  --table-header-hover-bg-color: #222222;
+  --table-row-bg-color: #121212;
+  --table-row-hover-bg-color: #2b2b2b;
+  --table-border-color: #2f2f2f;
+  --table-hover-color: #009fff;
+  --table-header-hover-color: #00bfff;
   /* Fonts */
   --font-family-sans: Segoe UI, Tahoma, Geneva, Verdana, sans-serif;
   --font-family-mono: Courier New, Courier, monospace;
@@ -99,7 +110,7 @@
 }
 
 :root[data-theme=light] {
-  --text-color: #121212;
+  --text-color: #141414;
   --background-color: #ffffff;
   --bg-layer-1: #f3f3f3;
   --bg-layer-2: #eeeeee;
@@ -130,18 +141,22 @@
   --form-border: 1px solid #b0b0b0;
   --form-input-wrapper-bg-color: #f5f5f5;
   --hr-color: #a0a0a0;
-  --link-color: #1976d2;
-  --link-hover-color: #42a5f5;
-  --link-visited-color: #7b1fa2;
-  --link-visited-hover-color: #9c27b0;
+  --link-color: #004A6D;
+  --link-hover-color: #092ACF;
+  --link-visited-color: #71139A;
+  --link-visited-hover-color: #572f68;
   --quiz-text-color: #333333;
   --quiz-correct-color: #4caf50;
   --quiz-incorrect-color: #f44336;
+  --task-first-heading-color: #0086d7;
   --task-text-color: #333333;
   --task-bold-color: #00a000;
   --task-italic-color: #00796b;
   --task-italic-bold-color: #d84315;
   --task-bold-italic-color: #bf360c;
+  --task-code-bg-color: #ffffff;
+  --task-code-text-color: #000000;
+  --task-code-border-color: #b9b9b9;
   --hint-text-color: #121212;
   --hint-info-background-color: #e3f2fd;
   --hint-info-border-color: #2196f3;
@@ -155,6 +170,13 @@
   --exam-passed-text-color: #035B06;
   --exam-failed-text-color: #A10000;
   --exam-empty-text-color: #6E00CE;
+  --table-header-bg-color: #d2d2d2;
+  --table-header-hover-bg-color: #f0f0f0;
+  --table-row-bg-color: #ffffff;
+  --table-row-hover-bg-color: #ffffff;
+  --table-border-color: #cccccc;
+  --table-hover-color: #000ff4;
+  --table-header-hover-color: #0076f4;
   /* Fonts */
   --font-family-sans: Segoe UI, Tahoma, Geneva, Verdana, sans-serif;
   --font-family-mono: Courier New, Courier, monospace;
@@ -171,7 +193,7 @@
   gap: 20px;
   min-height: 570px;
 }
-@media (max-width: 576px) {
+@media (max-width: 992px) {
   .dashboard-widgets {
     flex-direction: column;
     align-items: center;
@@ -185,7 +207,6 @@
   border-radius: 5px;
   width: 50%;
 }
-
 .exam-section h2,
 .subject-summary-widget h2 {
   text-align: center;
@@ -195,17 +216,30 @@
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
 }
+.exam-section p,
+.subject-summary-widget p {
+  text-align: center;
+  padding: 20px;
+}
+@media (max-width: 992px) {
+  .exam-section,
+  .subject-summary-widget {
+    width: 100%;
+  }
+}
 
 .subject-summary-list {
   display: flex;
   gap: 20px;
   justify-content: center;
   padding: 20px;
+  flex-wrap: wrap;
 }
 @media (max-width: 768px) {
   .subject-summary-list {
     flex-direction: column;
     align-items: center;
+    padding: 5px;
   }
 }
 
@@ -229,6 +263,11 @@
   justify-content: center;
   background-color: var(--bg-layer-4);
   box-shadow: 2px 3px 5px rgba(0, 0, 0, 0.4);
+}
+@media (max-width: 576px) {
+  .subject-card {
+    width: 100%;
+  }
 }
 
 .subject-emoji {

@@ -31,7 +31,7 @@
   font-display: swap;
 }
 :root[data-theme=dark] {
-  --text-color: #e5ebfa;
+  --text-color: #c1c1c1;
   --background-color: #030303;
   --bg-layer-1: #161616;
   --bg-layer-2: #1d1d1d;
@@ -40,24 +40,24 @@
   --bg-gradient-1: linear-gradient(142deg, rgb(0, 140, 195) 0%, rgb(47, 187, 105) 50%, rgb(243, 227, 85) 100%);
   --bg-gradient-2: linear-gradient(90deg, rgb(155, 42, 123) 0%, rgb(199, 87, 133) 50%, rgb(237, 83, 221) 100%);
   --bg-gradient-3: linear-gradient(90deg, rgb(123, 155, 42) 0%, rgb(199, 133, 87) 50%, rgb(221, 237, 83) 100%);
-  --focus-outline-color: #00FFBF;
-  --accent-color: #009FFF;
+  --focus-outline-color: #00ffbf;
+  --accent-color: #009fff;
   --input-bg-color: #101010;
   --input-bg-color-hover: #1a1a1a;
   --input-border: 1px solid #3a3a3a;
   --input-border-hover: 1px solid #9b9b9b;
   --outline-focus: 2px solid var(--focus-outline-color);
   --outline-hover: 1px solid var(--focus-outline-color);
-  --button-bg-primary: #004C98;
-  --button-bg-secondary: #464E55;
+  --button-bg-primary: #004c98;
+  --button-bg-secondary: #464e55;
   --button-bg-tertiary: #005614;
   --button-bg-quaternary: #991825;
-  --button-bg-fifth: #68471E;
-  --button-bg-hover-primary: #113F70;
-  --button-bg-hover-secondary: #30363B;
-  --button-bg-hover-tertiary: #0E491B;
+  --button-bg-fifth: #68471e;
+  --button-bg-hover-primary: #113f70;
+  --button-bg-hover-secondary: #30363b;
+  --button-bg-hover-tertiary: #0e491b;
   --button-bg-hover-quaternary: #7e121d;
-  --button-bg-hover-fifth: #4B3418;
+  --button-bg-hover-fifth: #4b3418;
   --form-bg-color: #353535;
   --form-border: 1px solid #606060;
   --form-input-wrapper-bg-color: #444444;
@@ -69,11 +69,15 @@
   --quiz-text-color: #cdcdcd;
   --quiz-correct-color: #00c853;
   --quiz-incorrect-color: #d50000;
+  --task-first-heading-color: #4e86ff;
   --task-text-color: #f3f3f3;
   --task-bold-color: #3bff65;
   --task-italic-color: #81d4fa;
   --task-italic-bold-color: #ffab40;
   --task-bold-italic-color: #ff6e40;
+  --task-code-bg-color: #2d2d2d;
+  --task-code-text-color: #ffffff;
+  --task-code-border-color: #555555;
   --hint-info-background-color: #263238;
   --hint-info-border-color: #2196f3;
   --hint-text-color: #ffffff;
@@ -83,6 +87,17 @@
   --hint-warning-border-color: #ffc400;
   --hint-danger-background-color: rgba(183, 28, 28, 0.2196078431);
   --hint-danger-border-color: #f44336;
+  --exam-item-header-bg-color: #141414;
+  --exam-passed-text-color: #8FF993;
+  --exam-failed-text-color: #FF7474;
+  --exam-empty-text-color: #C484FD;
+  --table-header-bg-color: #111111;
+  --table-header-hover-bg-color: #222222;
+  --table-row-bg-color: #121212;
+  --table-row-hover-bg-color: #2b2b2b;
+  --table-border-color: #2f2f2f;
+  --table-hover-color: #009fff;
+  --table-header-hover-color: #00bfff;
   /* Fonts */
   --font-family-sans: Segoe UI, Tahoma, Geneva, Verdana, sans-serif;
   --font-family-mono: Courier New, Courier, monospace;
@@ -95,7 +110,7 @@
 }
 
 :root[data-theme=light] {
-  --text-color: #121212;
+  --text-color: #141414;
   --background-color: #ffffff;
   --bg-layer-1: #f3f3f3;
   --bg-layer-2: #eeeeee;
@@ -112,32 +127,36 @@
   --input-border-hover: 1px solid #464646;
   --outline-focus: 3px solid var(--focus-outline-color);
   --outline-hover: 2px solid var(--focus-outline-color);
-  --button-bg-primary: #7DBEFF;
+  --button-bg-primary: #7dbeff;
   --button-bg-secondary: #bcc7d1;
-  --button-bg-tertiary: #78F198;
-  --button-bg-quaternary: #FFADAD;
-  --button-bg-fifth: #FFDE71;
-  --button-bg-hover-primary: #369AFF;
+  --button-bg-tertiary: #78f198;
+  --button-bg-quaternary: #ffadad;
+  --button-bg-fifth: #ffde71;
+  --button-bg-hover-primary: #369aff;
   --button-bg-hover-secondary: #85939e;
-  --button-bg-hover-tertiary: #2DC355;
-  --button-bg-hover-quaternary: #F96767;
-  --button-bg-hover-fifth: #D6AD26;
+  --button-bg-hover-tertiary: #2dc355;
+  --button-bg-hover-quaternary: #f96767;
+  --button-bg-hover-fifth: #d6ad26;
   --form-bg-color: #ffffff;
   --form-border: 1px solid #b0b0b0;
   --form-input-wrapper-bg-color: #f5f5f5;
   --hr-color: #a0a0a0;
-  --link-color: #1976d2;
-  --link-hover-color: #42a5f5;
-  --link-visited-color: #7b1fa2;
-  --link-visited-hover-color: #9c27b0;
+  --link-color: #004A6D;
+  --link-hover-color: #092ACF;
+  --link-visited-color: #71139A;
+  --link-visited-hover-color: #572f68;
   --quiz-text-color: #333333;
   --quiz-correct-color: #4caf50;
   --quiz-incorrect-color: #f44336;
+  --task-first-heading-color: #0086d7;
   --task-text-color: #333333;
   --task-bold-color: #00a000;
   --task-italic-color: #00796b;
   --task-italic-bold-color: #d84315;
   --task-bold-italic-color: #bf360c;
+  --task-code-bg-color: #ffffff;
+  --task-code-text-color: #000000;
+  --task-code-border-color: #b9b9b9;
   --hint-text-color: #121212;
   --hint-info-background-color: #e3f2fd;
   --hint-info-border-color: #2196f3;
@@ -147,6 +166,17 @@
   --hint-warning-border-color: #ffc107;
   --hint-danger-background-color: #ffebee;
   --hint-danger-border-color: #f44336;
+  --exam-item-header-bg-color: #fff;
+  --exam-passed-text-color: #035B06;
+  --exam-failed-text-color: #A10000;
+  --exam-empty-text-color: #6E00CE;
+  --table-header-bg-color: #d2d2d2;
+  --table-header-hover-bg-color: #f0f0f0;
+  --table-row-bg-color: #ffffff;
+  --table-row-hover-bg-color: #ffffff;
+  --table-border-color: #cccccc;
+  --table-hover-color: #000ff4;
+  --table-header-hover-color: #0076f4;
   /* Fonts */
   --font-family-sans: Segoe UI, Tahoma, Geneva, Verdana, sans-serif;
   --font-family-mono: Courier New, Courier, monospace;
@@ -196,7 +226,10 @@ html,
 body {
   background-color: var(--background-color);
   color: var(--text-color);
-  overflow-x: hidden;
+  height: 100dvh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 header {
@@ -209,6 +242,7 @@ header {
   justify-content: space-between;
   align-items: center;
   padding: 0px 5px;
+  flex-shrink: 0; /* Header doesn't shrink */
 }
 header a {
   height: 60px;
@@ -236,9 +270,15 @@ header a:focus {
   outline-offset: 1px;
 }
 
+main {
+  flex: 1;
+  overflow-y: auto; /* Default scroll for main content */
+  width: 100%;
+}
+
 main:not(.course-page) {
-  min-height: calc(100vh - 60px);
-  margin: 0 20px;
+  /* min-height removed handled by flex: 1 */
+  margin: 0;
   padding: 20px;
   display: flex;
   flex-direction: column;
@@ -260,6 +300,11 @@ main:not(.course-page) {
   main:not(.course-page) {
     padding: 5px;
   }
+}
+
+main.course-page {
+  overflow: hidden; /* Disable scroll on main for course page, panels handle it */
+  padding: 0 20px; /* Optional padding */
 }
 
 footer {

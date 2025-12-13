@@ -49,7 +49,7 @@ class CourseService
     />
     <link
       rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.css"
+      href="https://cdn.jsdelivr.net/npm/katex@0.16.27/dist/katex.min.css"
     />
 </head>
 <body>
@@ -74,10 +74,11 @@ class CourseService
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/languages/dos.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/languages/powershell.min.js"></script>
 
-    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/contrib/auto-render.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.27/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.27/dist/contrib/auto-render.min.js"></script>
 
     <script type="module" src="/js/course.js"></script>
+  <script type="module" src="/js/web-switchers.js"></script>
 </body>
 </html>
 HTML;

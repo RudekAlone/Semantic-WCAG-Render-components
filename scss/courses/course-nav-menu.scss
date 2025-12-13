@@ -4,8 +4,10 @@
   width: 360px;
   background-color: var(--bg-layer-1);
   overflow-y: auto;
-  height: 100vh;
+  height: calc(100dvh - 105px);
   padding-right: 8px;
+    margin: 4px 0;
+    @include shadow-box;
 }
 .module-menu:focus,
 .module-menu:focus-visible {
@@ -14,6 +16,7 @@
 .module-menu ul {
   list-style-type: none;
   padding: 0;
+  margin: 10px 0;
 }
 .module-menu li.active,
 .module-menu li:not(.module):not(:has(details)):hover {
@@ -40,9 +43,10 @@
   padding: 10px;
 }
 .module-menu details {
-  margin: 5px 0;
+  margin: 5px 0 5px 20px;
   padding: 10px;
   background-color: var(--bg-layer-1);
+  width: auto;
 }
 .module-menu li:hover details {
   outline: none;
@@ -60,7 +64,6 @@
 }
 
 .module-menu > ul > li:not(:has(details)) {
-  margin: 5px 0;
   background-color: var(--bg-layer-4);
   padding: 5px;
   border: var(--input-border);
@@ -69,5 +72,6 @@
 .lesson-item,
 .lesson {
   padding: 10px;
+  margin: 5px 0 5px 20px;
   @include shadow-box;
 }

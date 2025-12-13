@@ -14,9 +14,17 @@ class StatsRepository {
         $sql = "SELECT date_month as date, logins_count as logins FROM stats_login WHERE user_id = ?";
         $params = [$userId];
         if ($year) {
-             $sql .= " AND date_month LIKE ?";
-             $params[] = "$year-%";
+            // Rok szkolny: wrzesień {year} - sierpień {year+1}
+            // Np. 2024/2025 = 2024-09 do 2025-08
+            // date_month format: 'YYYY-MM'
+            $sql .= " AND (
+                (CAST(SUBSTRING(date_month, 1, 4) AS UNSIGNED) = ? AND CAST(SUBSTRING(date_month, 6, 2) AS UNSIGNED) >= 9) OR
+                (CAST(SUBSTRING(date_month, 1, 4) AS UNSIGNED) = ? AND CAST(SUBSTRING(date_month, 6, 2) AS UNSIGNED) <= 8)
+            )";
+            $params[] = intval($year);      // wrzesień-grudzień roku {year}
+            $params[] = intval($year) + 1;  // styczeń-sierpień roku {year+1}
         }
+        $sql .= " ORDER BY date_month ASC";
         return $this->db->query($sql, $params);
     }
 

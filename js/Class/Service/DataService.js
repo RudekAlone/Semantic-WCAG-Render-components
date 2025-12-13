@@ -222,7 +222,7 @@ export class DataService {
       // Backend returns [{id:1, name:'1A'}, ...]
       try {
         const classes = await this._fetch('/classes');
-        return classes.map(c => ({ value: c.name, label: c.name }));
+        return classes.map(c => ({ value: c.name, text: c.name }));
       } catch (e) {
           console.warn("Classes fetch failed, returning empty", e);
           return [];
@@ -231,9 +231,9 @@ export class DataService {
 
   static async getRoleOptions() {
       return [
-          { value: 'student', label: 'Uczeń' },
-          { value: 'teacher', label: 'Nauczyciel' },
-          { value: 'admin', label: 'Administrator' }
+          { value: 'student', text: 'Uczeń' },
+          { value: 'teacher', text: 'Nauczyciel' },
+          { value: 'admin', text: 'Administrator' }
       ];
   }
 
@@ -241,7 +241,7 @@ export class DataService {
       // Backend returns [{id:1, code:'aso', name:'ASO'}, ...]
       try {
         const subjects = await this._fetch('/subjects');
-        return subjects.map(s => ({ value: s.code, label: s.name }));
+        return subjects.map(s => ({ value: s.code, text: s.name }));
       } catch (e) {
           console.warn("Subjects fetch failed", e);
           return [];

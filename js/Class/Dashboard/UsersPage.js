@@ -38,7 +38,7 @@ export class UsersPage {
           container.appendChild(listContainer);
       
           this.renderAddUserForm(formContainer, roleOptions, classOptions);
-          this.renderUsersList(listContainer, usersData);
+          this.renderUsersList(listContainer, usersData, classOptions);
 
       } catch (error) {
           console.error("Błąd ładowania użytkowników:", error);
@@ -74,15 +74,6 @@ export class UsersPage {
 
       },
       {
-        label: "Email",
-        type: "email",
-        id: "user-email",
-        required: true,
-        placeholder: "Wpisz email",
-        direction: "row-full",
-
-      },
-      {
         selectInputOptions: true,
         label: "Rola",
         type: "select",
@@ -113,7 +104,7 @@ export class UsersPage {
     container.appendChild(form);
   }
 
-  static renderUsersList(container, usersData) {
+  static renderUsersList(container, usersData, classOptions) {
     const headers = ["Lp.", "Imię", "Drugie imię", "Nazwisko", "Login", "Rola", "Klasa", "Akcje"];
     const data = usersData.map((user, index) => {
         const [id, firstName, middleName, lastName, login, role, className] = user;
@@ -125,13 +116,15 @@ export class UsersPage {
           lastName,
           login,
           role, 
-          className || "-", 
+          className ?  {
+        type: "select",
+        options: classOptions,
+      } : "-", 
           {
-            type: "actions",
-            actions: [
-              {
+            type: "button",
                 label: "Resetuj Hasło",
-                action: async () => {
+                buttonStyle: "primary",
+                onClick: async () => {
                     if(confirm(`Czy zresetować hasło dla użytkownika ${firstName} ${lastName}?`)) {
                         try {
                             const res = await DataService.resetUserPassword(id);
@@ -141,30 +134,32 @@ export class UsersPage {
                     }
                 },
               },
-              {
-                label: "Zmień Klasę",
-                action: async () => {
-                    // Simple prompt for now
-                    const newClass = prompt("Podaj nową klasę:", className || "");
-                    if(newClass !== null && newClass !== className) {
-                         try {
-                            const res = await DataService.changeUserClass(id, newClass);
-                             if(res.success) {
-                                 alert("Klasa zmieniona.");
-                                 // Optional: reload page or update row
-                                 location.reload(); 
-                             }
-                            else alert("Błąd: " + (res.error || "Nieznany"));
-                        } catch(e) { console.error(e); alert("Wystąpił błąd."); }
-                    }
-                },
-              },
-              {
-                label: "Usuń",
-                action: () => alert(`Funkcja usuwania w przygotowaniu: ${firstName} ${lastName}`),
-              },
-            ],
-          },
+            
+            //   {
+            // type: "dropdown",
+            //     label: "Zmień Klasę",
+            //     action: async () => {
+            //         // Simple prompt for now
+            //         const newClass = prompt("Podaj nową klasę:", className || "");
+            //         if(newClass !== null && newClass !== className) {
+            //              try {
+            //                 const res = await DataService.changeUserClass(id, newClass);
+            //                  if(res.success) {
+            //                      alert("Klasa zmieniona.");
+            //                      // Optional: reload page or update row
+            //                      location.reload(); 
+            //                  }
+            //                 else alert("Błąd: " + (res.error || "Nieznany"));
+            //             } catch(e) { console.error(e); alert("Wystąpił błąd."); }
+            //         }
+            //     },
+            //   },
+            //   {
+            //     label: "Usuń",
+            //     action: () => alert(`Funkcja usuwania w przygotowaniu: ${firstName} ${lastName}`),
+            //   },
+            // ],
+          // },
         ];
     });
 

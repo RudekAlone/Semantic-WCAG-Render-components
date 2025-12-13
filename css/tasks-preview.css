@@ -187,3 +187,37 @@
   --font-family-comic-sans: Comic Sans MS, cursive, sans-serif;
   --font-family-atkinson-hyperlegible: 'Atkinson Hyperlegible', sans-serif;
 }
+
+#task-preview-section :is(h1, h2, h3, h4, h5, h6):not(:first-child) {
+  font-family: var(--font-family-mono);
+}
+#task-preview-section ul, #task-preview-section ol {
+  margin-left: 2rem;
+}
+#task-preview-section em > strong {
+  color: var(--task-italic-bold-color);
+}
+#task-preview-section strong > em {
+  color: var(--task-bold-italic-color);
+}
+#task-preview-section strong {
+  color: var(--task-bold-color);
+}
+#task-preview-section em {
+  color: var(--task-italic-color);
+}
+#task-preview-section code {
+  background-color: var(--task-code-bg-color);
+  color: var(--task-code-text-color);
+  padding: 0.2rem 0.4rem;
+  border-radius: 0.3rem;
+  font-family: var(--font-family-mono);
+  text-wrap-mode: nowrap;
+  border: 1px solid var(--task-code-border-color);
+}
+#task-preview-section .katex-display {
+  display: inline-block;
+}
+#task-preview-section table {
+  margin: 2rem 0;
+}
